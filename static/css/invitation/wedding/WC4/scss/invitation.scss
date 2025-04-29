@@ -1,0 +1,213 @@
+#mainCanvas {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.content {
+    text-align: center;
+    padding: 20px;
+}
+
+.bg-top-left, .bg-top-right, .bg-bottom-right, .bg-bottom-left {
+    position: absolute;
+}
+
+.bg-top-left {
+    top: -50px;
+    left: -30px;
+    width: 45%;
+}
+
+.bg-top-right {
+    top: -250px;
+    right: -250px;
+    width: 32%;
+}
+
+.bg-bottom-left {
+    bottom: -500px;
+    left: 0;
+    height: 55%;
+    width: auto; /* Allow image to scale responsively */
+}
+
+.bg-bottom-right {
+    transform: rotate(180deg);
+    bottom: -500px;
+    right: -20px;
+    width: 45%;
+}
+
+/* Typography */
+.title {
+    max-width: 700px;
+    align-items: center;
+    letter-spacing: 2px;
+    font-size: 2.5rem;
+    font-weight: 500;
+    color: rgb(92, 3, 3);
+    margin: 0 auto;
+    margin-bottom: 100px;
+    margin-top: 140px;
+}
+
+.name {
+    font-size: 7rem;
+    line-height: 8.5rem;
+    font-family: 'myfont', 'Great Vibes', cursive;
+}
+
+.and {
+    font-size: 5rem;
+    font-family: 'Playfair Display', serif;
+}
+
+.info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 100px;
+    text-align: center;
+}
+
+.day, .time {
+    font-size: 2rem;
+    border-top: 2px solid;
+    border-bottom: 2px solid;
+    padding: 15px 0;
+}
+
+.day {
+    margin-right: 12px;
+    padding-left: 32px;
+    border-image: linear-gradient(to right, rgb(16, 15, 15), rgb(243, 243, 208)) 1;
+}
+
+.time {
+    border-image: linear-gradient(to left, rgb(16, 15, 15), rgb(241, 241, 211)) 1;
+    margin-left: 12px;
+    padding-right: 32px;
+}
+
+
+.date {
+    font-family: 'playfair display', serif;
+    padding: 0 18px 18px 18px;
+
+    font-size: 6rem;
+}
+
+.month {
+    font-size: 2rem;
+}
+
+.address {
+  
+    font-size: 1.7rem;
+    max-width: 400px;
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 100px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .bg-top-left, .bg-top-right, .bg-bottom-right {
+        width: 50%; 
+        z-index: -1;
+    }
+
+    .bg-top-left {
+        top: -20px;
+        left: -15px;
+    }
+
+    .bg-top-right {
+        top: -110px;
+        right: -100px;
+    }
+
+    .bg-bottom-left {
+        bottom: -100px;
+        height: 28%;
+        z-index: -1;
+    }
+
+    .bg-bottom-right {
+        bottom: -100px;
+        right: -10px;
+    }
+
+    .title {
+        font-size: 1.5rem;
+        line-height: 2.5rem;
+        letter-spacing: 0.03em;
+        padding: 0 32px;
+        margin-bottom: 50px;
+    }
+
+    .name {
+        padding-top: 10px;
+        font-size: 4rem;
+        line-height: 4.5rem;
+    }
+
+    .and{
+        font-size: 2.5rem;
+        line-height: 4rem;
+    }
+    .day, .time,  .month, .address {
+        font-size: 1.5rem;
+        padding: 10px 8px;
+    }
+.day{
+    padding-left: 16px;
+    margin: 0;
+    font-size: 1.25rem;
+}
+.time{
+    font-size: 1.25rem;
+    padding-right: 16px;
+    margin: 0;
+}
+    .date {
+        font-family: 'playfair display', serif;
+        font-size:4rem;
+        margin: 0 4px; 
+        padding: 0 4px 4px 4px;  
+    }
+
+    .info{
+        margin-top: 50px;
+        padding: 0;
+    }
+    .address {
+        margin-top: 50px;
+    }
+}
+
+// @media (max-width: 480px) {
+//     .title, .title span {
+//         font-size: 24px;
+//     }
+
+//     .name, .and {
+//         font-size: 40px;
+//         line-height: 40px;
+//     }
+
+//     .day, .time, .date, .month, .address {
+//         font-size: 24px;
+//     }
+
+//     .date {
+//         font-size: 30px;
+//     }
+//     .info{
+//         padding-top: 20px;
+//     }
+//     .address {
+//         margin-top: 20px;
+//     }
+// }

@@ -1,0 +1,27 @@
+<div class="service-cards-container">
+    <div class="carousel">
+        <div class="carousel__wrapper">
+            <div class="carousel__header">
+                <h2 class="carousel__headline">{{ featured.service }}
+                </h2>
+                <div class="carousel__controls">
+                    <button class="carousel__arrow disabled arrow-prev"></button>
+                    <button class="carousel__arrow arrow-next"></button>
+                </div>
+            </div>
+            <ul class="carousel__content">
+                {% for service in featured.services %}
+                <li class="carousel__item">
+                    <a href="#"><img class="carousel__item__image" src="{% if service.thumbnail %}{{ service.thumbnail.url }}{% else %}{% static 'assets/defaults/1x1.png' %}{% endif %}" alt="" />
+                        <div class="carousel__description">
+                            <h3 class="carousel__title">
+                                {{ service.vendor.name|title|truncatechars:20 }}
+                            </h3><span class="carousel__subtitle">{{ service.vendor.city }}</span>
+                        </div>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>

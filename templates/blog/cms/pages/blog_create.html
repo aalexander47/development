@@ -1,0 +1,276 @@
+{% extends 'dashboard/cms/base.html' %}{% load static auth_extras %}
+{% block title %}Create Blog | Eventic{% endblock %}
+
+{% block cms_head %}
+<link rel="stylesheet" href="{% static 'css/photographer/styles/base.css' %}">
+<link rel="stylesheet" href="{% static 'css/blog/styles/blog_create.css' %}">
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js" integrity="sha512-SkmBfuA2hqjzEVpmnMt/LINrjop3GKWqsuLSSB3e7iBmYK7JuWw4ldmmxwD9mdm2IRTTi0OxSAfEGvgEi0i2Kw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{% endblock %}
+
+{% block content %}
+<div class="content-block">
+    <div class="main-header" id="MH01">
+        <div class="header-top">
+            <div class="header-title">
+                {% if request.META.HTTP_REFERER and request.META.HTTP_REFERER != request.build_absolute_uri %}
+                <a href="{{ request.META.HTTP_REFERER }}" class="back-btn"><i class="bi bi-arrow-left"></i></a>
+                {% else %}
+                <a href="{% url 'blog:Dashboard' %}" class="back-btn"><i class="bi bi-arrow-left"></i></a>
+                {% endif %}
+                <h1>{{ action|title }} Blog</h1>
+            </div>
+            <button type="submit" class="save-btn rounded-5" form="createDocsForm" name="{{ action }}_blogs"><i class="bi bi-cloud-arrow-up"></i>Save</button>
+        </div>
+    </div>
+    <div class="main-body">
+        {% include 'vendor/comps/messages.html' %}
+        <div id="createDocsContainer">
+            <header class="blogs-container-header">
+                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link rounded-5" id="pills-details-tab" data-bs-toggle="pill" data-bs-target="#pills-details" type="button" role="tab" aria-controls="details" aria-selected="false" onclick="setTabParam(this)">Details</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link rounded-5" id="pills-seo-tab" data-bs-toggle="pill" data-bs-target="#pills-seo" type="button" role="tab" aria-controls="seo" aria-selected="false" onclick="setTabParam(this)">SEO</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link active rounded-5" id="pills-content-tab" data-bs-toggle="pill" data-bs-target="#pills-content" type="button" role="tab" aria-controls="content" aria-selected="true" onclick="setTabParam(this)">Content</button>
+                    </li>
+                </ul>
+            </header>
+            <form id="createDocsForm" method="post">
+                {% csrf_token %}
+                <div class="blogs-container-body">
+                    <div class="tab-content" id="pills-tabContent">
+                        <div class="tab-pane fade py-4" id="pills-details" role="tabpanel" aria-labelledby="pills-details-tab">
+                            <!-- Floating Inputs -->
+                            <div class="form-group mb-3">
+                                <label for="blogsTitleInput" class="form-label mb-0"><i class="bi bi-card-heading me-2"></i>Title</label>
+                                <input type="text" class="form-control shadow-none border-0 border-bottom rounded-0 fs-1 poppins px-0 fw-bold" name="name" id="blogsTitleInput" placeholder="--" value="{{ blogs.name }}" onchange="debouncedUpdateTitle();">
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control shadow-none" name="slug" id="blogsSlugInput" placeholder="Slug" value="{{ blogs.url }}">
+                                <label for="blogsSlugInput">Slug</label>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 col-12">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control shadow-none" name="thumbnail" id="thumbnail" placeholder="Thumbnail Url" value="{{ blogs.thumbnail }}">
+                                        <label for="thumbnail">Thumbnail</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade py-4" id="pills-seo" role="tabpanel" aria-labelledby="pills-seo-tab">
+                            <h2 class="poppins">SEO</h2>
+                            <h3 class="poppins">Meta Information</h3>
+                            <!-- Floating Inputs -->
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control shadow-none" name="meta_title" id="floatingInput" placeholder="Meta Title" value="{{ blogs.seo_data.meta_title }}">
+                                        <label for="floatingInput">Meta Title</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-floating">
+                                        <textarea class="form-control shadow-none" name="meta_description" placeholder="Add Meta Description" id="floatingTextareaMetaDescription" style="height: 100px">{{ blogs.seo_data.meta_description }}</textarea>
+                                        <label for="floatingTextareaMetaDescription">Meta Description</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-floating">
+                                        <textarea class="form-control shadow-none" name="meta_keywords" placeholder="Add Meta Keywords" id="floatingTextareaMetaKeywords" style="height: 100px">{{ blogs.seo_data.meta_keywords }}</textarea>
+                                        <label for="floatingTextareaMetaKeywords">Meta Keywords</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <h3 class="poppins">Open Graph</h3>
+                            <div class="row mb-4">
+                                <div class="col-md-6 col-12">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control shadow-none" name="og_title" id="floatingInputOGTitle" placeholder="OG Title" value="{{ blogs.seo_data.og_title }}">
+                                        <label for="floatingInputOGTitle">OG Title</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control shadow-none" name="og_description" id="floatingInputOGDescription" placeholder="OG Description" value="{{ blogs.seo_data.og_description }}">
+                                        <label for="floatingInputOGDescription">OG Description</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control shadow-none" name="og_image_url" id="floatingInputOGImage" placeholder="OG Image Url" value="{{ blogs.seo_data.og_image_url }}">
+                                        <label for="floatingInputOGImage">OG Image</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <h3 class="poppins">Twitter</h3>
+                            <div class="row mb-4">
+                                <div class="col-md-6 col-12">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control shadow-none" name="twitter_title" id="floatingInputTwitterTitle" placeholder="Twitter Title" value="{{ blogs.seo_data.twitter_title }}">
+                                        <label for="floatingInputTwitterTitle">Twitter Title</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control shadow-none" name="twitter_description" id="floatingInputTwitterDescription" placeholder="Twitter Description" value="{{ blogs.seo_data.twitter_description }}">
+                                        <label for="floatingInputTwitterDescription">Twitter Description</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control shadow-none" name="twitter_image_url" id="floatingInputTwitterImage" placeholder="Twitter Image Url" value="{{ blogs.seo_data.twitter_image_url }}">
+                                        <label for="floatingInputTwitterImage">Twitter Image</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade py-2 show active" id="pills-content" role="tabpanel" aria-labelledby="pills-content-tab">
+                            <h1 id="blogsTitle">{{ blogs.name }}</h1>
+                            <div id="contentContainer">
+                                {% if not blogs.content_data.content %}
+                                <div class="content-area-container" id="AfaD2kjv40ContentArea" draggable="true">
+                                    <input type="hidden" name="content_area_id" value="AfaD2kjv40">
+                                    <div class="content-area-label">
+                                        <span class="content-area-label-text">AfaD2kjv40</span>
+                                        <button type="button" class="delete-box-btn" data-remove-id="AfaD2kjv40" data-bs-toggle="modal" data-bs-target="#deleteBoxModal" onclick="deleteElement(this)"><i class="bi bi-trash"></i></button>
+                                    </div>
+                                    <div class="content-area-box">
+                                        <div class="content-area custom-scrollbar" data-bs-target="#contentAreaModal" data-bs-toggle="modal" data-id="AfaD2kjv40ContentArea"></div>
+                                        <textarea name="content" class="d-none"></textarea>
+                                    </div>
+                                </div>
+                                {% else %}
+                                {% for content in blogs.content_data.content %}
+                                <div class="content-area-container" id="{{ content.id }}ContentArea" draggable="true">
+                                    <input type="hidden" name="content_area_id" value="{{ content.id }}">
+                                    <div class="content-area-label">
+                                        <span class="content-area-label-text">{{ content.id }}</span>
+                                        <button type="button" class="delete-box-btn" data-remove-id="{{ content.id }}" data-bs-toggle="modal" data-bs-target="#deleteBoxModal" onclick="deleteElement(this)"><i class="bi bi-trash"></i></button>
+                                    </div>
+                                    <div class="content-area-box">
+                                        <div class="content-area custom-scrollbar" data-bs-target="#contentAreaModal" data-bs-toggle="modal" data-id="{{ content.id }}ContentArea">{{ content.content|safe }}</div>
+                                        <textarea name="content" class="d-none">{{ content.content|safe }}</textarea>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <button type="button" class="add-content-box-btn" id="addContentBox"><i class="bi bi-hash"></i>Box</button>
+    </div>
+</div>
+
+<!-- contentAreaModal -->
+<div class="modal fade" id="contentAreaModal" tabindex="-1" aria-hidden="true" aria-labelledby="contentAreaModalLabel" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content rounded-5 p-md-3 p-2">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="contentAreaModalLabel">Content Area</h5>
+                <div class="row align-items-center">
+                    {% if IN_DEVELOPMENT and HIDDEN %}
+                    <div class="col-auto pe-1">
+                        <button type="button" class="btn text-danger border-0 shadow-none py-1 px-2" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Delete" id="deleteContentArea" data-remove-id="" data-bs-toggle="modal" data-bs-target="#deleteBoxModal" onclick="deleteElement(this)"><i class="bi bi-trash"></i></button>
+                    </div>
+                    {% endif %}
+                    <div class="col-auto ps-1">
+                        <button type="button" class="btn text-dark border-0 shadow-none py-1 px-2" data-bs-dismiss="modal" aria-label="Close"><i class="bi bi-arrows-angle-contract"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body py-0">
+                <div class="modal-content-area-container">
+                    <ul class="modal-content-area-toolbar">
+                        <!-- h4-h6 -->
+                        <li><button type="button" class="content-area-editor-btn" data-command="formatBlock" data-value="H2" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Heading2" onclick="document.execCommand('formatBlock', false, 'h2')"><i class="bi bi-type-h2"></i></button></li>
+                        <li><button type="button" class="content-area-editor-btn" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Heading3" onclick="document.execCommand('formatBlock', false, 'h3')"><i class="bi bi-type-h3"></i></button></li>
+                        <li><button type="button" class="content-area-editor-btn" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Heading4" onclick="document.execCommand('formatBlock', false, 'h4')"><i class="bi bi-type-h4"></i></button></li>
+                        <li><button type="button" class="content-area-editor-btn" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Heading5" onclick="document.execCommand('formatBlock', false, 'h5')"><i class="bi bi-type-h5"></i></button></li>
+                        <li><button type="button" class="content-area-editor-btn" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Heading6" onclick="document.execCommand('formatBlock', false, 'h6')"><i class="bi bi-type-h6"></i></button></li>
+                        <li><button type="button" class="content-area-editor-btn" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Paragraph" onclick="execCmd('formatBlock', 'p')"><i class="bi bi-paragraph"></i></button></li>
+                        <!-- bold, italic, underline -->
+                        <li><button type="button" class="content-area-editor-btn" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Bold" onclick="document.execCommand('bold')"><i class="bi bi-type-bold"></i></button></li>
+                        <li><button type="button" class="content-area-editor-btn" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Italic" onclick="document.execCommand('italic')"><i class="bi bi-type-italic"></i></button></li>
+                        <li><button type="button" class="content-area-editor-btn" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Underline" onclick="document.execCommand('underline')"><i class="bi bi-type-underline"></i></button></li>
+                        <!-- Align -->
+                        <li><button type="button" class="content-area-editor-btn" data-command="justifyLeft" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Align Left" onclick="document.execCommand('justifyLeft')"><i class="bi bi-text-left"></i></button></li>
+                        <li><button type="button" class="content-area-editor-btn" data-command="justifyCenter" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Align Center" onclick="document.execCommand('justifyCenter')"><i class="bi bi-text-center"></i></button></li>
+                        <li><button type="button" class="content-area-editor-btn" data-command="justifyRight" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Align Right" onclick="document.execCommand('justifyRight')"><i class="bi bi-text-right"></i></button></li>
+                        <li><button type="button" class="content-area-editor-btn" data-command="justifyFull" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Justify" onclick="document.execCommand('justifyFull')"><i class="bi bi-justify"></i></button></li>            
+                        {% if user.is_staff %}
+                        <li><button type="button" class="content-area-editor-btn" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Insert Link" onclick="document.execCommand('createLink', false, prompt('Enter the URL of the link:'))"><i class="bi bi-link-45deg"></i></button></li>
+                        <li><button type="button" class="content-area-editor-btn" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Insert Image" onclick="addImage();"><i class="bi bi-image"></i></button></li>
+                        <li><button type="button" class="content-area-editor-btn" id="insertVideoBtn" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Insert Video"><i class="bi bi-youtube"></i></button></li>
+                        {% endif %}
+                        <li><button type="button" class="content-area-editor-btn" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Unordered List" onclick="document.execCommand('insertUnorderedList')"><i class="bi bi-list-ul"></i></button></li>
+                        <li><button type="button" class="content-area-editor-btn" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ordered List" onclick="document.execCommand('insertOrderedList')"><i class="bi bi-list-ol"></i></button></li>
+                        <!-- Indentation (Increase, Decrease) -->
+                        <li><button type="button" class="content-area-editor-btn" data-command="outdent" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Decrease Indent" onclick="document.execCommand('outdent')"><i class="bi bi-text-indent-left"></i></button></li>
+                        <li><button type="button" class="content-area-editor-btn" data-command="indent" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Increase Indent" onclick="document.execCommand('indent')"><i class="bi bi-text-indent-right"></i></button></li>                   
+                        <li><button type="button" class="content-area-editor-btn" data-command="fontSize" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Font Size" onclick="document.execCommand('fontSize', false, prompt('Enter a size (1-7):'))"><i class="bi bi-fonts"></i></button></li>
+                        <!-- Font Size and Foreground/Background Color -->
+                        <li><button type="button" class="content-area-editor-btn" data-command="foreColor" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Text Color" onclick="document.execCommand('foreColor', false, prompt('Enter a color (name or hex):'))"><i class="bi bi-palette"></i></button></li>
+                        <li><button type="button" class="content-area-editor-btn" data-command="hiliteColor" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Background Color" onclick="document.execCommand('hiliteColor', false, prompt('Enter a color (name or hex):'))"><i class="bi bi-brush"></i></button></li>
+                        <!-- Undo and Redo -->
+                        <li><button type="button" class="content-area-editor-btn" data-command="undo" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Undo" onclick="document.execCommand('undo')"><i class="bi bi-arrow-counterclockwise"></i></button></li>
+                        <li><button type="button" class="content-area-editor-btn" data-command="redo" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Redo" onclick="document.execCommand('redo')"><i class="bi bi-arrow-clockwise"></i></button></li>              
+                        <!-- clear -->
+                        <li><button type="button" class="content-area-editor-btn" id="clearFormatting" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Clear Formatting" ><i class="bi bi-eraser"></i></button></li>
+                    </ul>
+                    <div class="modal-content-area-box">
+                        <div class="modal-content-area custom-scrollbar" id="contentArea" contenteditable="true" spellcheck="false"></div>
+                    </div>
+                </div>
+                <div class="modal-code-area-container d-none">
+                    <textarea class="custom-scrollbar" id="codeArea"></textarea>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center p-3">
+                <div class="form-group mb-0">
+                    <select name="tab_type" class="form-select shadow-none border-0" id="tabType">
+                        <option value="content">Content</option>
+                        <option value="code">Code</option>
+                    </select>
+                </div>
+                <div>
+                    <button type="button" class="btn text-primary border-0 shadow-none" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary shadow-none px-3 py-2 rounded-5 border-0" id="saveContentArea" data-id="">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create delete box modal -->
+<div class="modal fade" id="deleteBoxModal" tabindex="-1" aria-labelledby="deleteBoxModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-5 p-md-3 p-2">
+        <div class="modal-header border-0">
+          <h5 class="modal-title" id="deleteBoxModalLabel">Delete Box</h5>
+          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          <p class="mb-0">Are you sure you want to remove <span id="deleteBoxID" class="text-primary"></span> box?</p>
+        </div>
+        <div class="modal-footer border-0 justify-content-center">
+          <button type="button" class="btn btn-outline-light text-muted shadow-none rounded-5 px-3 py-2" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-danger shadow-none rounded-5 px-3 py-2" id="deleteBoxBtn" data-id="" data-bs-dismiss="modal">Delete</button>
+        </div>
+      </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="{% static 'scripts/blogs/blog_create.js' %}"></script>
+{% endblock %}

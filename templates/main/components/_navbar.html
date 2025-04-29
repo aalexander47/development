@@ -1,0 +1,81 @@
+{% load auth_extras static %}
+<nav>
+    <div class="logo">
+        <a href="/"><img src="{% static 'assets/logos/Eventic-golden-dark-lg-logo-new.png' %}" alt="Eventic Gold Dark Logo"></a>
+    </div>
+    {% if request.path != '/' or request.path != '/auth/login/' or request.path != '/auth/signup/' %}
+    <div id="navSearchBox">
+        <form action="{% block navbar_search_url %}{% url 'search:Vendor_Search' %}{% endblock %}" method="GET">
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="Search..." name="q" value="{% if request.GET.q %}{{ request.GET.q }}{% endif %}">
+                <button type="submit" class="search-btn" title="Search" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="bi bi-search"></i></button>
+            </div>
+        </form>
+    </div>
+    {% endif %}
+    <ul id="navBtnGroup">
+        <li>
+            <button class="btn btn-secondary" id="navServicesBtn" type="button" data-bs-toggle="offcanvas" data-bs-target="#servicesWeOffer" aria-controls="servicesWeOffer"><i class="bi bi-grid-3x3-gap-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Services We Offer"></i></button>
+        </li>
+        {% if request.user.is_authenticated %}
+        <li>
+            <div class="btn-group">
+                <button type="button" class="btn-profile dropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Profile">
+                    <div class="profile-img">
+                        <img src="{% if user.profile_picture %}{{ user.profile_picture.url }}{% else %}{% static 'assets/defaults/profile.png' %}{% endif %}" onerror=`this.onerror=null; this.src="{% static 'assets/defaults/profile.png' %}";` alt="Default image with Picture icon in it">
+                    </div>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="{% url 'user:Profile' %}"><i class="bi bi-person"></i>&nbsp; Profile</a></li>
+                    <li><a class="dropdown-item dropdown-btn-logout" href="{% url 'auth:logout' %}"><i class="bi bi-box-arrow-left"></i>&nbsp; Logout</a></li>
+                </ul>
+            </div>
+        </li>
+        {% else %}
+        {% if request.path != '/auth/login/' %}
+        <li>
+            <a href="{% url 'auth:login' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}" class="link-btn">
+                <div class="btn-login">
+                    <i class="bi bi-box-arrow-in-right"></i>
+                    <span>Login</span>
+                </div>
+            </a>
+        </li>
+        {% else %}
+        <li>
+            <a href="{% url 'auth:signup' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}" class="link-btn">
+                <div class="btn-login">
+                    <i class="bi bi-box-arrow-in-right"></i>
+                    <span>Sign Up</span>
+                </div>
+            </a>
+        </li>
+        {% endif %}
+        {% endif %}
+    </ul>
+</nav>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="servicesWeOffer" aria-labelledby="servicesWeOfferLabel">
+    <div class="offcanvas-header">
+      <h5 id="servicesWeOfferLabel"><i class="bi bi-stars"></i>&nbsp;Eventrons</h5>
+      <button type="button" class="btn-close text-reset shadow-none" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="nav-services-box" id="navServicesBox">
+            <div class="services-container">
+                <a href="{% url 'photographer:search_service' %}" role="button">
+                    <div class="service-box">
+                        <i class="bi bi-camera2"></i>
+                        <p>Photographer</p>
+                    </div>
+                </a>
+                <a href="{% url 'videographer:search_service' %}" role="button">
+                    <div class="service-box">
+                        <i class="bi bi-film"></i>
+                        <p>Videographer</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

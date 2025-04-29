@@ -1,0 +1,152 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+@font-face {
+  font-family: "Geist";
+  src: url("https://eventic-webapp.s3.ap-south-1.amazonaws.com/static/fonts/Geist/GeistVariableVF.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Google-sans";
+  src: url("https://eventic-webapp.s3.ap-south-1.amazonaws.com/static/fonts/google-sans-cufonfonts/ProductSans-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Roboto";
+  src: url("https://eventic-webapp.s3.ap-south-1.amazonaws.com/static/fonts/Roboto/Roboto-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Platypi";
+  src: url("https://eventic-webapp.s3.ap-south-1.amazonaws.com/static/fonts/Platypi/static/Platypi-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "SF Pro", "SF Pro Text", "Myriad Set Pro", system-ui, "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  src: url("https://eventic-webapp.s3.ap-south-1.amazonaws.com/static/fonts/SF-Pro/SFPRODISPLAYREGULAR.woff2") format("woff2");
+  font-weight: normal;
+}
+@font-face {
+  font-family: "Great Vibes";
+  src: url("https://eventic-webapp.s3.ap-south-1.amazonaws.com/static/fonts/great-vibes/GreatVibes-Regular.ttf") format("truetype");
+  font-weight: normal;
+}
+.geist {
+  font-family: "Geist", "Open Sans", sans-serif !important;
+}
+
+.google-sans {
+  font-family: "Google-sans", "Open Sans", sans-serif !important;
+}
+
+.poppins {
+  font-family: "Poppins", sans-serif !important;
+}
+
+.roboto {
+  font-family: "Roboto", sans-serif !important;
+}
+
+.platypi {
+  font-family: "Platypi", sans-serif !important;
+}
+
+.sf-pro {
+  font-family: "SF Pro", "Open Sans", Helvetica, sans-serif !important;
+}
+
+.playfair {
+  font-family: "Playfair Display", serif !important;
+}
+
+.noto-sans {
+  font-family: "Noto Sans", sans-serif !important;
+}
+
+.great-vibes {
+  font-family: "Great Vibes" !important;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  padding: 20px;
+  background: #212121;
+  color: white;
+  width: 100%;
+  min-height: 100vh;
+  display: grid;
+  place-content: center;
+  text-align: center;
+}
+body h1 {
+  font-size: 8rem;
+  font-weight: 700;
+  line-height: 6rem;
+  color: transparent;
+  -webkit-text-stroke: 1px #ffffff;
+}
+body h2 {
+  font-size: 5rem;
+  background: #fff0be;
+  background: repeating-radial-gradient(ellipse farthest-corner at top left, #fff0be 0%, #8D7119 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+body h3 {
+  font-size: 2rem;
+  font-weight: 400;
+  margin-bottom: 24px;
+  background: #fff0be;
+  background: repeating-radial-gradient(ellipse farthest-corner at top left, #fff0be 0%, #8D7119 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+body p {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  margin-bottom: 24px;
+  letter-spacing: 0.05em;
+}
+body a.btn {
+  text-decoration: none;
+  background: rgb(255, 255, 255);
+  color: #171717;
+  padding: 8px 12px;
+  width: auto;
+  font-weight: 500;
+  margin: 24px auto 0 auto;
+  border-radius: 8px;
+  font-family: "Geist", "Open Sans", sans-serif;
+  transition: all 0.25s ease-in-out;
+}
+body a.btn:hover {
+  color: black;
+  background: white;
+  scale: 1.05;
+}
+
+@media screen and (max-width: 768px) {
+  body h1 {
+    font-size: 5rem;
+    line-height: 5rem;
+  }
+  body h2 {
+    font-size: 2rem;
+  }
+  body h3 {
+    font-size: 1.5rem;
+  }
+  body p {
+    font-size: 1rem;
+  }
+  body a.btn {
+    font-size: 1rem;
+    margin-top: 12px;
+  }
+}/*# sourceMappingURL=error.css.map */

@@ -1,0 +1,27 @@
+{% load static %}
+<section id="recommendationContainer">
+    <div id="recommendation" class="box">
+        <div class="recommendation-header">
+            <h5>Recommended</h5>
+        </div>
+        <div class="recommendation-body">
+            {% for service in services %}
+                <div class="recommendation-card">
+                    <div class="recommendation-card-header">
+                        <div class="recommendation-card-img">
+                            <a href="{% url 'photographer:service' service.id service.slug %}" target="_blank">
+                                <img src="{{ service.thumbnail.url }}" onerror=`this.onerror=null; this.src="{% static 'assets/defaults/1x1.png' %}";` alt="Service Thumbnail">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="recommendation-card-body">
+                        <a href="{% url 'photographer:service' service.id service.slug %}" target="_blank">
+                            <h4>{{ service.vendor.name }}</h4>
+                        </a>
+                        <p>{{ service.description | truncatechars:"100" }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>

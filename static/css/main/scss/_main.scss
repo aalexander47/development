@@ -1,0 +1,120 @@
+@import '../../core/scss/_theme.scss';
+@import 'components/_navbar.scss';
+@import 'components/_footer.scss';
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: $poppins;
+}
+
+body::-webkit-scrollbar {
+    width: 8px;
+    height: 0;
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: rgb(217, 224, 231);
+    border-radius: 8px;
+}
+
+
+.form-box {
+    ul.nonfield, ul.errorlist {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        li {
+            color: #f04444;
+            font-size: 14px;
+            line-height: 20px;
+            font-weight: 400;
+            margin: 4px 0 6px 0;
+            font-family: $geist;
+        }
+    }
+    ul.nonfield {
+        margin-bottom: 16px;
+        li {
+            font-size: 16px;
+        }
+    }
+}
+
+
+.input-group-01 {
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    label {
+        font-size: 16px;
+        margin-bottom: 8px;
+        font-family: $sf-pro;
+        letter-spacing: 0.03em;
+        color: #2d2d2d;
+    }
+    input {
+        padding: 12px;
+        border-radius: 8px;
+        width: 100%;
+        border: 1px solid #bec3c9;
+        outline: none;
+        font-family: "Poppins", sans-serif !important;
+        font-size: 18px;
+        color: #292929;
+        transition: all 0.25s ease-in-out;
+        &:focus {
+            border: 1px solid #007bff;
+        }
+    }
+    .password-input-group {
+        position: relative;
+        display: flex;
+        align-items: center;
+        input {
+            padding-right: 48px;
+        }
+        .toggle-password {
+            position: absolute;
+            display: grid;
+            place-content: center;
+            top: 1px;
+            bottom: 1px;
+            right: 1px;
+            height: calc(100% - 2px);
+            width: auto;
+            aspect-ratio: 1/1;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.25s ease-in-out;
+        }
+        .toggle-password:hover {
+            background: #f2f3f5;
+        }
+    }
+    .form-text {
+        font-size: 14px;
+        color: #909090;
+        font-weight: 400;
+        line-height: 20px;
+        margin-top: 4px;
+    }
+}
+
+button[type="submit"].submit-btn-primary {
+    background: $primary-color;
+    box-shadow: none;
+    width: 100%;
+    padding: 12px;
+    border-radius: 50px;
+    color: #fff;
+    font-family: $poppins;
+    font-size: 18px;
+    font-weight: 500;
+    transition: all 0.25s ease-in-out;
+    &:hover {
+        color: #fff;
+        background-color: $primary-color-hover;
+    }
+}

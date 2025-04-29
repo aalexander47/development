@@ -1,0 +1,42 @@
+@import '_main.scss';
+
+body {
+    main {
+        section.services {
+            padding: 24px;
+            a {
+                text-decoration: none;
+                border-radius: 24px;
+            }
+            .service-card {
+                display: grid;
+                place-content: center;
+                gap: 24px;
+                padding: 8px;
+                aspect-ratio: 1 / 1;
+                border-radius: 24px;
+                background: linear-gradient(340deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 50%, rgba(0,212,255,1) 100%);
+                font-family: $sf-pro;
+                transition: all 0.25s ease-in-out;
+                h2 {
+                    color: white;
+                    font-size: 1.5rem;
+                    text-align: center;
+                    margin-bottom: 0;
+                }
+                h3 {
+                    color: white;
+                    font-size: 5rem;
+                    line-height: 5rem;
+                    font-weight: 700;
+                    margin-bottom: 0;
+                    text-align: center;
+                    // font-family: $poppins !important;
+                }
+            }
+            .service-card:hover {
+                box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+            }
+        }
+    }
+}

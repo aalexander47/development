@@ -1,0 +1,75 @@
+header {
+    width: 100%;
+    padding: 24px 12px;
+    .logo {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 8px;
+        img {
+            height: 40px;
+            width: auto;
+        }
+    }
+    nav {
+        padding: 24px 0 0 0;
+        max-width: 1000px;
+        margin: 0 auto;
+        ul {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            list-style: none;
+            padding: 0;
+            margin-bottom: 0;
+            li {
+                a {
+                    color: #060606;
+                    padding: 8px 16px 8px 12px;
+                    border-radius: 50px;
+                    background: #dcdee8;
+                    text-decoration: none;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    flex-wrap: nowrap;
+                    column-gap: 2px;
+                    font-family: 'poppins', sans-serif;
+                    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
+                    border: 1px solid #ffffff;
+                    transition: all 0.25s ease-in-out;
+                    i {
+                        color: rgb(108, 108, 108);
+                        transition: all 0.25s ease-in-out;
+                        height: 24px;
+                        width: 24px;
+                        display: grid;
+                        place-items: center;
+                    }
+                    span {
+                        font-size: 16px;
+                        line-height: 16px;
+                        letter-spacing: 0.02em;
+                    }
+                }
+                a:hover {
+                    background: #ffffff;
+                    color: #282828;
+                    i {
+                        color: #141414;
+                    }
+                }
+                a.active {
+                    background: #2e2e2e;
+                    color: #fff;
+                    i {
+                        color: #fff;
+                    }
+                }
+            }
+        }
+    }
+}

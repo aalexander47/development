@@ -1,0 +1,287 @@
+{% extends 'dashboard/cms/base.html' %}{% load auth_extras %}
+{% block title %}Invitations Dashboard | Eventic{% endblock %}
+{% block content %}
+<div class="content-block">
+    <div class="main-header" id="MH01">
+        <div class="header-top">
+            <div class="header-title">
+                {% if request.META.HTTP_REFERER %}
+                <a href="{{ request.META.HTTP_REFERER }}" class="back-btn"><i class="bi bi-arrow-left"></i></a>
+                {% else %}
+                <a href="{% url 'dashboard:Dashboard' %}" class="back-btn"><i class="bi bi-arrow-left"></i></a>
+                {% endif %}
+                <h1>Invitations</h1>
+            </div>
+        </div>
+        <div class="header-bottom">
+            <ul>
+                <li><a href="{% url 'dashboard:Templates' %}">Templates</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main-body">
+        {% include 'vendor/comps/messages.html' %}
+        
+        <!-- Chart Section -->
+        <div class="chart-container mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4>Invitation Activity</h4>
+                <select id="filterDays" class="form-select w-auto">
+                    <option value="7">Last 7 Days</option>
+                    <option value="30">Last 30 Days</option>
+                    <option value="custom">Custom Range</option>
+                    <option value="month">This Month</option>
+                </select>
+            </div>
+            <canvas id="invitationChart" height="100"></canvas>
+        </div>
+
+        <!-- Custom Date Range Picker -->
+        <div id="customDateRange" class="d-none mb-4">
+            <label for="startDate" class="form-label">Start Date:</label>
+            <input type="date" id="startDate" class="form-control w-auto d-inline-block">
+            <label for="endDate" class="form-label ms-3">End Date:</label>
+            <input type="date" id="endDate" class="form-control w-auto d-inline-block">
+            <button id="applyDateRange" class="btn btn-primary ms-3">Apply</button>
+        </div>
+
+        <!-- Redesigned Invitation Analytics Section -->
+        <div class="analytics-container mb-4">
+            <h4 class="mb-4">Invitation Analytics</h4>
+            <div class="row mx-0">
+                <div class="col-md-4 col-6 mb-4 px-1">
+                    <div class="card rounded-5 shadow-sm border p-3 text-center bg-primary text-white">
+                        <h5 class="mb-1">Active Invitations</h5>
+                        <h2 id="activeInvitations" class="mb-0">0</h2>
+                    </div>
+                </div>
+                <div class="col-md-4 col-6 mb-4 px-1">
+                    <div class="card rounded-5 shadow-sm border p-3 text-center bg-light">
+                        <h5 class="mb-1">Inactive Invitations</h5>
+                        <h2 id="inactiveInvitations" class="mb-0">0</h2>
+                    </div>
+                </div>
+                <div class="col-md-4 col-6 mb-4 px-1">
+                    <div class="card rounded-5 shadow-sm border p-3 text-center bg-orange">
+                        <h5 class="mb-1">Total Reports</h5>
+                        <h2 id="totalReports" class="mb-0">0</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row mx-0">
+                <div class="col-md-6 mb-4 px-1">
+                    <div class="card rounded-5 shadow-sm border p-3 text-center">
+                        <h5 class="mb-1">Average Duration (Days)</h5>
+                        <h2 id="avgDuration" class="mb-0">0</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const ctx = document.getElementById('invitationChart').getContext('2d');
+        const filterDays = document.getElementById('filterDays');
+        const customDateRange = document.getElementById('customDateRange');
+        const startDateInput = document.getElementById('startDate');
+        const endDateInput = document.getElementById('endDate');
+        const applyDateRange = document.getElementById('applyDateRange');
+
+        let invitationChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [], // Dates will be dynamically added
+                datasets: [
+                    {
+                        label: 'Invitations Per Day',
+                        data: [],
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 3, // Ensure dots are visible even for 0 values
+                        pointBackgroundColor: 'rgba(75, 192, 192, 1)'
+                    },
+                    {
+                        label: 'Active Invitations Per Day',
+                        data: [],
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 3,
+                        pointBackgroundColor: 'rgba(54, 162, 235, 1)'
+                    },
+                    {
+                        label: 'Inactive Invitations Per Day',
+                        data: [],
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 3,
+                        pointBackgroundColor: 'rgba(255, 99, 132, 1)'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        },
+                        grid: {
+                            display: false // Remove grid lines on x-axis
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Number of Invitations'
+                        },
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        },
+                        grid: {
+                            display: false // Remove grid lines on y-axis
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true
+                    }
+                }
+            }
+        });
+
+        function generateDateRange(startDate, endDate) {
+            const dates = [];
+            let currentDate = new Date(startDate);
+            while (currentDate <= endDate) {
+                dates.push(currentDate.toISOString().split('T')[0]);
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            return dates;
+        }
+
+        function fillMissingDates(data, startDate, endDate) {
+            const allDates = generateDateRange(new Date(startDate), new Date(endDate));
+            const filledData = {
+                labels: allDates,
+                invitations_per_day: [],
+                active_invitations_per_day: [],
+                inactive_invitations_per_day: []
+            };
+
+            allDates.forEach(date => {
+                const index = data.labels.indexOf(date);
+                filledData.invitations_per_day.push(index !== -1 ? data.invitations_per_day[index] : 0);
+                filledData.active_invitations_per_day.push(index !== -1 ? data.active_invitations_per_day[index] : 0);
+                filledData.inactive_invitations_per_day.push(index !== -1 ? data.inactive_invitations_per_day[index] : 0);
+            });
+
+            return filledData;
+        }
+
+        function fetchChartData(filterType, startDate = null, endDate = null) {
+            let url = `/dashboard/invitations/chart-data/?filter=${filterType}`;
+            if (startDate && endDate) {
+                url += `&start_date=${startDate}&end_date=${endDate}`;
+            }
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    let defaultStartDate, defaultEndDate;
+
+                    if (filterType === '7') {
+                        const today = new Date();
+                        defaultStartDate = new Date(today);
+                        defaultStartDate.setDate(today.getDate() - 6); // Last 7 days
+                        defaultEndDate = today;
+                    } else if (filterType === '30') {
+                        const today = new Date();
+                        defaultStartDate = new Date(today);
+                        defaultStartDate.setDate(today.getDate() - 29); // Last 30 days
+                        defaultEndDate = today;
+                    } else if (filterType === 'month') {
+                        const today = new Date();
+                        defaultStartDate = new Date(today.getFullYear(), today.getMonth(), 1); // First day of the month
+                        defaultEndDate = new Date(today.getFullYear(), today.getMonth() + 1, 0); // Last day of the month
+                    } else {
+                        defaultStartDate = startDate;
+                        defaultEndDate = endDate;
+                    }
+
+                    const filledData = fillMissingDates(
+                        data,
+                        startDate || defaultStartDate.toISOString().split('T')[0],
+                        endDate || defaultEndDate.toISOString().split('T')[0]
+                    );
+
+                    const maxValue = Math.max(
+                        ...filledData.invitations_per_day,
+                        ...filledData.active_invitations_per_day,
+                        ...filledData.inactive_invitations_per_day
+                    );
+
+                    invitationChart.options.scales.y.max = maxValue + 2; // Set y-axis max to max value + 5
+
+                    invitationChart.data.labels = filledData.labels;
+                    invitationChart.data.datasets[0].data = filledData.invitations_per_day;
+                    invitationChart.data.datasets[1].data = filledData.active_invitations_per_day;
+                    invitationChart.data.datasets[2].data = filledData.inactive_invitations_per_day;
+                    invitationChart.update();
+                })
+                .catch(error => console.error('Error fetching chart data:', error));
+        }
+
+        filterDays.addEventListener('change', function () {
+            const filterValue = this.value;
+            if (filterValue === 'custom') {
+                customDateRange.classList.remove('d-none');
+            } else {
+                customDateRange.classList.add('d-none');
+                fetchChartData(filterValue);
+            }
+        });
+
+        applyDateRange.addEventListener('click', function () {
+            const startDate = startDateInput.value;
+            const endDate = endDateInput.value;
+            if (startDate && endDate) {
+                fetchChartData('custom', startDate, endDate);
+            } else {
+                alert('Please select both start and end dates.');
+            }
+        });
+
+        // Fetch initial data for the last 7 days
+        fetchChartData('7');
+
+        // Fetch invitation analytics data
+        fetch('/dashboard/invitations/analytics-data/')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('activeInvitations').textContent = data.active_invitations;
+                document.getElementById('inactiveInvitations').textContent = data.inactive_invitations;
+                document.getElementById('totalReports').textContent = data.total_reports;
+                document.getElementById('avgDuration').textContent = data.avg_duration;
+            })
+            .catch(error => console.error('Error fetching analytics data:', error));
+    });
+</script>
+{% endblock %}
+
+

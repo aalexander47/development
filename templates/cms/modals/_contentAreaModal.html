@@ -1,0 +1,40 @@
+<!-- contentAreaModal -->
+<div class="modal fade" id="contentAreaModal" tabindex="-1" aria-hidden="true" aria-labelledby="contentAreaModalLabel" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content rounded-5 p-md-3 p-2">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="contentAreaModalLabel">Content Area</h5>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body py-0">
+                <div class="modal-content-area-container">
+                    <ul class="modal-content-area-toolbar list-unstyled d-flex justify-content-start flex-wrap">
+                        <!-- h4-h6 -->
+                        <li><button type="button" class="btn btn-sm btn-outline-dark border-0" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Heading1" onclick="document.execCommand('formatBlock', false, 'h3')"><i class="bi bi-type-h1"></i></button></li>
+                        <li><button type="button" class="btn btn-sm btn-outline-dark border-0" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Heading2" onclick="document.execCommand('formatBlock', false, 'h4')"><i class="bi bi-type-h2"></i></button></li>
+                        <li><button type="button" class="btn btn-sm btn-outline-dark border-0" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Heading3" onclick="document.execCommand('formatBlock', false, 'h5')"><i class="bi bi-type-h3"></i></button></li>
+                        <!-- bold, italic, underline -->
+                        <li><button type="button" class="btn btn-sm btn-outline-dark border-0" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Bold" onclick="document.execCommand('bold')"><i class="bi bi-type-bold"></i></button></li>
+                        <li><button type="button" class="btn btn-sm btn-outline-dark border-0" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Italic" onclick="document.execCommand('italic')"><i class="bi bi-type-italic"></i></button></li>
+                        <li><button type="button" class="btn btn-sm btn-outline-dark border-0" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Underline" onclick="document.execCommand('underline')"><i class="bi bi-type-underline"></i></button></li>
+                        {% if user.is_staff %}
+                        <li><button type="button" class="btn btn-sm btn-outline-dark border-0" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Insert Link" onclick="document.execCommand('createLink', false, prompt('Enter the URL of the link:'))"><i class="bi bi-link-45deg"></i></button></li>
+                        <li><button type="button" class="btn btn-sm btn-outline-dark border-0" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Insert Image" onclick="document.execCommand('insertImage', false, prompt('Enter the URL of the image:'))"><i class="bi bi-image"></i></button></li>
+                        <li><button type="button" class="btn btn-sm btn-outline-dark border-0" id="insertVideoBtn" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Insert Video"><i class="bi bi-youtube"></i></button></li>
+                        {% endif %}
+                        <li><button type="button" class="btn btn-sm btn-outline-dark border-0" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Unordered List" onclick="document.execCommand('insertUnorderedList')"><i class="bi bi-list-ul"></i></button></li>
+                        <li><button type="button" class="btn btn-sm btn-outline-dark border-0" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ordered List" onclick="document.execCommand('insertOrderedList')"><i class="bi bi-list-ol"></i></button></li>
+                        <li><button type="button" class="btn btn-sm btn-outline-dark border-0" id="clearFormatting" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Clear Formatting" ><i class="bi bi-eraser"></i></button></li>
+                    </ul>
+                    <div class="modal-content-area-box">
+                        <div class="modal-content-area custom-scrollbar" id="contentArea" contenteditable="true" spellcheck="false"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn text-primary border-0 shadow-none" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary shadow-none px-3 py-2 rounded-5 border-0" id="saveContentArea" data-id="">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

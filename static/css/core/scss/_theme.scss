@@ -1,0 +1,52 @@
+@import '_fontfaces.scss';
+@import '_colors.scss';
+@import '_custom.scss';
+
+// Padding Variables
+$padding-sm: 8px;
+$padding-md: 16px;
+$padding-lg: 24px;
+
+// Margin Variables
+$margin-sm: 8px;
+$margin-md: 16px;
+$margin-lg: 24px;
+
+// Font Size Variables
+$font-size-sm: 12px;
+$font-size-md: 16px;
+$font-size-lg: 20px;
+$font-size-xl: 24px;
+
+// Font Weight Variables
+$font-weight-light: 300;
+$font-weight-normal: 400;
+$font-weight-md: 500;
+$font-weight-bold: 700;
+
+// Spacing Variables
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+
+// Breakpoint Variables
+$breakpoint-xs: 576px;
+$breakpoint-sm: 768px;
+$breakpoint-md: 992px;
+$breakpoint-lg: 1200px;
+
+// Border Radius Variables
+$border-radius-sm: 4px;
+$border-radius-md: 8px;
+$border-radius-lg: 12px;
+
+// Transition Variables
+$transition-duration: 0.3s;
+$transition-easing: ease-in-out;
+
+// Z-index Variables
+$z-index-dropdown: 1000;
+$z-index-modal: 2000;
+$z-index-tooltip: 3000;

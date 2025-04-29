@@ -1,0 +1,148 @@
+{% extends 'invitation/cms/base.html' %}
+{% block title %}Invitation Dashboard | Eventic{% endblock %}
+
+{% block content %}
+<div class="content-block">
+    <div class="main-header" id="MH01">
+        <div class="header-top">
+            <div class="header-title">
+                <a href="{% url 'invitation:cms_dashboard' id=invitation.id %}" class="back-btn"><i class="bi bi-arrow-left"></i></a>
+                <h1>RSVP's</h1>
+            </div>
+            <a href="{% url 'main:invitation' id=invitation.id %}" class="save-btn" target="_blank"><i class="bi bi-box-arrow-up-right"></i><span>View</span></a>
+        </div>
+        <div class="header-bottom">
+            <ul>
+                <li><a href="{% url 'invitation:cms_dashboard' id=invitation.id %}">Details</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main-body">
+        <div class="container py-0">
+            <p>Total RSVP's: {{ invitation.rsvps.count }}</p>
+            <div class="rsvp-container">
+                {% if invitation.rsvps.count == 0 %}
+                <div class="no-notification-box text-center py-5 bg-light rounded-5">
+                    <h2>(つ﹏<。)</h2>
+                    <h5 class="mb-0 text-secondary">No RSVP's yet</h5>
+                </div>
+                {% endif %}
+                {% if invitation.rsvps.count > 0 %}
+                <div class="row">
+                    {% if request.user_agent.is_mobile %}
+                    <div class="col">
+                        {% for rsvp in invitation.rsvps.all %}
+                        {% include 'invitation/cms/components/rsvp-card.html' %}
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="col-md-6">
+                        {% for rsvp in invitation.rsvps.all %}
+                        {% if not forloop.counter|divisibleby:2 %}
+                        {% include 'invitation/cms/components/rsvp-card.html' %}
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="col-md-6">
+                        {% for rsvp in invitation.rsvps.all %}
+                        {% if forloop.counter|divisibleby:2 %}
+                        {% include 'invitation/cms/components/rsvp-card.html' %}
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal to read RSVP message -->
+<div class="modal fade" id="rsvpMessageModal" tabindex="-1" aria-labelledby="rsvpMessageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable custom-scrollbar modal-lg">
+        <div class="modal-content rounded-5 shadow-sm p-md-4 p-3"> 
+            <div class="modal-header border-0 p-0">
+                <button type="button" class="btn-close shadow-none rounded-5" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-0">
+                <h5 class="fw-bold mb-0 poppins" id="rsvpMessageSender"></h5>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <p class="text-muted mb-0"><small><span id="rsvpMessageDate"></span></small></p>
+                    <p class="mb-0"><small><span id="rsvpStatus"></span></small></p>
+                </div>
+                <p class="poppins fs-5" id="rsvpMessageContent"></p>
+                <div class="row">
+                    <div class="col-auto">
+                        <div class="row">
+                            <div class="col-auto" id="rsvpMessagePhone">
+                                <a href="" class="btn p-0"><i class="bi bi-telephone"></i></a>
+                            </div>
+                            <div class="col-auto" id="rsvpMessageEmail">
+                                <a href="" class="btn p-0"><i class="bi bi-envelope"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    function showRsvpMessage(rsvpId) {
+        const rsvpMessage = document.getElementById('rsvp_' + rsvpId + '_message').value;
+        const rsvpName = document.querySelector('[data-bs-rsvp-id="' + rsvpId + '"]').getAttribute('data-bs-rsvp-name');
+        const rsvpDate = document.querySelector('[data-bs-rsvp-id="' + rsvpId + '"]').getAttribute('data-bs-rsvp-date');
+        const rsvpPhone = document.querySelector('[data-bs-rsvp-id="' + rsvpId + '"]').getAttribute('data-bs-rsvp-phone');
+        const rsvpEmail = document.querySelector('[data-bs-rsvp-id="' + rsvpId + '"]').getAttribute('data-bs-rsvp-email');
+        // Set the status based on the RSVP response
+        const rsvpStatus = document.querySelector('[data-bs-rsvp-id="' + rsvpId + '"]').getAttribute('data-bs-rsvp-status');
+
+        document.getElementById('rsvpMessageSender').innerText = rsvpName;
+        document.getElementById('rsvpMessageDate').innerText = rsvpDate;
+        document.getElementById('rsvpMessageContent').innerText = rsvpMessage;
+        document.getElementById('rsvpStatus').innerText = rsvpStatus;
+        // Set the status color based on the RSVP response
+        const statusElement = document.getElementById('rsvpStatus');
+        if (rsvpStatus === 'yes') {
+            statusElement.classList.add('text-success');
+            statusElement.classList.remove('text-danger', 'text-dark');
+            statusElement.innerText = 'Let\'s Goo...🥳';
+        } else if (rsvpStatus === 'no') {
+            statusElement.classList.add('text-danger');
+            statusElement.classList.remove('text-success', 'text-dark');
+            statusElement.innerText = 'I can\'t....😭';
+        } else if (rsvpStatus === 'maybe') {
+            statusElement.classList.add('text-dark');
+            statusElement.classList.remove('text-success', 'text-danger');
+            statusElement.innerText = 'Don\'t Know...😅';
+        }
+        // Set phone and email links if available
+        const phoneLink = document.getElementById('rsvpMessagePhone');
+        const emailLink = document.getElementById('rsvpMessageEmail');
+        if (rsvpPhone) {
+            phoneLink.querySelector('a').href = 'tel:' + rsvpPhone;
+            phoneLink.style.display = 'block';
+        } else {
+            phoneLink.style.display = 'none';
+        }
+        if (rsvpEmail) {
+            emailLink.querySelector('a').href = 'mailto:' + rsvpEmail;
+            emailLink.style.display = 'block';
+        } else {
+            emailLink.style.display = 'none';
+        }
+    }
+    document.addEventListener('DOMContentLoaded', function () {
+        const rsvpCards = document.querySelectorAll('.rsvp-card');
+        rsvpCards.forEach(card => {
+            card.addEventListener('click', function () {
+                const rsvpId = this.getAttribute('data-bs-rsvp-id');
+                showRsvpMessage(rsvpId);
+            });
+        });
+    });
+</script>
+{% endblock %}

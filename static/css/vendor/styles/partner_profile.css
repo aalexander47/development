@@ -1,0 +1,180 @@
+@font-face {
+  font-family: "Geist";
+  src: url("/static/fonts/Geist/GeistVariableVF.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Google-sans";
+  src: url("/static/fonts/google-sans-cufonfonts/ProductSans-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 0;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgb(217, 224, 231);
+  border-radius: 8px;
+}
+
+.ls-0 {
+  letter-spacing: 0px;
+}
+
+.ls-1 {
+  letter-spacing: 1px;
+}
+
+.ls-2 {
+  letter-spacing: 2px;
+}
+
+.ls-3 {
+  letter-spacing: 3px;
+}
+
+.ls-4 {
+  letter-spacing: 4px;
+}
+
+.ls-5 {
+  letter-spacing: 5px;
+}
+
+label.form-check-label {
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Geist", sans-serif;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #eceef3 !important;
+}
+body header #tabsBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -moz-column-gap: 32px;
+       column-gap: 32px;
+}
+body header #tabsBtn label {
+  color: #a0aab4;
+  padding: 8px 0;
+  display: flex;
+  -moz-column-gap: 8px;
+       column-gap: 8px;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.25s ease-in-out;
+}
+body header #tabsBtn label:hover {
+  color: #333333;
+}
+body header #tabsBtn input[type=radio]:checked + label {
+  border-bottom: 2px solid #5886AF;
+  color: #333333;
+}
+body main {
+  width: 750px;
+}
+body main .card {
+  border-radius: 16px;
+  box-shadow: rgba(0, 0, 0, 0.18) 0px 2px 4px;
+}
+body main input, body main textarea {
+  border-color: #373737 !important;
+}
+body main input:hover, body main input:focus, body main textarea:hover, body main textarea:focus {
+  border-color: #212125 !important;
+}
+body main .form-group label {
+  font-size: 14px !important;
+  color: #222;
+}
+body main #defaultTabContainer button#profile_update_btn {
+  padding: 4px 12px;
+  background: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  text-wrap: nowrap;
+  transition: all 0.25s ease-in-out;
+}
+body main #defaultTabContainer button#profile_update_btn i {
+  font-size: 14px;
+}
+body main #defaultTabContainer button#profile_update_btn:hover {
+  color: white;
+  background: #007bff;
+}
+body main #servicesTabContainer #servicesSubTabsBtns label {
+  padding: 4px 12px;
+  background: #fff;
+  font-size: 16px;
+  border-radius: 50px;
+  border: 1px solid #e6eaef;
+  cursor: pointer;
+  transition: all 0.25s ease-in-out;
+  text-wrap: nowrap;
+}
+body main #servicesTabContainer #servicesSubTabsBtns label:hover {
+  background: #f6f7f8;
+}
+body main #servicesTabContainer #servicesSubTabsBtns input[type=radio] {
+  display: none;
+}
+body main #servicesTabContainer #servicesSubTabsBtns input[type=radio]:checked + label {
+  background: #007bff;
+  color: white;
+  border: 1px solid #007bff;
+}
+body main #servicesTabContainer #allServicesTabContainer .card {
+  border-radius: 24px;
+  padding: 16px;
+}
+body main #servicesTabContainer #allServicesTabContainer .card .landscape-thumbnail {
+  margin-bottom: 16px;
+  height: 240px;
+  padding: 25px 0;
+  text-align: center;
+}
+body main #servicesTabContainer #allServicesTabContainer .card .landscape-thumbnail img {
+  border-radius: 12px;
+  height: 100%;
+  width: auto;
+  margin: 0 auto;
+  mix-blend-mode: multiply;
+}
+body main #servicesTabContainer #allServicesTabContainer .card .portrait-thumbnail img {
+  height: 120px;
+  width: 120px;
+  border-radius: 8px;
+}
+body main #servicesTabContainer #allServicesTabContainer .card h5 {
+  color: rgba(0, 0, 0, 0.65);
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin-bottom: 0;
+}/*# sourceMappingURL=partner_profile.css.map */

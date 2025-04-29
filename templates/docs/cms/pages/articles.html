@@ -1,0 +1,26 @@
+{% extends 'dashboard/cms/base.html' %}{% load auth_extras %}
+{% block title %}Articles | Eventic{% endblock %}
+
+{% block content %}
+<div class="content-block">
+    <div class="main-header" id="MH01">
+        <div class="header-top">
+            <div class="header-title">
+                <h1>Articles</h1>
+            </div>
+        </div>
+        <div class="header-bottom">
+            <ul>
+                <li><a href="{% url 'docs:Media' %}"><i class="bi bi-images me-1"></i>Media</a></li>
+                <li><a href="{% url 'docs:Dashboard' %}"><i class="bi bi-file-earmark-text me-1"></i>Docs</a></li>
+                {% if IN_DEVELOPMENT and HIDDEN %}
+                <li><a href="{% url 'docs:Dashboard' %}"><i class="bi bi-file-text me-1"></i>Blogs</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+    <div class="main-body">
+        {% include 'vendor/comps/messages.html' %}
+    </div>
+</div>
+{% endblock %}

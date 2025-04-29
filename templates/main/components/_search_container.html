@@ -1,0 +1,37 @@
+{% load static %}
+<section id="searchContainer">
+    <div id="searchBox">
+        <h1><span class="search-span">Search for</span><span class="typing-span">Vendor's</span></h1>
+        <form action="{% url 'search:Vendor_Search' %}" method="GET" id="searchForm">
+            <div class="search-box-form">
+                <div class="form-group search-input"> 
+                    <div class="search-logo-icon">
+                        <img src="{% static 'assets/logos/eventic-golden-favicon.png' %}" alt="Eventic Gold Icon Logo">
+                    </div>
+                    <input type="text" class="form-control shadow-none fs-5" name="q" id="query" placeholder="Search by type, location, etc." value="{% if request.GET.q %}{{ request.GET.q }}{% endif %}" autocomplete="off">
+                    <button type="submit"><i class="bi bi-search"></i></button>
+                </div>
+                <div class="filter-box">
+                    <div class="search-filter-box">
+                        <label for="searchService" class="form-label"><i class="bi bi-briefcase-fill"></i></label>
+                        <div id="searchServicebox">
+                            <select name="service" class="form-select" id="searchService" onchange="searchFilter()">
+                                <option value="vendor" {% if request.GET.service == 'vendor' %}selected{% endif %}>Vendor</option>
+                                <option value="photographer" {% if request.GET.service == 'photographer' %}selected{% endif %}>Photographer</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="search-filter-box">
+                        <label for="searchCategory" class="form-label"><i class="bi bi-stars"></i></label>
+                        <div id="searchCategorybox">
+                            <select name="category" class="form-select" id="searchCategory">
+                                <option selected disabled>--</option>
+                                <option value="photographer">Photograper</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>

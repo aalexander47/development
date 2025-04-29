@@ -1,0 +1,95 @@
+{% extends 'dashboard/cms/base.html' %}
+{% load static %}
+{% block title %}{{ template.id|default:"Add" }} Template | Eventic{% endblock %}
+{% block content %}
+<div class="content-block">
+    <div class="main-header" id="MH01">
+        <div class="header-top">
+            <div class="header-title">
+                <a href="{% url 'dashboard:Templates' %}" class="back-btn"><i class="bi bi-arrow-left"></i></a>
+                <h1>{% if cp == 'create' %}Create{% else %}Update{% endif %} Template</h1>
+            </div>
+        </div>
+    </div>
+    <div class="main-body">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="templateID" class="form-label">Template ID</label>
+                <input type="text" class="form-control" id="templateID" name="template_id" value="{{ template.id }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="templateName" class="form-label">Template Name</label>
+                <input type="text" class="form-control" id="templateName" name="name" value="{{ template.name|default:'' }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="templateDescription" class="form-label">Description</label>
+                <textarea class="form-control text-editor" id="templateDescription" name="description" rows="5" required>{{ template.description|default:'' }}</textarea>
+            </div>
+            <script src="https://cdn.ckeditor.com/4.25.1-lts/standard/ckeditor.js"></script>
+            <script>
+                CKEDITOR.replace('templateDescription');
+            </script>
+            <div class="mb-3">
+                <label for="templateThumbnail" class="form-label">Thumbnail</label>
+                <input type="file" class="form-control" id="templateThumbnail" name="thumbnail" accept="image/*">
+                {% if template and template.thumbnail %}
+                <img src="{{ template.thumbnail }}" alt="Thumbnail" class="img-thumbnail mt-2" style="max-width: 200px;">
+                {% endif %}
+            </div>
+            <div class="mb-3">
+                <label for="templateType" class="form-label">Type</label>
+                <select class="form-select" id="templateType" name="invitation_type" required onchange="updateTags()">
+                    {% for type, label in TYPES %}
+                    <option value="{{ type }}" {% if template and template.invitation_type == type %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Tags</label>
+                <div id="tagsContainer">
+                    <!-- Checkboxes for tags will be dynamically rendered here -->
+                </div>
+            </div>
+            <script>
+                let invitationTags = "{{ invitation_tags|safe }}"; // Pass the tags from data.py
+                invitationTags = JSON.parse(invitationTags); // Parse the JSON string into an object
+                const selectedTags = "{{ template.tag|default:'' }}".split(','); // Pre-select tags if editing
+
+                function updateTags() {
+                    const category = document.getElementById('templateType').value;
+                    const tagsContainer = document.getElementById('tagsContainer');
+                    tagsContainer.innerHTML = ''; // Clear existing checkboxes
+
+                    if (invitationTags[category]) {
+                        invitationTags[category].forEach(tag => {
+                            const checkbox = document.createElement('div');
+                            checkbox.className = 'form-check';
+                            checkbox.innerHTML = `
+                                <input class="form-check-input" type="checkbox" name="tags" value="${tag}" id="tag-${tag}" ${selectedTags.includes(tag) ? 'checked' : ''}>
+                                <label class="form-check-label" for="tag-${tag}">${tag}</label>
+                            `;
+                            tagsContainer.appendChild(checkbox);
+                        });
+                    }
+                }
+
+                document.addEventListener('DOMContentLoaded', updateTags); // Initialize tags on page load
+            </script>
+            <div class="mb-3">
+                <label for="templatePrice" class="form-label">Price</label>
+                <input type="number" class="form-control" id="templatePrice" name="price" value="{{ template.price|default:0 }}" min="0" required>
+            </div>
+            <div class="mb-3">
+                <label for="templateFreeDays" class="form-label">Free Days</label>
+                <input type="number" class="form-control" id="templateFreeDays" name="free_days" value="{{ template.free_days|default:0 }}" min="0" required>
+            </div>
+            <div class="mb-3">
+                <label for="templatePath" class="form-label">Path</label>
+                <input type="text" class="form-control" id="templatePath" name="path" value="{{ template.path|default:'' }}" required>
+            </div>
+            <button type="submit" class="btn btn-primary" name="{% if cp == 'create' %}create{% else %}update{% endif %}">{% if cp == 'create' %}Create{% else %}Update{% endif %} Template</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

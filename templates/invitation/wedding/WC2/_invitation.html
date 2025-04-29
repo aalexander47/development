@@ -1,0 +1,29 @@
+{% load static %}
+<div id="mainCanvas">
+    <img src="{% static 'assets/invitation/wedding/wc-2.png' %}" class="invitation-header-image" alt="">
+    <div class="content">
+        <h3 class="invitation-header" animate>SAVE THE DATE</h3>
+        <div class="names">
+            {% if invitation.details.groom %}
+            <h2 class="name" animate>{{ invitation.details.groom }}</h2>
+            {% else %}
+            <h2 class="name editor-data" data-type="text" data-key="groom" data-label="Your Name" id="groom_text" animate>Groom</h2>
+            {% endif %}
+            <h3 class="and" animate>&</h3>
+            {% if invitation.details.bride %}
+            <h2 class="name" animate>{{ invitation.details.bride }}</h2>
+            {% else %}
+            <h2 class="name editor-data" data-type="text" data-key="bride" data-label="Partner's Name" id="bride_text" animate>Bride</h2>
+            {% endif %}
+        </div>
+        <div class="date-container">
+            <h6 class="day" animate>SUNDAY</h6>
+            <div class="date-box">
+                <p class="month" animate>OCTOBER</p>
+                <h6 class="date" animate>27</h6>
+                <p class="year" animate>2024</p>
+            </div>
+        </div>
+        <p class="follow">FORMAL INVITE TO FOLLOW</p>
+    </div>
+</div>

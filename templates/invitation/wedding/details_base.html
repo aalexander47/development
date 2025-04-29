@@ -1,0 +1,304 @@
+{% load static auth_extras %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Wedding Invitation{% endblock %}</title>
+    {% block head %}{% endblock %}
+    <link rel="shortcut icon" href="{% static 'assets/logos/eventic-golden-favicon.png' %}" type="image/x-icon">
+    <!-- Add bootstrap CSS and JS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap 5 JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <meta name="robots" content="noindex">
+    {% if request.user == invitation.user %}
+    <!-- QR Code -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    {% endif %}
+    {% include 'main/utils/_google-analytics.html' %}
+</head>
+
+<body>
+    {% if "preview" in request.path %}
+    <div class="top-action-btns">
+        <a href="{% url 'invitation:template_information' id=invitation.id %}" class="btn-back"><i class="bi bi-arrow-left"></i>Back</a>
+        <div class="responsive-tabs">
+            <div class="view-toggle">
+                <label>
+                    <input type="radio" name="view" value="desktop" checked>
+                    <i class="bi bi-laptop-fill"></i>
+                </label>
+                <label>
+                    <input type="radio" name="view" value="tablet">
+                    <i class="bi bi-tablet"></i>
+                </label>
+                <label>
+                    <input type="radio" name="view" value="mobile">
+                    <i class="bi bi-phone"></i>
+                </label>
+            </div>
+        </div>
+        <a href="{% url 'invitation:create_invitation' id=invitation.id %}" class="btn-edit"><i class="bi bi-pencil"></i>Customize</a>
+    </div>
+    {% elif request.user == invitation.user %}
+    <div class="top-action-btns">
+        <a href="{% url 'invitation:cms_dashboard' id=invitation.id %}" class="btn-back"><i class="bi bi-arrow-left"></i>Dashboard</a>
+        <a href="{% url 'invitation:update_invitation' id=invitation.id %}" class="btn-edit"><i class="bi bi-pencil"></i>Edit</a>
+    </div>
+    {% endif %}
+    <main>
+        {% if "preview" in request.path %}
+        <input type="hidden" id="templateID" value="{{ invitation.id }}">
+        {% endif %}
+        <div id="mainContainer">
+            {% block invitation_card %}{% endblock %}
+        </div>
+    </main>
+    <div class="action-btns">
+        <button type="button" class="btn btn-light shadow border-secondary rounded-5 px-3 py-2" data-bs-toggle="modal" data-bs-target="#rsvpModal"><i class="bi bi-send me-2"></i>RSVP</button>
+        {% if request.user == invitation.user %}
+        <button type="button" class="btn btn-primary shadow-none rounded-5 px-3 py-2" data-bs-toggle="modal" data-bs-target="#downloadModal"><i class="bi bi-download me-1"></i>Download</button>
+        {% endif %}
+    </div>
+    {% if request.user == invitation.user %}
+    <div id="downloadCards">
+        <div class="invitation-card" id="download_invitationCard">
+            {% block download_card %}{% endblock %}
+        </div>
+        <div class="invitation-card card-qrcode" id="download_cardQrCode">
+            {% block download_qr_code %}{% endblock %}
+        </div>
+    </div>
+
+    <!-- Modal for invitation download -->
+    <div class="modal fade" id="downloadModal" tabindex="-1" aria-labelledby="downloadModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable modal-dialog-centered">
+            <div class="modal-content rounded-5 p-md-3 p-2">
+                <div class="modal-header border-0">
+                    <h1 class="modal-title fs-5" id="downloadModalLabel">Download Invitation</h1>
+                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="invitation-card-previews rounded-4">
+                        <div id="carouselExampleIndicators" class="carousel carousel-dark slide" data-bs-ride="false">
+                            <div class="carousel-indicators">
+                              <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Card"></button>
+                              <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="QR Code"></button>
+                            </div>
+                            <div class="carousel-inner">
+                              <div class="carousel-item active">
+                                <div class="card-type">
+                                    <div class="invitation-card" id="invitationCard">
+                                        {% block card %}{% endblock %}
+                                    </div>
+                                </div>
+                              </div>
+                              <div class="carousel-item">
+                                  <div class="card-type" id="QrCode">
+                                    <div class="invitation-card card-qrcode" id="cardQrCode">
+                                        {% block qr_code %}{% endblock %}
+                                    </div>
+                                  </div>
+                              </div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                              <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                              <span class="visually-hidden">Next</span>
+                            </button>
+                          </div>
+                    </div>
+                    <div class="invitation-card-details">
+                        <div class="download-btns mb-3">
+                            <button type="button" class="btn btn-primary download-btn shadow-none rounded-2 px-3 py-2 w-100 mb-2"  data-target="download_invitationCard"><i class="bi bi-download me-1"></i>Download Invitation</button>
+                            <button type="button" class="btn btn-primary download-btn shadow-none rounded-2 px-3 py-2 w-100 mb-2"  data-target="download_cardQrCode"><i class="bi bi-qr-code me-1"></i>Download QR Code</button>
+                        </div>
+                        <div class="share-btns row align-items-center">
+                            <div class="col-6 pe-1">
+                                <button type="button" class="btn btn-outline-light text-dark shadow-sm rounded-2 px-3 w-100 py-2" onclick="shareDivAsImage('invitationCard')"><i class="bi bi-share-fill me-2"></i>Invitation</button>
+                            </div>
+                            <div class="col-6 ps-1">
+                                <button type="button" class="btn btn-outline-light text-dark shadow-sm rounded-2 px-3 py-2 w-100" onclick="shareDivAsImage('cardQrCode')"><i class="bi bi-qr-code me-2"></i>QR Code</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Modal for RSVP -->
+    <div class="modal fade" id="rsvpModal" tabindex="-1" aria-labelledby="rsvpModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-5 p-md-3 p-2">
+                <div class="modal-header border-0">
+                    <h1 class="modal-title fs-5" id="rsvpModalLabel">RSVP</h1>
+                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body pt-0">
+                    <img src="https://i.pinimg.com/736x/75/7f/f6/757ff6b25470bfa8170c03621c7c49af.jpg" class="img-fluid mx-auto mb-2 rounded-2" alt="">
+                    <div class="row">
+                        <div class="col-6 pe-1">
+                            <button type="button" class="btn btn-light text-dark shadow-none w-100 p-4 rounded-2" id="teamGroomRSVPbtn">
+                                <small class="text-secondary">Team</small><br>
+                                <h6 class="mb-0">{% if invitation.details.groom %}{{ invitation.details.groom }}{% else %}Groom{% endif %}</h6>
+                            </button>
+                        </div>
+                        <div class="col-6 ps-1">
+                            <button type="button" class="btn btn-light text-dark shadow-none w-100 p-4 rounded-2" id="teamBrideRSVPbtn">
+                                <small class="text-secondary">Team</small><br>
+                                <h6 class="mb-0">{% if invitation.details.bride %}{{ invitation.details.bride }}{% else %}Bride{% endif %}</h6>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="teamGroomModal" aria-labelledby="teamGroomLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="teamGroomLabel">Team {% if invitation.details.groom %}{{ invitation.details.groom }}{% else %}Groom{% endif %}</h5>
+          <button type="button" class="btn-close text-reset shadow-none" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="RSVP-box">
+                <div class="header-image">
+                    <img src="https://i.pinimg.com/736x/0a/42/49/0a42498ecf1ddbc4468fcd98ad521665.jpg" alt="">
+                </div>
+                <form method="post" id="groomRSVPForm">
+                    {% csrf_token %}
+                    <input type="hidden" name="team" value="Groom">
+                    <input type="hidden" name="invitation_id" value="{{ invitation.id }}">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control shadow-none" id="name" name="name" placeholder="Name" required>
+                        <label for="name"><i class="bi bi-person me-1"></i> Name</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control shadow-none" id="email" name="email" placeholder="Email" required>
+                        <label for="email"><i class="bi bi-envelope me-1"></i> Email</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control shadow-none" id="phone" name="phone" placeholder="Phone" required>
+                        <label for="phone"><i class="bi bi-telephone me-1"></i> Phone</label>
+                    </div>
+                    <p class="mb-1">Are you attending?</p>
+                    <div class="row mb-3">
+                        <div class="col-auto">
+                            <div class="form-group">
+                                <input type="radio" class="form-check-input shadow-none" id="yesAttendingGroom" name="attending" value="yes" required>
+                                <label for="yesAttendingGroom" class="form-check-label">Yes</label>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="form-group">
+                                <input type="radio" class="form-check-input shadow-none" id="notAttendingGroom" name="attending" value="no" required>
+                                <label for="notAttendingGroom" class="form-check-label">No</label>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="form-group">
+                                <input type="radio" class="form-check-input shadow-none" id="maybeAttendingGroom" name="attending" value="maybe" required>
+                                <label for="maybeAttendingGroom" class="form-check-label">Maybe</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <textarea name="message" class="form-control shadow-none" id="message" placeholder="Message"></textarea>
+                        <label for="message"><i class="bi bi-chat-heart me-1"></i> Message</label>
+                    </div>
+                    <div class="row justify-content-end mb-3">
+                        <div class="col-auto">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary shadow-none rounded-5 px-3 py-2" id="groomRSVPBtn" name="groomRSVP"><i class="bi bi-send-fill me-2"></i>RSVP</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="teamBrideModal" aria-labelledby="teamBrideLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="teamBrideLabel">Team {% if invitation.details.bride %}{{ invitation.details.bride }}{% else %}Bride{% endif %}</h5>
+          <button type="button" class="btn-close text-reset shadow-none" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="RSVP-box">
+                <div class="header-image">
+                    <img src="https://i.pinimg.com/736x/67/43/6a/67436a689a334616fe2050d9e8f40399.jpg" alt="">
+                </div>
+                <form method="post" id="brideRSVPForm">
+                    {% csrf_token %}
+                    <input type="hidden" name="team" value="Bride">
+                    <input type="hidden" name="invitation_id" value="{{ invitation.id }}">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control shadow-none" id="name" name="name" placeholder="Name" required>
+                        <label for="name"><i class="bi bi-person me-1"></i> Name</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control shadow-none" id="email" name="email" placeholder="Email" required>
+                        <label for="email"><i class="bi bi-envelope me-1"></i> Email</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control shadow-none" id="phone" name="phone" placeholder="Phone" required>
+                        <label for="phone"><i class="bi bi-telephone me-1"></i> Phone</label>
+                    </div>
+                    <p class="mb-1">Are you attending?</p>
+                    <div class="row mb-3">
+                        <div class="col-auto">
+                            <div class="form-group">
+                                <input type="radio" class="form-check-input shadow-none" id="yesAttendingBride" name="attending" value="yes" required>
+                                <label for="yesAttendingBride" class="form-check-label">Yes</label>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="form-group">
+                                <input type="radio" class="form-check-input shadow-none" id="notAttendingBride" name="attending" value="no" required>
+                                <label for="notAttendingBride" class="form-check-label">No</label>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="form-group">
+                                <input type="radio" class="form-check-input shadow-none" id="maybeAttendingBride" name="attending" value="maybe" required>
+                                <label for="maybeAttendingBride" class="form-check-label">Maybe</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <textarea name="message" class="form-control shadow-none" id="message" placeholder="Message"></textarea>
+                        <label for="message"><i class="bi bi-chat-heart me-1"></i> Message</label>
+                    </div>
+                    <div class="row justify-content-start mb-3">
+                        <div class="col-auto">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary shadow-none rounded-5 px-3 py-2" id="brideRSVPBtn" name="brideRSVP"><i class="bi bi-send-fill me-2"></i>RSVP</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- GSAP and Split Type -->
+    <script src="https://unpkg.com/split-type"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+
+    <script src="{% static 'scripts/invitation/wedding/details.js' %}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>

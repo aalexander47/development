@@ -1,0 +1,15 @@
+{% load static %}
+<img src="{% static 'assets/invitation/wedding/WC1/green-leafs-frame-bg.png' %}" alt="" class="header-bg">
+<img class="brand-logo" src="{% static 'assets/logos/eventic-golden-favicon.png' %}" alt="Brand Logo">
+<h4>You're Invited</h4>
+<p class="invite-text">Join us in celebrating the beautiful union of</p>
+<div class="names">{% if invitation.details.groom %}{{ invitation.details.groom }}{% else %}Groom{% endif %} <span class="and">&</span> {% if invitation.details.bride %}{{ invitation.details.bride }}{% else %}Bride{% endif %}</div>
+
+<!-- QR Code Container -->
+<div class="qr-container">
+    <div class="qrcode-box"></div> 
+    <img class="qr-logo" src="{% static 'assets/logos/qrcode-logo-light.png' %}" alt="Brand Logo">
+</div>
+<p class="footer">Scan the QR code to get dates, venue and RSVP</p>
+<p class="footer-cc">Powered by <span>Eventic</span></p>
+<img class="footer-bg" src="{% static 'assets/invitation/wedding/WC1/winter-leaf-fall-bg.png' %}" alt="">

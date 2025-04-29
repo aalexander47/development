@@ -1,0 +1,43 @@
+{% load static %}
+<header id="cmsHeader">
+    <div id="headerContainer">
+        <div id="offcanvasNavbarBox">
+            <button class="btn btn-nav-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+                <img src="{% if user.profile_picture %}{{ user.profile_picture.url }}{% else %}{% static 'assets/defaults/profile.png' %}{% endif %}" alt="User Profile Picture at Evntic">
+            </button>
+            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+                <div class="offcanvas-header">
+                    <a href="{% if user.is_vendor %}{% url 'vendor:Dashboard' %}{% elif user.is_authenticated %}{% url 'dashboard:Dashboard' %}{% else %}{% url 'user:Profile' %}{% endif %}" class="logo">
+                        <div class="logo-box">
+                            <img class="icon-logo" src="{% static 'assets/logos/eventic-golden-favicon.png' %}" alt="Eventic Gold Icon Logo">
+                        </div>
+                    </a>
+                  <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <div class="nav-box">
+                        {% include 'cms/components/_nav_items.html' %}
+                    </div>
+                </div>
+                <div class="offcanvas-footer">
+                    {% include 'cms/components/_nav_footer_profile_btn.html' %}
+                </div>
+            </div>
+        </div>
+        <a href="{% if user.is_vendor %}{% url 'vendor:Dashboard' %}{% elif user.is_staff %}{% url 'dashboard:Dashboard' %}{% else %}{% url 'user:Profile' %}{% endif %}" class="logo">
+            <div class="logo-box">
+                <img class="icon-logo" src="{% static 'assets/logos/eventic-golden-favicon.png' %}" alt="Eventic Gold Icon Logo">
+            </div>
+        </a>
+        <ul id="headerNav">
+            {% if cp != 'notifications' %}
+            <li class="nav-btn-box">
+                <a href="{% if user.is_vendor %}{% url 'vendor:Notifications' %}{% elif user.is_staff %}{% url 'dashboard:Notifications' %}{% else %}{% url 'user:Notifications' %}{% endif %}" class="nav-btn-notifications">
+                    <i class="bi bi-bell" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Notifications"></i>
+                    <span id="notificationBadge" class="d-none"></span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+</header>

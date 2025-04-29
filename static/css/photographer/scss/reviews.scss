@@ -1,0 +1,64 @@
+@import '../../core/scss/_theme.scss';
+@import '_main.scss';
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700');
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: $google-sans;
+}
+
+body {
+    main {
+        .main-body {
+            #reviews {
+                display: flex;
+                flex-direction: column;
+                row-gap: 16px;
+                margin-top: 24px;
+                a {
+                    text-decoration: none;
+                    color: #000;
+                }
+                .review-card {
+                    padding: 16px;
+                    border-radius: 16px;
+                    background: #f7f7f7;
+                    display: grid;
+                    grid-template-columns: 40px 1fr;
+                    column-gap: 12px;
+                    align-items: start;
+                    transition: all 0.25s ease-in-out;
+                    .profile-img {
+                        height: 40px;
+                        width: 80px;
+                        img {
+                            border-radius: 50%;
+                            height: 40px;
+                            width: 40px;
+                            aspect-ratio: 1 / 1;
+                            object-fit: cover;
+                        }
+                    }
+                    .review-body {
+                        h6 {
+                            font-size: 16px;
+                            font-weight: 600;
+                            margin-bottom: 0;
+                            color: #4b4c52;
+                        }
+                        p {
+                            font-size: 16px;
+                            color: #4f4f4f;
+                            font-weight: 400;
+                            margin-bottom: 0;
+                        }
+                    }
+                }
+                .review-card:hover {
+                    background: #fff;
+                }
+            }
+        }
+    }
+}

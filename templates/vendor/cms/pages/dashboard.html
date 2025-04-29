@@ -1,0 +1,164 @@
+{% extends 'vendor/cms/base.html' %}
+{% block title %}Dashboard - Eventic{% endblock %}
+
+{% block content %}
+<div class="content-block">
+    <div class="main-header" id="MH01">
+        <div class="header-top">
+            <h1>Dashboard</h1>
+            <h6 class="mb-0 account-id"  data-bs-toggle="tooltip" data-bs-placement="bottom" title="Account ID" role="button">{{ vendor.account_id }}</h6>
+        </div>
+    </div>
+    <div class="main-body">
+        {% include 'vendor/comps/messages.html' %}
+        <div id="dashboardDataBlock">
+            <div class="welcome-text">
+                <h4>Hi,</h4>
+                <h1>{% if user.first_name or user.last_name %}{{ user.first_name }} {{ user.last_name }}{% else %}{{ user.username }}{% endif %}</h1>
+            </div>
+            {% if not vendor.is_active %}
+            <div class="vendor-inactive-alert">
+                <h4><i class="bi bi-exclamation-triangle-fill"></i>&nbsp;Your account is inactive</h4>
+                <p>By updating your profile, you can activate your account.</p>
+                <a href="{% url 'vendor:Details' %}" class="btn" role="button">Update Profile</a>
+            </div>
+            {% endif %}
+            {% if vendor.is_suspended %}
+            <div class="vendor-inactive-alert">
+                <h4><i class="bi bi-exclamation-triangle-fill"></i>&nbsp;Your account is suspended</h4>
+                <p>By settling your outstanding payments, you can activate your account.</p>
+                <a href="{% url 'vendor:Billing' %}" class="btn" role="button">Pay Now</a>
+            </div>
+            {% endif %}
+            <div class="leads-card">
+                <i class="bi bi-phone"></i>
+                <h5>Leads</h5> 
+                <p>{% if vendor.leads_count %}{{ vendor.leads_count }}{% else %}0{% endif %}</p>
+            </div>
+            <div class="likes-card">
+                <i class="bi bi-heart"></i>
+                <h5>Likes</h5>
+                <p>{% if vendor.likes_count %}{{ vendor.likes_count }}{% else %}0{% endif %}</p>
+            </div>
+            <div class="saves-card">
+                <i class="bi bi-bookmark"></i>
+                <h5>Saves</h5>
+                <p>{% if vendor.saves_count %}{{ vendor.saves_count }}{% else %}0{% endif %}</p>
+            </div>
+            <div class="credits-card">
+                <i class="bi bi-wallet2"></i>
+                <h5>Credits</h5>
+                <p>{% if vendor.credits %}{{ vendor.credits }}{% else %}0{% endif %}</p>
+            </div>
+            {% if not vendor.is_suspended %}
+            {% if vendor.services_count > 0 %}
+            <div class="services-card no-data-card">
+                <h3>(◕ᗜ◕)</h3>
+                <p>{{ vendor.services_count }} Services</p>
+                <button class="btn" data-bs-toggle="modal" data-bs-target="#{% if vendor.is_active %}addServiceModal{% else %}updateProfileModal{% endif %}">Add More Service</button>
+            </div>
+            {% else %}
+            <div class="services-card no-data-card">
+                <h3>◕︵◕</h3>
+                <p>No services added yet.</p>
+                <button class="btn" data-bs-toggle="modal" data-bs-target="#{% if vendor.is_active %}addServiceModal{% else %}updateProfileModal{% endif %}">Add Service</button>
+            </div>
+            {% endif %}
+            {% if vendor.team_count > 0 %}
+            <div class="team-card no-data-card">
+                <h3>(⌐▨_▨)</h3>
+                <p>{{ vendor.team_count }} Team Members</p>
+                <button class="btn" data-bs-toggle="modal" data-bs-target="#{% if vendor.is_active %}addTeamMemberModal{% else %}updateProfileModal{% endif %}">Add Team Member</button>
+            </div>
+            {% else %}
+            <div class="team-card no-data-card">
+                <h3>(｡•́︿•̀｡)</h3>
+                <p>No team member added yet.</p>
+                <button class="btn" data-bs-toggle="modal" data-bs-target="#{% if vendor.is_active %}addTeamMemberModal{% else %}updateProfileModal{% endif %}">Add Member</button>
+            </div>
+            {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Update Profile Pop Up Modal -->
+<div class="modal fade" id="updateProfileModal" tabindex="-1" aria-labelledby="updateProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content rounded-4">
+            <div class="modal-header border-0">
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center pt-3 pb-5">
+                <h4><i class="bi bi-exclamation-triangle-fill text-danger"></i>&nbsp;Your account is not active.</h4>
+                <p>By updating your profile, you can activate your account. And you can get access to all the features.</p>
+                <a href="{% url 'vendor:Details' %}" class="btn btn-primary py-2 px-3 rounded-5" role="button">Update Profile</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if vendor.is_active %}
+<!-- Add Service Modal -->
+<div class="modal fade" id="addServiceModal" tabindex="-1" aria-labelledby="addServiceModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content rounded-5 p-3">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="addServiceModalLabel"><i class="bi bi-plus-square-fill"></i>&nbsp; Choose Service To Create</h5>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex flex-column row-gap-2">
+                    <a class="btn p-3 btn-light btn-outline-dark shadow w-100 rounded-3" href="{% url 'photographer:CreateService' %}">
+                        <h5 class="card-title"><span><i class="bi bi-camera"></i></span>&ensp;Photographer</h5>
+                    </a>
+                    {% if IN_DEVELOPMENT %}
+                    <a class="btn p-3 btn-light btn-outline-dark shadow w-100 rounded-3" href="{% url 'videographer:CreateService' %}">
+                        <h5 class="card-title"><span><i class="bi bi-film"></i></span>&ensp;Videographer</h5>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Team Member Modal -->
+<div class="modal fade" id="addTeamMemberModal" tabindex="-1" aria-labelledby="addTeamMemberModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-5 p-2">
+        <div class="modal-header border-0">
+          <h5 class="modal-title" id="addTeamMemberModalLabel">Add Team Member</h5>
+          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="post" action="{% url 'vendor:Team' %}">
+            {% csrf_token %}
+            <div class="modal-body pt-0">
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control shadow-none" name="name" id="name" placeholder="Name" required>
+                    <label for="name"><i class="bi bi-person"></i>&nbsp; Name</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control shadow-none" name="role" id="role" placeholder="Role" required>
+                    <label for="role"><i class="bi bi-briefcase"></i>&nbsp; Work Role</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="number" class="form-control shadow-none" name="phone" id="phone" min="1000000000" max="9999999999" placeholder="Phone" required oninvalid="this.setCustomValidity('Add a valid phone number')" oninput="this.setCustomValidity('')" />
+                    <label for="phone"><i class="bi bi-telephone"></i>&nbsp; Phone</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="number" class="form-control shadow-none" name="whatsapp" id="whatsapp" min="1000000000" max="9999999999" placeholder="WhatsApp" required oninvalid="this.setCustomValidity('Add a valid WhatsApp number')" oninput="this.setCustomValidity('')" />
+                    <label for="whatsapp"><i class="bi bi-whatsapp"></i>&nbsp; WhatsApp</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="email" class="form-control shadow-none" name="email" id="email" placeholder="Email" required>
+                    <label for="email"><i class="bi bi-envelope"></i>&nbsp; Email</label>
+                </div>
+                <button type="submit" class="btn btn-primary shadow-none" name="add_team_member">Add Member</button>
+            </div>
+        </form>
+      </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

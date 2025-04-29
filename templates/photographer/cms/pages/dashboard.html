@@ -1,0 +1,25 @@
+{% extends 'photographer/cms/base.html' %}
+{% block title %}Photographer Service Dashboard | Eventic{% endblock %}
+
+{% block content %}
+<div class="content-block">
+    <div class="main-header" id="MH01">
+        <div class="header-top">
+            <div class="header-title">
+                <a href="{% url 'vendor:Services' %}" class="back-btn"><i class="bi bi-arrow-left"></i></a>
+                <h1>Photographer Service</h1>
+            </div>
+        </div>
+        <div class="header-bottom">
+            <ul>
+                <li><a href="{% url 'photographer:Reviews' %}">Reviews</a></li>
+                <li><a href="{% url 'photographer:Gallery' %}">Gallery</a></li>
+                <li><a href="{% url 'photographer:CreateService' %}">Create</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main-body">
+        <h1>Dashboard</h1>
+    </div>
+</div>
+{% endblock %}

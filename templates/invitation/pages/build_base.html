@@ -1,0 +1,621 @@
+{% load static auth_extras %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="shortcut icon" href="{% static 'assets/logos/eventic-golden-favicon.png' %}" type="image/x-icon">
+    {% block head %}{% endblock %}
+    <!-- Add bootstrap CSS and JS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+
+<body class="custom-scrollbar">
+    <header>
+        <div id="headerContainer">
+            <nav class="navbar">
+                <div class="logo">
+                    <img src="{% static 'assets/logos/eventic-golden-favicon.png' %}" alt="Eventic Logo">
+                </div>
+                <!-- Radio Buttons for View Selection -->
+                <div class="view-toggle">
+                    <label>
+                        <input type="radio" name="view" value="desktop" checked>
+                        <i class="bi bi-laptop-fill"></i>
+                    </label>
+                    <label>
+                        <input type="radio" name="view" value="tablet">
+                        <i class="bi bi-tablet"></i>
+                    </label>
+                    <label>
+                        <input type="radio" name="view" value="mobile">
+                        <i class="bi bi-phone"></i>
+                    </label>
+                </div>
+                <ul class="pages">
+                    <li class="page"><a href="{% url 'invitation:home' %}">Templates</a></li>
+                </ul>
+                <button type="button" class="nextBtn" data-bs-toggle="modal"
+                    data-bs-target="#finalConfirmationModal">Publish<i class="bi bi-arrow-right"></i></button>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <input type="hidden" id="invitationID" value="{{ invitation.id }}">
+        <input type="hidden" id="templateID" value="{{ template.id }}">
+        <div id="mainContainer">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <!-- Modal for text editor -->
+    <div class="modal fade" id="textEditorModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-5 p-md-3 p-2">
+                <div class="modal-header border-0">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel"></h1>
+                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-0">
+                    <div class="form-group">
+                        <input type="text" class="form-control shadow-none border border-secondary" id="textInput"
+                            name="textInput" placeholder="Enter text here">
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-primary text-white shadow-none px-3 py-2 rounded-5"
+                        data-bs-dismiss="modal" data-id="" id="saveTextBtn">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for date and time editor -->
+    <div class="modal fade" id="dateTimeEditorModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-5 p-md-3 p-2">
+                <div class="modal-header border-0">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel"></h1>
+                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-0">
+                    <div class="row mb-3">
+                        <div class="col-6 pe-1">
+                            <div class="form-group">
+                                <label for="dateInput">Date</label>
+                                <input type="date" class="form-control shadow-none border border-secondary"
+                                    id="dateInput" name="dateInput" placeholder="Enter date here">
+                            </div>
+                        </div>
+                        <div class="col-6 ps-1">
+                            <div class="form-group">
+                                <label for="timeInput">Time</label>
+                                <input type="time" class="form-control shadow-none border border-secondary"
+                                    id="timeInput" name="timeInput" placeholder="Enter time here">
+                            </div>
+                        </div>
+                    </div>
+                    <select class="form-select form-select-sm mb-1 shadow-none border border-secondary"
+                        aria-label="Time Zone Selection" id="timeZoneInput" name="timeZoneInput" required>
+                        <option value="" selected disabled>Select Time Zone</option>
+                        <option value="-12">(GMT-12:00) International Date Line West</option>
+                        <option value="-11">(GMT-11:00) Midway Island, Samoa</option>
+                        <option value="-10">(GMT-10:00) Hawaii</option>
+                        <option value="-9">(GMT-09:00) Alaska</option>
+                        <option value="-8">(GMT-08:00) Pacific Time (US & Canada)</option>
+                        <option value="-7">(GMT-07:00) Mountain Time (US & Canada)</option>
+                        <option value="-6">(GMT-06:00) Central Time (US & Canada), Mexico City</option>
+                        <option value="-5">(GMT-05:00) Eastern Time (US & Canada), Bogota, Lima</option>
+                        <option value="-4">(GMT-04:00) Atlantic Time (Canada), Caracas, La Paz</option>
+                        <option value="-3.5">(GMT-03:30) Newfoundland</option>
+                        <option value="-3">(GMT-03:00) Brazil, Buenos Aires, Greenland</option>
+                        <option value="-2">(GMT-02:00) Mid-Atlantic</option>
+                        <option value="-1">(GMT-01:00) Azores, Cape Verde Islands</option>
+                        <option value="0">(GMT+00:00) London, Lisbon, Casablanca, Dublin</option>
+                        <option value="1">(GMT+01:00) Amsterdam, Berlin, Rome, Paris, Madrid</option>
+                        <option value="2">(GMT+02:00) Athens, Istanbul, Cairo, Jerusalem</option>
+                        <option value="3">(GMT+03:00) Moscow, St. Petersburg, Baghdad, Riyadh</option>
+                        <option value="3.5">(GMT+03:30) Tehran</option>
+                        <option value="4">(GMT+04:00) Abu Dhabi, Dubai, Baku, Yerevan</option>
+                        <option value="4.5">(GMT+04:30) Kabul</option>
+                        <option value="5">(GMT+05:00) Islamabad, Karachi, Tashkent</option>
+                        <option value="5.5">(GMT+05:30) Mumbai, Kolkata, Chennai, New Delhi</option>
+                        <option value="5.75">(GMT+05:45) Kathmandu</option>
+                        <option value="6">(GMT+06:00) Astana, Dhaka, Almaty</option>
+                        <option value="6.5">(GMT+06:30) Yangon (Rangoon)</option>
+                        <option value="7">(GMT+07:00) Bangkok, Hanoi, Jakarta</option>
+                        <option value="8">(GMT+08:00) Beijing, Singapore, Kuala Lumpur, Perth</option>
+                        <option value="9">(GMT+09:00) Tokyo, Seoul, Osaka, Sapporo</option>
+                        <option value="9.5">(GMT+09:30) Adelaide, Darwin</option>
+                        <option value="10">(GMT+10:00) Sydney, Melbourne, Guam, Port Moresby</option>
+                        <option value="11">(GMT+11:00) Solomon Islands, New Caledonia</option>
+                        <option value="12">(GMT+12:00) Auckland, Wellington, Fiji, Marshall Islands</option>
+                    </select>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-primary text-white shadow-none px-3 py-2 rounded-5"
+                        data-bs-dismiss="modal" id="saveDateTimeBtn">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for final confirmation -->
+    <div class="modal fade" id="finalConfirmationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <button type="button" class="close-btn" data-bs-dismiss="modal"><i class="bi bi-x-lg"></i></button>
+                <div class="progress-track">
+                    <div class="edit-progress-bar" id="progressBar" style="width: 0%"></div>
+                </div>
+                <div class="modal-body">
+                    <div class="progress-container">
+                        <div class="tab-content active" data-step="1">
+                            <div class="tab-box">
+                                <div class="modal-body-header">
+                                    <button type="button" class="btn back-btn text-dark border-light fs-5 btn-light rounded-5 px-3 py-1">&#129104;</button>
+                                    <h4 class="mb-0">RSVP & Games</h4>
+                                </div>
+
+                                <div class="modal-body-main custom-scrollbar">
+                                    <div class="containter">
+                                        <div class="rsvp-card bg-light rounded-3 p-3 mb-3">
+                                            <div class="row">
+                                                <div class="col-md-6 col-12">
+                                                    <div class="form-check mx-0 px-0">
+                                                        <input type="checkbox" class="fs-4 my-1 mx-1 p-0 form-check-input shadow-none border border-secondary" id="rsvpCheckbox" name="rsvpCheckbox">
+                                                        <label for="rsvpCheckbox" class="ms-2 form-check-label">
+                                                            <h4 class="mb-0">RSVP</h4>
+                                                            <p class="mb-0"><small>Enable RSVP for your guests</small></p>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-12 text-end">
+                                                    <div class="form-floating">
+                                                        <select class="form-select shadow-none" id="guestCountInput" aria-label="Default select example">
+                                                            <option value="1" selected>0-50 (Free)</option>
+                                                            <option value="2">50-100</option>
+                                                            <option value="3">100-200 ( Save 10% )</option>
+                                                            <option value="4">200-500 ( Save 15% )</option>
+                                                            <option value="5">500+ ( Save 25% )</option>
+                                                        </select>
+                                                        <label for="guestCountInput"><i class="bi bi-people-fill"></i> Select Guest Count</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="rsvp-guest-prices">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 col-12 mb-3">
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input shadow-none border border-secondary" id="triviaWrongAnswers" name="triviaWrongAnswers">
+                                                    <label for="triviaWrongAnswers" class="mb-1 form-check-label">Trivia (Wrong Answers Only)</label>
+                                                </div>
+                                            </div>
+                                            <!-- Create radio cards for trivias on select it should gets primary bg -->
+                                            {% for trivia in triviaOptions %}
+                                            <div class="col-12 mb-3">
+                                                <div class="form-check">
+                                                    <input type="radio" class="btn-check" id="trivia{{ trivia.id }}" name="triviaOptions" value="{{ trivia.id }}" autocomplete="off">
+                                                    <label class="btn btn-outline-light text-dark border-0 shadow-none p-3 rounded-4" for="trivia{{ trivia.id }}">
+                                                        <p><small>{% for tone in trivia.tone %}{{ tone|title }}{% if not forloop.last %}, {% endif %}{% endfor %}</small></p>
+                                                        <h6 class="mb-0">{{ trivia.text }}</h6>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-body-footer">
+                                    <div class="tab-navigation">
+                                        <button type="button" class="btn next-btn ms-auto">Next &#129106;</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-content" data-step="2">
+                            <div class="tab-box">
+                                <div class="modal-body-header">
+                                    <button type="button" class="btn back-btn text-dark border-light fs-5 btn-light rounded-5 px-3 py-1">&#129104;</button>
+                                    <h4 class="mb-0">Venue & Address</h4>
+                                </div>
+                                <div class="modal-body-main custom-scrollbar">
+                                    <div class="containter px-md-5 mx-auto">
+                                        <div class="form-group px-md-5 mb-3">
+                                            <label for="venueInput" class="mb-1">Venue Name</label>
+                                            <input type="text" class="form-control shadow-none fs-5 border border-secondary"
+                                                id="venueInput" name="venueInput" placeholder="Enter venue name here">
+                                        </div>
+                                        <div class="form-group px-md-5 mb-3">
+                                            <label for="addressInput" class="mb-1">Address</label>
+                                            <input type="text" class="form-control fs-5 shadow-none border border-secondary"
+                                                id="addressInput" name="addressInput" placeholder="Enter address here">
+                                        </div>
+                                        <div class="row px-md-5">
+                                            <div class="col-md-6 col-12 mb-3">
+                                                <div class="form-group">
+                                                    <label for="cityInput" class="mb-1">City</label>
+                                                    <input type="text" class="form-control shadow-none border border-secondary"
+                                                        id="cityInput" name="cityInput" placeholder="Enter city here">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-12 mb-3">
+                                                <div class="form-group">
+                                                    <label for="stateInput" class="mb-1">State</label>
+                                                    <input type="text" class="form-control shadow-none border border-secondary"
+                                                        id="stateInput" name="stateInput" placeholder="Enter state here">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row px-md-5">
+                                            <div class="col-md-6 col-12 mb-3">
+                                                <div class="form-group">
+                                                    <label for="zipInput" class="mb-1">Zip Code</label>
+                                                    <input type="text" class="form-control shadow-none border border-secondary"
+                                                        id="zipInput" name="zipInput" placeholder="Enter zip here">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-12 mb-3">
+                                                <div class="form-group">
+                                                    <label for="countryInput" class="mb-1">Country</label>
+                                                    <select class="form-select shadow-none border border-secondary" name="countryInput"
+                                                        id="countryInput" required>
+                                                        {% for country in countries %}
+                                                        <option value="{{ country.code }}-|-{{ country.name }}">{{ country.name }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group px-md-5 mb-3">
+                                            <label for="mapUrlInput" class="mb-1"><i class="bi bi-geo-alt me-1"></i>Map Url</label>
+                                            <input type="text" class="form-control shadow-none border border-secondary"
+                                                id="mapUrlInput" name="mapUrlInput" placeholder="Google Map Url">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-body-footer">
+                                    <div class="tab-navigation">
+                                        <button type="button" class="btn next-btn ms-auto">Next &#129106;</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-content" data-step="3">
+                            <div class="tab-box">
+                                <div class="modal-body-header">
+                                    <h4 class="mb-0">Invitation Details</h4>
+                                </div>
+                                <div class="modal-body-main custom-scrollbar">
+                                    <div class="container px-md-5 mx-auto">
+                                        <div class="row px-md-5">
+                                            <div class="col-md-6 col-12 mb-3">
+                                                <div class="form-group">
+                                                    <label for="yourFirstName" class="mb-1">Your First Name</label>
+                                                    <input type="text" class="form-control fs-5 shadow-none border border-secondary"
+                                                        id="yourFirstName" name="yourFirstName" placeholder="--">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-12 mb-3">
+                                                <div class="form-group">
+                                                    <label for="yourLastName" class="mb-1">Your Last Name</label>
+                                                    <input type="text" class="form-control fs-5 shadow-none border border-secondary"
+                                                        id="yourLastName" name="yourLastName" placeholder="--">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row px-md-5">
+                                            <div class="col-md-6 col-12 mb-3">
+                                                <div class="form-group">
+                                                    <label for="partnerFirstName" class="mb-1">Partner's First Name</label>
+                                                    <input type="text" class="form-control fs-5 shadow-none border border-secondary"
+                                                        id="partnerFirstName" name="partnerFirstName" placeholder="--">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-12 mb-3">
+                                                <div class="form-group">
+                                                    <label for="partnerLastName" class="mb-1">Partner's Last Name</label>
+                                                    <input type="text" class="form-control fs-5 shadow-none border border-secondary"
+                                                        id="partnerLastName" name="partnerLastName" placeholder="--">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row px-md-5">
+                                            <div class="col-md-6 col-12 mb-3">
+                                                <div class="form-group">
+                                                    <label for="dateInput" class="mb-1">Event Date</label>
+                                                    <input type="date" class="form-control shadow-none border border-secondary"
+                                                        id="dateInput" name="dateInput" placeholder="Enter date here">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-12 mb-3">
+                                                <div class="form-group">
+                                                    <label for="timeInput" class="mb-1">Event Time</label>
+                                                    <input type="time" class="form-control shadow-none border border-secondary"
+                                                        id="timeInput" name="timeInput" placeholder="Enter time here">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group px-md-5 mb-3">
+                                            <label for="timeZoneInput" class="mb-1">Time Zone</label>
+                                            <select class="form-select form-select-sm shadow-none border border-secondary"
+                                                name="timeZoneInput" id="timeZoneInput">
+                                                <option value="-12">(GMT-12:00) International Date Line West</option>
+                                                <option value="-11">(GMT-11:00) Midway Island, Samoa</option>
+                                                <option value="-10">(GMT-10:00) Hawaii</option>
+                                                <option value="-9">(GMT-09:00) Alaska</option>
+                                                <option value="-8">(GMT-08:00) Pacific Time (US & Canada)</option>
+                                                <option value="-7">(GMT-07:00) Mountain Time (US & Canada)</option>
+                                                <option value="-6">(GMT-06:00) Central Time (US & Canada), Mexico City</option>
+                                                <option value="-5">(GMT-05:00) Eastern Time (US & Canada), Bogota, Lima</option>
+                                                <option value="-4">(GMT-04:00) Atlantic Time (Canada), Caracas, La Paz</option>
+                                                <option value="-3.5">(GMT-03:30) Newfoundland</option>
+                                                <option value="-3">(GMT-03:00) Brazil, Buenos Aires, Greenland</option>
+                                                <option value="-2">(GMT-02:00) Mid-Atlantic</option>
+                                                <option value="-1">(GMT-01:00) Azores, Cape Verde Islands</option>
+                                                <option value="0">(GMT+00:00) London, Lisbon, Casablanca, Dublin</option>
+                                                <option value="1">(GMT+01:00) Amsterdam, Berlin, Rome, Paris, Madrid</option>
+                                                <option value="2">(GMT+02:00) Athens, Istanbul, Cairo, Jerusalem</option>
+                                                <option value="3">(GMT+03:00) Moscow, St. Petersburg, Baghdad, Riyadh</option>
+                                                <option value="3.5">(GMT+03:30) Tehran</option>
+                                                <option value="4">(GMT+04:00) Abu Dhabi, Dubai, Baku, Yerevan</option>
+                                                <option value="4.5">(GMT+04:30) Kabul</option>
+                                                <option value="5">(GMT+05:00) Islamabad, Karachi, Tashkent</option>
+                                                <option value="5.5">(GMT+05:30) Mumbai, Kolkata, Chennai, New Delhi</option>
+                                                <option value="5.75">(GMT+05:45) Kathmandu</option>
+                                                <option value="6">(GMT+06:00) Astana, Dhaka, Almaty</option>
+                                                <option value="6.5">(GMT+06:30) Yangon (Rangoon)</option>
+                                                <option value="7">(GMT+07:00) Bangkok, Hanoi, Jakarta</option>
+                                                <option value="8">(GMT+08:00) Beijing, Singapore, Kuala Lumpur, Perth</option>
+                                                <option value="9">(GMT+09:00) Tokyo, Seoul, Osaka, Sapporo</option>
+                                                <option value="9.5">(GMT+09:30) Adelaide, Darwin</option>
+                                                <option value="10">(GMT+10:00) Sydney, Melbourne, Guam, Port Moresby</option>
+                                                <option value="11">(GMT+11:00) Solomon Islands, New Caledonia</option>
+                                                <option value="12">(GMT+12:00) Auckland, Wellington, Fiji, Marshall Islands</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-body-footer">
+                                    <div class="tab-navigation">
+                                        <button type="button" class="btn next-btn ms-auto">Next &#129106;</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-content" data-step="4">
+                            <div class="tab-box">
+                                <div class="modal-body-header">
+                                    <button type="button" class="btn back-btn text-dark border-light fs-5 btn-light rounded-5 px-3 py-1">&#129104;</button>
+                                    <h4 class="mb-0">Completion</h4>
+                                </div>
+
+                                <div class="modal-body-main custom-scrollbar">
+                                    <p>Process complete!</p>
+                                </div>
+                                <div class="modal-body-footer">
+                                    <div class="tab-navigation">
+                                        <button type="button" class="btn finish-btn ms-auto">Finish</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for address editor -->
+    <div class="modal fade" id="addressEditorModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-5 p-md-3 p-2">
+                <div class="modal-header border-0">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel"></h1>
+                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-0">
+                    <div class="form-group mb-3">
+                        <label for="venueInput">Venue Name</label>
+                        <input type="text" class="form-control shadow-none border border-secondary" name="venueInput"
+                            id="venueInput" placeholder="--" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="addressInput">Address</label>
+                        <input type="text" class="form-control shadow-none border border-secondary" id="addressInput"
+                            name="addressInput" placeholder="Enter address here">
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="cityInput">City</label>
+                                <input type="text" class="form-control shadow-none border border-secondary"
+                                    id="cityInput" name="cityInput" placeholder="City">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="stateInput">State</label>
+                                <input type="text" class="form-control shadow-none border border-secondary"
+                                    id="stateInput" name="stateInput" placeholder="State">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="countryInput">Country</label>
+                                <select class="form-select shadow-none border border-secondary" name="countryInput"
+                                    id="countryInput" required>
+                                    {% for country in countries %}
+                                    <option value="{{ country.code }}-|-{{ country.name }}">{{ country.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="postalCodeInput">Postal / Zip Code</label>
+                                <input type="text" class="form-control shadow-none border border-secondary"
+                                    id="postalCodeInput" name="postalCodeInput" placeholder="Postal Code">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="mapUrlInput"><i class="bi bi-geo-alt me-1"></i>Map Url</label>
+                        <input type="text" class="form-control shadow-none border border-secondary" id="mapUrlInput"
+                            name="mapUrlInput" placeholder="Google Map Url">
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-primary text-white shadow-none px-3 py-2 rounded-5"
+                        data-bs-dismiss="modal" data-id="" id="saveAddressBtn">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-5 p-md-3 p-2">
+                <div class="modal-header border-0 ps-2 pt-2">
+                    <div class="d-flex align-items-center">
+                        <button type="button" class="btn btn-light shadow-none rounded-5 px-3 me-2" id="backToOtherBtn"
+                            data-bs-toggle="modal" data-bs-target="#otherInfoModal"><i
+                                class="bi bi-arrow-left"></i></button>
+                        <h5 class="modal-title" id="paymentModalLabel">Payment</h5>
+                    </div>
+                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-2 pt-0">
+                    <div class="form-group">
+                        <div id="paymentContainer">
+                            <div class="loader-container d-flex justify-content-center align-items-center py-5">
+                                <div class="box-circle-loader"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if not user.is_authenticated %}
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-5 p-md-3 p-2">
+                <div class="modal-header border-0 ps-2 pt-2">
+                    <div class="d-flex align-items-center">
+                        <button type="button" class="btn btn-light shadow-none rounded-5 px-3 me-2" id="backToOtherBtn"
+                            data-bs-toggle="modal" data-bs-target="#otherInfoModal"><i
+                                class="bi bi-arrow-left"></i></button>
+                        <h5 class="modal-title" id="loginModalLabel">Login</h5>
+                    </div>
+                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <form action="{% url 'auth:login' %}?next={{ request.path }}" method="post">
+                    {% csrf_token %}
+                    <div class="modal-body pt-0">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control shadow-none border border-secondary"
+                                name="username_email_phone" id="floatingEmail" placeholder="name@example.com" required>
+                            <label for="floatingEmail"><i class="bi bi-envelope me-1"></i>Email</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control shadow-none border border-secondary"
+                                name="password" id="floatingPassword" placeholder="Password" required>
+                            <label for="floatingPassword"><i class="bi bi-lock me-1"></i>Password</label>
+                        </div>
+                        <div class="row justify-content-end mb-3">
+                            <div class="col-auto ps-1">
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary shadow-none rounded-5 px-3 py-2"
+                                        id="loginBtn">Login</button>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="mb-0 text-center">Don't have an account? <a data-bs-toggle="modal" href="#signupModal"
+                                role="button">Signup</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="modal fade" id="signupModal" tabindex="-1" aria-labelledby="signupModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-5 p-md-3 p-2">
+                <div class="modal-header border-0 ps-2 pt-2">
+                    <div class="d-flex align-items-center">
+                        <button type="button" class="btn btn-light shadow-none rounded-5 px-3 me-2" id="backToOtherBtn"
+                            data-bs-toggle="modal" data-bs-target="#otherInfoModal"><i
+                                class="bi bi-arrow-left"></i></button>
+                        <h5 class="modal-title" id="signupModalLabel">Signup</h5>
+                    </div>
+                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <form action="{% url 'auth:temp_signup' %}?next={{ request.path }}" method="post">
+                    {% csrf_token %}
+                    <div class="modal-body pt-0">
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control shadow-none border border-secondary" name="email"
+                                id="floatingEmail" placeholder="name@example.com" required>
+                            <label for="floatingEmail"><i class="bi bi-envelope me-1"></i>Email</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="tel" class="form-control shadow-none border border-secondary" name="phone"
+                                id="floatingPhone" placeholder="Phone" required>
+                            <label for="floatingPhone"><i class="bi bi-telephone me-1"></i>Phone</label>
+                        </div>
+                        <div class="row justify-content-end mb-3">
+                            <div class="col-auto">
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary shadow-none rounded-5 px-3 py-2"
+                                        id="signupBtn" name="signup">Signup</button>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="mb-0 text-center">Already have an account? <a data-bs-toggle="modal"
+                                href="#loginModal" role="button">Login</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% block modal %}{% endblock %}
+
+    {% include 'main/utils/_toast.html' %}
+
+    {% block extended_script %}{% endblock %}
+
+    <script src="{% static 'scripts/invitation/build_base.js' %}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Page with Components</title>
+    <style>
+        .container {
+            width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+        }
+        .component-to-export {
+            width: 100%;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #eee;
+            margin-bottom: 20px;
+        }
+        .btn-export {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>My Page with Components</h1>
+        
+        <!-- Component you want to export -->
+        <div id="exportable-component" class="component-to-export">
+            <h2>Special Component</h2>
+            <p>This is the component that will be exported as an image.</p>
+            <img src="https://www.pngkey.com/png/full/3-30869_a-common-mistake-that-people-make-when-trying.png" alt="Component Image" width="100%">
+            <p>Any content here will be included in the export.</p>
+        </div>
+        
+        <!-- Other content that won't be exported -->
+        <div class="other-content">
+            <p>This content won't be included in the exported image.</p>
+        </div>
+        
+        <!-- Export form -->
+        <form method="POST" action="{% url 'invitation:convert_component' %}">
+            {% csrf_token %}
+            <input type="hidden" name="template_name" value="invitation/pages/template_with_components.html">
+            <input type="hidden" name="component_selector" value="#exportable-component">
+            <button type="submit" class="btn-export">Export Component as Image</button>
+        </form>
+    </div>
+</body>
+</html>

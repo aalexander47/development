@@ -1,0 +1,94 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Registration</title>
+    <!-- Styles -->
+    <link rel="stylesheet" href="{% static 'css/auth/styles/business-registration.css' %}"> 
+    <link rel="shortcut icon" href="{% static 'assets/logos/eventic-golden-favicon.png' %}" type="image/x-icon">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Google Analytics -->
+    {% include 'main/utils/_google-analytics.html' %}
+</head>
+<body>
+    <main>
+        <div class="container">
+            <div class="logo" id="headerLogo">
+                <img src="{% static 'assets/logos/Eventic-golden-white-lg-logo-new.png' %}" alt="Eventic Gold Dark Logo">
+            </div>
+            <form method="post" id="businessRegistrationForm">
+                {% csrf_token %}
+                <div class="box">
+                    <h1 class="title">Unlock Exclusive Benefits: <br>Register Your Business Today!</h1>
+                    <div class="start-form-group">
+                        <input type="text" name="business_name" id="businessName" placeholder="Full name/Business name" required autofocus autocomplete="off">
+                        <button type="button" name="register_business" id="registerBusinessBtn">
+                            <div class="btn-icon"><i class="bi bi-arrow-right"></i></div>
+                            <div class="btn-text">Let's get started</div>
+                            <div class="overlay"></div>
+                        </button>
+                    </div>
+                    <div class="home-link text-center pt-4 pb-2">
+                        <a href="{% url 'main:home' %}" class="text-center text-white"><i class="bi bi-arrow-left-short"></i> Back to Home</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+    
+    {% if messages %}
+    <div class="toast-container">
+        {% for message in messages %}
+        <div class="toast align-items-center text-bg-{{ message.tags }}" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <p class="mb-0">{{ message | safe }}</p>
+                </div>
+                <button type="button" class="btn-close btn-close-white shadow-none me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <!-- Initialize Toasts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toastElList = document.querySelectorAll('.toast');
+            toastElList.forEach(function (toastEl) {
+                const toast = new bootstrap.Toast(toastEl);
+                toast.show();
+            });
+        });
+    </script>
+    {% endif %}
+    <script type="text/javascript">
+    // Business Name
+    document.getElementById('businessName').oninput = function(e) {
+        document.getElementById('businessName').classList.remove('is-invalid');
+    }
+
+    // Business Registration
+    document.getElementById('registerBusinessBtn').onclick = function(e){
+        if (document.getElementById('businessName').value == '') {
+            document.getElementById('businessName').focus();
+            document.getElementById('businessName').classList.add('is-invalid');
+            return false;
+        }
+        document.getElementById('businessRegistrationForm').submit();
+        e.preventDefault();
+        // Add spinner to the button
+        var btn = document.getElementById('registerBusinessBtn');
+        btn.innerHTML = `<div class="btn-icon"><div class="spinner-grow spinner-grow-sm" role="status"><span class="visually-hidden">Loading...</span></div></div>
+                        <div class="btn-text">Processing...</div>
+                        <div class="overlay"></div>`;
+        btn.disabled = true;
+    }
+    </script>
+</body>
+</html>

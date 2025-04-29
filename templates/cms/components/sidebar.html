@@ -1,0 +1,18 @@
+{% load static %}
+<section id="cmsSidebar">
+    <div id="navContainer">
+        <div class="nav-header">
+            <div class="nav-logo">
+                <a href="{% if user.is_vendor %}{% url 'vendor:Dashboard' %}{% elif user.is_authenticated %}{% url 'dashboard:Dashboard' %}{% else %}{% url 'user:Profile' %}{% endif %}"><img src="{% static 'assets/logos/eventic-golden-favicon.png' %}" alt="logo"></a>
+            </div>
+        </div>
+        <div class="nav-main">
+            <div class="nav-box">
+                {% include 'cms/components/_nav_items.html' %}
+            </div>
+        </div>
+        <div class="nav-footer">
+            {% include 'cms/components/_nav_footer_profile_btn.html' %}
+        </div>
+    </div>
+</section>

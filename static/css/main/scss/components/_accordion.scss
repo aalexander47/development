@@ -1,0 +1,98 @@
+$bg: #fff;
+$text: #7288a2;
+$gray: #4d5974;
+$lightgray: #e5e5e5;
+
+.accordion {
+  .accordion-item {
+    border: none !important;
+    border-bottom: 1px solid $lightgray;
+    button[aria-expanded="true"] {
+      border-bottom: 1px solid $primary-color
+    }
+  }
+  button {
+    position: relative;
+    display: block;
+    text-align: left;
+    width: 100%;
+    padding: 0.75em 32px 0.75em 0;
+    color: $text;
+    font-size: 1.15rem;
+    font-weight: 400;
+    border: 0;
+    background: none;
+    outline: none;
+    &:hover,
+    &:focus {
+      cursor: pointer;
+      color: $primary-color;
+      &::after {
+        cursor: pointer;
+        color: $primary-color;
+        border: 1px solid $primary-color;
+      }
+    }
+    .accordion-title {
+      padding: 1em 1em 1em 0;
+    }
+    .icon {
+      display: inline-block;
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 22px;
+      border: 1px solid;
+      border-radius: 22px;
+      &::before {
+        display: block;
+        position: absolute;
+        content: "";
+        top: 9px;
+        left: 5px;
+        width: 10px;
+        height: 2px;
+        background: currentColor;
+      }
+      &::after {
+        display: block;
+        position: absolute;
+        content: "";
+        top: 5px;
+        left: 9px;
+        width: 2px;
+        height: 10px;
+        background: currentColor;
+      }
+    }
+  }
+  button[aria-expanded="true"] {
+    color: $primary-color;
+    .icon {
+      &::after {
+        width: 0;
+      }
+    }
+    + .accordion-content {
+      opacity: 1;
+      max-height: 9em;
+      overflow-y: scroll;
+      transition: all 200ms linear;
+      will-change: opacity, max-height;
+    }
+  }
+  .accordion-content {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 200ms linear, max-height 200ms linear;
+    will-change: opacity, max-height;
+    p {
+      font-size: 1rem;
+      font-weight: 300;
+      margin: 1.5em 0;
+    }
+  }
+}

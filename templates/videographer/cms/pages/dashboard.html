@@ -1,0 +1,21 @@
+{% extends 'videographer/cms/base.html' %}
+{% block title %}Videographer Service Dashboard | Eventic{% endblock %}
+
+{% block content %}
+<div class="content-block">
+    <div class="main-header" id="MH01">
+        <div class="header-top">
+            <div class="header-title">
+                <a href="{% url 'vendor:Services' %}" class="back-btn"><i class="bi bi-arrow-left"></i></a>
+                <h1>Videographer Service</h1>
+            </div>
+        </div>
+        <div class="header-bottom">
+            <ul>
+                <li><a href="{% url 'videographer:Reviews' %}">Reviews</a></li>
+                <li><a href="{% url 'videographer:CreateService' %}">Create</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'photographer/cms/base.html' %}{% load static %}
+{% block title %}Reviews | Eventic{% endblock %}
+
+{% block content %}
+<div class="content-block">
+    <div class="main-header" id="MH01">
+        <div class="header-top">
+            <div class="header-title">
+                {% if request.META.HTTP_REFERER %}
+                <a href="{{ request.META.HTTP_REFERER }}" class="back-btn"><i class="bi bi-arrow-left"></i></a>
+                {% else %}
+                <a href="{% url 'photographer:Dashboard' %}" class="back-btn"><i class="bi bi-arrow-left"></i></a>
+                {% endif %}
+                <h1>Reviews</h1>
+            </div>
+        </div>
+        <div class="header-bottom">
+            <ul>
+                <li><a href="{% url 'photographer:Dashboard' %}">Dashboard</a></li>
+                <li><a href="{% url 'photographer:Gallery' %}">Gallery</a></li>
+                <li><a href="{% url 'photographer:CreateService' %}">Create</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main-body">
+        <div id="reviews">
+            {% if reviews|length == 0 %}
+            <div class="no-notification-box text-center py-5 bg-light rounded-5">
+                <h2>(つ﹏<。)</h2>
+                <h5 class="mb-0 text-secondary">No Reviews</h5>
+            </div>
+            {% else %}
+            {% for review in reviews %}
+            <a href="{% url 'photographer:service' review.service.id review.service.slug %}" role="button" target="_blank">
+                <div class="review-card">
+                    <div class="profile-img">
+                        <img src="{% if review.user.profile_pic %}{{ review.user.profile_pic.url }}{% else %}{% static 'assets/defaults/profile.png' %}{% endif %}" onerror=`this.onerror=null; this.src="{% static 'assets/defaults/profile.png' %}";` alt="Profile Picture">
+                    </div>
+                    <div class="review-body">
+                        <h6 class="user-name">{{ review.user.first_name }} {{ review.user.last_name }}<i class="bi bi-dot"></i>{{ review.service.category|title }} Photography<i class="bi bi-dot"></i>{{ review.created_at | timesince }} ago</h6>
+                        <p class="user-review">{{ review.review|truncatechars:100 }}</p>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

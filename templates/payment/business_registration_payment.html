@@ -1,0 +1,141 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Registration Payment</title>
+    <link rel="stylesheet" href="{% static 'css/payment/styles/business_registration_payment.css' %}">
+    <link rel="shortcut icon" href="{% static 'assets/logos/eventic-golden-favicon.png' %}" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body class="custom-scrollbar">
+    <div class="container">
+        <div class="logo" id="headerLogo">
+            <a href="{% url 'main:home' %}"><img class="logo-icon" src="{% static 'assets/logos/Eventic-golden-white-lg-logo-new.png' %}" alt="Eventic Gold Icon Logo"></a>
+        </div>
+        <div class="box">
+            <h1>Be the First: Pay Only <span>₹{{ price }}</span> To Get Registered!</h1>
+            <form id="payment-form">
+                <button id="payBtn">
+                    <div class="btn-icon"><i class="bi bi-currency-rupee"></i></div>
+                    <div class="btn-text">Pay Now</div>
+                    <div class="overlay"></div>
+                </button>
+            </form>
+            <form method="post" action="{% url 'payment:ApplyCode' %}" id="applyCodeForm">
+                {% csrf_token %}
+                <div class="coupon-code-box">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="apply_code" name="apply_code" placeholder="Code here..." required autofocus autocomplete="off">
+                    </div>
+                    <button type="button" class="btn" id="applyCodeBtn"><i class="bi bi-stars"></i>&nbsp;Apply</button>
+                </div>
+            </form>
+            <p>By signing up, you agree to Eventic's <a href="{% url 'main:payment_policy' %}">Payment Policy</a> and <a href="{% url 'main:refund_policy' %}">Refund Policy</a>.</p>
+            <p>Step into the spotlight with Eventic's <span>₹{{ price }}</span> registration offer for the <span>first 250 users</span>. Save <span>Rs.500/-</span> and also earn <span>500 credit points (worth Rs.500/-)</span> only for <span>₹{{ price }}</span> – it's the perfect start to your event management journey. Hurry, these spots are filling up fast!</p>
+        </div>
+    </div>
+    {% if messages %}
+    <div class="toast-container">
+        {% for message in messages %}
+        <div class="toast align-items-center text-bg-{{ message.tags }}" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <p class="mb-0">{{ message | safe }}</p>
+                </div>
+                <button type="button" class="btn-close btn-close-white shadow-none me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <!-- Initialize Toasts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toastElList = document.querySelectorAll('.toast');
+            toastElList.forEach(function (toastEl) {
+                const toast = new bootstrap.Toast(toastEl);
+                toast.show();
+            });
+        });
+    </script>
+    {% endif %}
+    <script type="text/javascript">
+        var options = {
+            "key": "{{ razorpay_key_id }}", // Razorpay API Key
+            "amount": "{{ amount }}", // Amount in paise
+            "currency": "INR",
+            "name": "Eventic",  
+            "description": "Business Registration Payment",
+            "order_id": "{{ order_id }}", // This is a sample Order ID
+            "handler": function (response){
+                // Send response to the server to verify the payment
+                var form = document.getElementById('payment-form');
+                form.action = "{% url 'payment:handle_payment_success' %}";
+                form.method = 'POST';
+
+                var csrf_token = document.createElement("input");
+                csrf_token.setAttribute("type", "hidden");
+                csrf_token.setAttribute("name", "csrfmiddlewaretoken");
+                csrf_token.setAttribute("value", '{{ csrf_token }}');
+                form.appendChild(csrf_token);
+                
+                var payment_type = document.createElement("input");
+                payment_type.setAttribute("type", "hidden");
+                payment_type.setAttribute("name", "payment_type");
+                payment_type.setAttribute("value", '{{ payment_type }}');
+                form.appendChild(payment_type);
+
+                var razorpay_payment_id = document.createElement("input");
+                razorpay_payment_id.setAttribute("type", "hidden");
+                razorpay_payment_id.setAttribute("name", "razorpay_payment_id");
+                razorpay_payment_id.setAttribute("value", response.razorpay_payment_id);
+                form.appendChild(razorpay_payment_id);
+
+                var razorpay_order_id = document.createElement("input");
+                razorpay_order_id.setAttribute("type", "hidden");
+                razorpay_order_id.setAttribute("name", "razorpay_order_id");
+                razorpay_order_id.setAttribute("value", response.razorpay_order_id);
+                form.appendChild(razorpay_order_id);
+
+                var razorpay_signature = document.createElement("input");
+                razorpay_signature.setAttribute("type", "hidden");
+                razorpay_signature.setAttribute("name", "razorpay_signature");
+                razorpay_signature.setAttribute("value", response.razorpay_signature);
+                form.appendChild(razorpay_signature);
+
+                form.submit();
+            }
+        };
+        var rzp1 = new Razorpay(options);
+        document.getElementById('payBtn').onclick = function(e){
+            rzp1.open();
+            e.preventDefault();
+        }
+
+        // Apply Code
+        document.getElementById('apply_code').oninput = function(e) {
+            document.getElementById('apply_code').classList.remove('is-invalid');
+        }
+
+        // Apply Code
+        document.getElementById('applyCodeBtn').onclick = function(e){
+            if (document.getElementById('apply_code').value == '') {
+                document.getElementById('apply_code').focus();
+                document.getElementById('apply_code').classList.add('is-invalid');
+                return false;
+            }
+            document.getElementById('applyCodeForm').submit();
+            e.preventDefault();
+            // Add spinner to the button
+            var btn = document.getElementById('applyCodeBtn');
+            btn.innerHTML = '<div class="spinner-border spinner-border-sm" role="status"><span class="visually-hidden">Loading...</span></div>&nbsp; Applying...';
+            btn.disabled = true;
+        }
+    </script>
+</body>
+</html>

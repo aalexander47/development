@@ -1,0 +1,170 @@
+{% extends 'vendor/cms/base.html' %}
+{% block title %}Transactions - Eventic{% endblock %}
+
+{% block content %}
+<div class="content-block">
+    <div class="main-header" id="MH01">
+        <div class="header-top">
+            <div class="header-title">
+                {% if request.META.HTTP_REFERER %}
+                <a href="{{ request.META.HTTP_REFERER }}" class="back-btn"><i class="bi bi-arrow-left"></i></a>
+                {% else %}
+                <a href="{% url 'vendor:Billing' %}" class="back-btn"><i class="bi bi-arrow-left"></i></a>
+                {% endif %}
+                <h1>Transactions</h1>
+            </div>
+        </div>
+    </div>
+    <div class="main-body">
+        {% include 'vendor/comps/messages.html' %}
+        <div id="transactionsContentBlock">
+            <section class="main-section-container">
+                {% if transactions|length > 0 %}
+                <h6 class="mb-2 text-secondary">About <span class="text-dark">{{ transactions|length }}</span> Transactions</h6>
+                {% for transaction in transactions %}
+                <div class="card rounded-4 bg-light mt-2">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 col-7">
+                                <h6 class="card-subtitle mb-1 text-muted"><small>{{ transaction.created_at }}&nbsp;<i class="bi bi-dot"></i>&nbsp;{% if transaction.is_successful %}<span class="text-success">Successful</span>{% else %}<span class="text-danger">Failed</span>{% endif %}</small></h6>
+                            </div>
+                            <div class="col-md-6 col-5 text-end">
+                                <h6 class="card-subtitle mb-1 text-muted"><small><i class="bi bi-wallet2"></i>&nbsp; {{ transaction.method|title }}</small></h6>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-7 col-md-6">
+                                <h5 class="card-title mb-1">
+                                    {% if transaction.method == 'money' %}<small><i class="bi bi-currency-rupee"></i></small>{% endif %}{{ transaction.amount }}
+                                </h5>
+                            </div>
+                            {% if transaction.is_successful and transaction.method == 'point' %}
+                            <div class="col-5 col-md-6 text-end">
+                                <h5 class="card-title mb-1 {% if transaction.transaction_type == 'credit' %}text-success{% else %}text-danger{% endif %}">{{ transaction.transaction_type|title }}</h5>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% if transaction.transaction_id %}
+                        <p class="card-text mb-0"><small><span class="text-secondary">Transaction ID:</span> {{ transaction.transaction_id }}</small></p>
+                        {% endif %}
+                        <p class="card-text mb-0"><span class="text-secondary">Description:</span> {% if transaction.description %}{{ transaction.description | safe }}{% else %}--{% endif %}</p>
+                    </div>
+                </div>
+                {% endfor %}
+                {% endif %}
+            </section>
+        </div>
+    </div>
+</div>
+
+{% if vendor.bill %}
+<!-- Payment Settelement Modal -->
+<div class="modal fade" id="payMethodModal" tabindex="-1" aria-labelledby="payMethodModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="payMethodModalLabel">Pay Method</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <h4 class="mb-2"><small>Billing Amount:</small> <i class="bi bi-currency-rupee"></i>{{ vendor.bill }}</h4>
+            <h5 class="mb-4"><i class="bi bi-wallet2"></i>&nbsp;Credits: {% if vendor.credits %}{{ vendor.credits }}{% else %}0{% endif %}</h5>
+            <div class="row justify-content-center">
+                <div class="col pe-1">
+                    <button type="button" class="btn btn-primary w-100 py-3 rounded-3" id="payBtn"><i class="bi bi-wallet"></i>&nbsp; Pay Online</button>
+                </div>
+                <div class="col ps-1">
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary w-100 py-3 rounded-3" id="cashBtn" name="payWithCredits" {% if not vendor.credits %}disabled{% endif %}><i class="bi bi-wallet2"></i>&nbsp; Pay with Credits</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Buy Credits Modal -->
+<div class="modal fade" id="buyCreditsModal" tabindex="-1" aria-labelledby="buyCreditsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="buyCreditsModalLabel">Buy Credits</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <h4 class="mb-2"><small>Billing Amount:</small> <i class="bi bi-currency-rupee"></i>{{ vendor.bill }}</h4>
+            <h5 class="mb-4"><i class="bi bi-wallet2"></i>&nbsp;Credits: {% if vendor.credits %}{{ vendor.credits }}{% else %}0{% endif %}</h5>
+            <form method="post">
+                {% csrf_token %}
+                <div class="input-group mb-3">
+                    <input type="number" class="form-control" aria-label="Amount (to the nearest dollar)" name="credits" value="0" min="0" max="{{ vendor.bill }}">
+                    <span class="input-group-text"><i class="bi bi-currency-rupee"></i></span>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-3 rounded-3"><i class="bi bi-wallet2"></i>&nbsp; Buy Credits</button>
+            </form>
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% if vendor.bill %}
+<script type="text/javascript">
+    var options = {
+        "key": "{{ payment.razorpay_key_id }}", // Razorpay API Key
+        "amount": "{{ payment.amount }}", // Amount in paise
+        "currency": "INR",
+        "name": "Eventic",  
+        "description": "Bill Payment",
+        "order_id": "{{ payment.order_id }}", // This is a sample Order ID
+        "handler": function (response){
+            // Send response to the server to verify the payment
+            var form = document.getElementById('payment-form');
+            form.action = "{% url 'payment:handle_payment_success' %}";
+            form.method = 'POST';
+
+            var csrf_token = document.createElement("input");
+            csrf_token.setAttribute("type", "hidden");
+            csrf_token.setAttribute("name", "csrfmiddlewaretoken");
+            csrf_token.setAttribute("value", '{{ csrf_token }}');
+            form.appendChild(csrf_token);
+            
+            var payment_type = document.createElement("input");
+            payment_type.setAttribute("type", "hidden");
+            payment_type.setAttribute("name", "payment_type");
+            payment_type.setAttribute("value", '{{ payment.payment_type }}');
+            form.appendChild(payment_type);
+
+            var razorpay_payment_id = document.createElement("input");
+            razorpay_payment_id.setAttribute("type", "hidden");
+            razorpay_payment_id.setAttribute("name", "razorpay_payment_id");
+            razorpay_payment_id.setAttribute("value", response.razorpay_payment_id);
+            form.appendChild(razorpay_payment_id);
+
+            var razorpay_order_id = document.createElement("input");
+            razorpay_order_id.setAttribute("type", "hidden");
+            razorpay_order_id.setAttribute("name", "razorpay_order_id");
+            razorpay_order_id.setAttribute("value", response.razorpay_order_id);
+            form.appendChild(razorpay_order_id);
+
+            var razorpay_signature = document.createElement("input");
+            razorpay_signature.setAttribute("type", "hidden");
+            razorpay_signature.setAttribute("name", "razorpay_signature");
+            razorpay_signature.setAttribute("value", response.razorpay_signature);
+            form.appendChild(razorpay_signature);
+
+            form.submit();
+        }
+    };
+    var rzp1 = new Razorpay(options);
+    document.getElementById('payBtn').onclick = function(e){
+        rzp1.open();
+        e.preventDefault();
+    }
+</script>
+{% endif %}
+{% endblock %}

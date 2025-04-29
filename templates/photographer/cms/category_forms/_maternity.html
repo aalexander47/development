@@ -1,0 +1,587 @@
+{% load static %}
+<div class="form-container">
+    <h4 class="form-title">Maternity Photography</h4>
+    <!-- Basic Information -->
+    <div class="ph-container">
+        <div class="ph-container-header">
+            <h3 class="ph-container-title"><i class="bi bi-stars"></i>&nbsp; Basic Information</h3>
+        </div>
+        <div class="row">
+            <div class="col-md-7">
+                <div class="form-box">
+                    <label for="price" class="ph-q-label">Service Price</label>
+                    <div class="row mx-0 align-items-center">
+                        <div class="col-md-7 col-7 px-0">
+                            <div class="input-box">
+                                <div class="icon-box"><i class="bi bi-currency-rupee"></i></div>
+                                <input type="number" name="serviceCost" id="serviceCost" class="q-control" min="0" placeholder="--" value="{{ service.price }}" required>
+                            </div>
+                        </div>
+                        <div class="col-md-1 col-1 px-0 text-center">/</div>
+                        <div class="col-md-4 col-4 px-0">
+                            <select name="serviceCostPer" id="serviceCostPer" class="q-control">
+                                <option value="Shoot" {% if service.price_unit == 'Shoot' %}selected{% endif %}>Shoot</option>
+                                <option value="Day" {% if service.price_unit == 'Day' %}selected{% endif %}>Day</option>
+                                <option value="Hour" {% if service.price_unit == 'Hour' %}selected{% endif %}>Hour</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-box">
+                    <label for="pointOfContact" class="ph-q-label">Choose Contact</label>
+                    <select name="pointOfContact" id="pointOfContact">
+                        <option value="0" {% if service.contact == 0 %}selected{% endif %}>Default Contact</option>
+                        {% for member in teamMembers %}
+                        <option value="{{ member.id }}" {% if service.contact == member.id %}selected{% endif %}>{{ member.name }} | {{ member.role }} | {{ member.phone }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="button" class="btn btn-sm btn-outline-theme-blue px-3 mt-1" data-bs-toggle="modal" data-bs-target="#addTeamMemberModal">Add Team Member</button>
+                </div>
+                <div class="form-box">
+                    <label for="startedIn" class="ph-q-label">Which year and month you started shooting maternity?</label>
+                    <input type="month" name="startedIn" id="startedIn" class="q-control w-md form-control shadow-none" value="{{ service.experience }}" required>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="form-box" id="thumbnailFormBox">
+                    <div class="image-input-group">
+                        <label for="thumbnail">
+                            <div class="image-preview-box">
+                                <img src="{% if service.thumbnail %}{{ service.thumbnail.url }}{% else %}{% static 'assets/defaults/service-thumbnail.png' %}{% endif %}" alt="Thumbnail" id="label_thumbnail">
+                                <span class="image-label">Thumbnail</span>
+                            </div>
+                        </label>
+                        <input type="hidden" name="file_exists" id="file_exists" value="{% if service.thumbnail %}unchanged{% else %}nofile{% endif %}" hidden>
+                        <input type="file" name="thumbnail" id="thumbnail" accept="image/*" onchange="previewImage(this);" hidden>
+                        <button type="button" class="{% if service.thumbnail %}d-block{% else %}d-none{% endif %}" name="remove_file" id="remove_file" data-id="thumbnail" data-image-src="{% static 'assets/defaults/service-thumbnail.png' %}" data-file-exists="{% if service.thumbnail %}true{% else %}false{% endif %}" onclick="removeFile(this)"><i class="bi bi-trash3"></i>&nbsp;Remove</button>
+                        <div class="form-text">Thumbnail should be in 3:2 ratio. And should be less than 5MB</div>
+                        <div class="invalid-feedback">Please select an image for your thumbnail</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-box">
+            <label for="includedInPackage" class="ph-q-label">What is included in the package?</label>
+            <div class="form-check">
+                <input class="form-check-input" name="includedInPackage" type="checkbox" value="Full Day Coverage" id="fullDayCoverage" {% if "Full Day Coverage" in service.other.serviceDetails.includedInPackage %}checked{% endif %}>
+                <label class="form-check-label" for="fullDayCoverage">Full Day Coverage</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" name="includedInPackage" type="checkbox" value="Half Day Coverage" id="halfDayCoverage" {% if "Half Day Coverage" in service.other.serviceDetails.includedInPackage %}checked{% endif %}>
+                <label class="form-check-label" for="halfDayCoverage">Half Day Coverage</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" name="includedInPackage" type="checkbox" value="Custom Duration" id="customDuration" {% if "Custom Duration" in service.other.serviceDetails.includedInPackage %}checked{% endif %}>
+                <label class="form-check-label" for="customDuration">Custom Duration</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" name="includedInPackage" type="checkbox" value="Photo Editing" id="photoEditing" {% if "Photo Editing" in service.other.serviceDetails.includedInPackage %}checked{% endif %}>
+                <label class="form-check-label" for="photoEditing">Photo Editing</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" name="includedInPackage" type="checkbox" value="Printed Album" id="printedAlbum" {% if "Printed Album" in service.other.serviceDetails.includedInPackage %}checked{% endif %}>
+                <label class="form-check-label" for="printedAlbum">Printed Album</label>
+            </div>
+        </div>
+        <div class="form-box">
+            <label for="customizedPackages" class="ph-q-label">Do you offer customized packages?</label>
+            <!-- Radio for Yes/No -->
+            <div class="row mx-0">
+                <div class="col-auto ps-0 pe-3">
+                    <div class="form-check">
+                        <input class="form-check-input shadow-none" type="radio" value="Yes" id="customizedPackagesYes" name="customizedPackages" {% if service.other.serviceDetails.customizedPackages == 'Yes' %}checked{% endif %}>
+                        <label class="form-check-label" for="customizedPackagesYes">Yes</label>
+                    </div>
+                </div>
+                <div class="col-auto ps-3 pe-0">
+                    <div class="form-check">
+                        <input class="form-check-input shadow-none" type="radio" value="No" id="customizedPackagesNo" name="customizedPackages" {% if service.other.serviceDetails.customizedPackages == 'No' %}checked{% endif %}>
+                        <label class="form-check-label" for="customizedPackagesNo">No</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-box">
+            <label for="expressDelivery" class="ph-q-label">Do you provide express delivery for additional charges?</label>
+            <!-- Radio for Yes/No -->
+            <div class="row mx-0">
+                <div class="col-auto ps-0 pe-3">
+                    <div class="form-check">
+                        <input class="form-check-input shadow-none" type="radio" value="Yes" id="expressDeliveryYes" name="expressDelivery" {% if service.other.serviceDetails.expressDelivery == 'Yes' %}checked{% endif %}>
+                        <label class="form-check-label" for="expressDeliveryYes">Yes</label>
+                    </div>
+                </div>
+                <div class="col-auto ps-3 pe-0">
+                    <div class="form-check">
+                        <input class="form-check-input shadow-none" type="radio" value="No" id="expressDeliveryNo" name="expressDelivery" {% if service.other.serviceDetails.expressDelivery == 'No' %}checked{% endif %}>
+                        <label class="form-check-label" for="expressDeliveryNo">No</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content-area-container form-box mb-0" id="descriptionContentArea">
+            <label for="content" class="ph-q-label"><span class="content-area-label-text">About your service (please describe in detail).</span></label>
+            <div class="content-area-box bg-white border">
+                <div class="content-area custom-scrollbar" data-bs-target="#contentAreaModal" data-bs-toggle="modal" data-id="descriptionContentArea">{% if service.description %}{{ service.description | safe }}{% endif %}</div>
+                <textarea name="description" class="d-none">{% if service.description %}{{ service.description }}{% endif %}</textarea>
+            </div>
+        </div>
+    </div>
+    <!-- Travel and Accommodation -->
+    <div class="ph-container">
+        <h6><i class="bi bi-geo-alt"></i> Travel</h6>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-box">
+                    <label for="canTravel" class="ph-q-label">Are you willing to travel for shoots?</label>
+                    <!-- Radio for Yes/No -->
+                    <div class="row mx-0">
+                        <div class="col-auto ps-0 pe-3">
+                            <div class="form-check">
+                                <input class="form-check-input shadow-none" type="radio" value="Yes" id="canTravelYes" name="canTravel" {% if service.other.serviceDetails.canTravel == 'Yes' %}checked{% endif %}>
+                                <label class="form-check-label" for="canTravelYes">Yes</label>
+                            </div>
+                        </div>
+                        <div class="col-auto ps-3 pe-0">
+                            <div class="form-check">
+                                <input class="form-check-input shadow-none" type="radio" value="No" id="canTravelNo" name="canTravel" {% if service.other.serviceDetails.canTravel == 'No' %}checked{% endif %}>
+                                <label class="form-check-label" for="canTravelNo">No</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-box mb-3 mb-md-0">
+                    <label for="travelOrAccommodation" class="ph-q-label">Are there any travel or accommodation charges for outstation shoots?</label>
+                    <select name="travelOrAccommodation" id="travelOrAccommodation">
+                        <option value="No extra charges" {% if service.other.serviceDetails.travelOrAccommodation == 'No extra charges' %}selected{% endif %}>No extra charges</option>
+                        <option value="Travel only" {% if service.other.serviceDetails.travelOrAccommodation == 'Travel only' %}selected{% endif %}>Travel only</option>
+                        <option value="Travel and accommodation" {% if service.other.serviceDetails.travelOrAccommodation == 'Travel and accommodation' %}selected{% endif %}>Travel and accommodation</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-box mb-0">
+                    <label for="citiesCovered" class="ph-q-label">How many cities have you covered maternity shoot in till date?</label>
+                    <div class="text-box">
+                        <div class="row align-items-center mb-1 px-2">
+                            <div class="col">
+                                <label for="citiesCovered" class="text-secondary">Cities List</label>
+                            </div>
+                            <div class="col-auto"><label id="citiesCovered__charCount">0/250</label></div>
+                        </div>
+                        <textarea name="citiesCovered" class="q-control" id="citiesCovered" rows="3" maxlength="250" placeholder="--" onkeyup="countChars(this)">{{ service.other.serviceDetails.citiesCovered }}</textarea>
+                    </div>
+                    <div class="form-text">Comma " , " separated list</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Packages -->
+    <div class="ph-container">
+        <div class="ph-container-header mb-0">
+            <div>
+                <h3 class="ph-container-title"><i class="bi bi-box-seam"></i>&nbsp; Packages <small class="fs-6"><i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="Packages are the pricing and services that you offer. E.g. Basic, Premium, Custom, etc"></i></small></h3>
+                <div class="form-text">Packages are the pricing and services that you offer. E.g. Basic, Premium, Custom, etc</div>
+            </div>
+            <button type="button" class="btn btn-add" id="createPackageBtn" onclick="createPackage();"><i class="bi bi-plus-lg"></i></button>
+        </div>
+        <div class="row" id="packageContainer">
+            {% for package in service.other.packages %}
+            <div class="col-md-6 mt-4 package" id="package_{{ forloop.counter }}">
+                <div class="form-box mb-0">
+                    <label for="packageName_{{ forloop.counter }}">
+                        <div class="row align-items-center">
+                            <div class="col">Package Name</div>
+                            <div class="col-auto">
+                                <button type="button" class="btn btn-outline-danger border-0 btn-sm" id="packageRemoveBtn_{{ forloop.counter }}" data-remove-id="package_{{ forloop.counter }}" onclick="removeBlock(this);"><i class="bi bi-trash3"></i></button>
+                            </div>
+                        </div>
+                    </label>
+                    <div class="input-box mb-2">
+                        <div class="icon-box"><i class="bi bi-camera"></i></div>
+                        <input type="text" name="packageName" id="packageName_{{ forloop.counter }}" class="q-control form-control" placeholder="--" value="{{ package.name }}" required>
+                    </div>
+                    <div class="text-box">
+                        <div class="row align-items-center mb-1">
+                            <div class="col-md-7 col-6 pe-1">
+                                <label for="packagePrice_{{ forloop.counter }}" class="text-secondary"><small>Price</small></label>
+                                <div class="input-box mb-2">
+                                    <div class="icon-box"><i class="bi bi-currency-rupee"></i></div>
+                                    <input type="number" name="packagePrice" id="packagePrice_{{ forloop.counter }}" class="q-control form-control" min="0" placeholder="--" value="{{ package.price }}">
+                                </div>
+                            </div>
+                            <div class="col-md-5 col-6 ps-0">
+                                <label for="packagePriceUnit_{{ forloop.counter }}" class="text-secondary"><small>Price Per</small></label>
+                                <div class="input-box mb-2">
+                                    <div class="icon-box"><i class="bi bi-slash-lg"></i></div>
+                                    <input type="text" name="packagePriceUnit" class="q-control form-control" id="packagePriceUnit_{{ forloop.counter }}" value="{{ package.priceUnit }}" placeholder="Day, Hour...">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="content-area-container form-box mb-0" id="packageDetails_{{ forloop.counter }}ContentArea">
+                            <label for="content" class="ph-q-label"><span class="content-area-label-text">Package Details</span></label>
+                            <div class="content-area-box bg-white border">
+                                <div class="content-area custom-scrollbar" data-bs-target="#contentAreaModal" data-bs-toggle="modal" data-id="packageDetails_{{ forloop.counter }}ContentArea">{% if package.details %}{{ package.details | safe }}{% endif %}</div>
+                                <textarea name="packageDetails" class="d-none">{% if package.details %}{{ package.details }}{% endif %}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <!-- Specification -->
+    <div class="ph-container">
+        <div class="ph-container-header">
+            <h3 class="ph-container-title"><i class="bi bi-binoculars"></i>&nbsp; Specification</h3>
+        </div>
+        <div class="form-box">
+            <label for="haveSpecificThemes" class="ph-q-label">Do you have specific themes or ideas for maternity shoots?</label>
+            <div class="row">
+                <div class="col-auto">
+                    <div class="form-check">
+                        <input type="radio" name="haveSpecificThemes" id="haveSpecificThemesYes" class="form-check-input" value="Yes" {% if service.other.serviceDetails.haveSpecificThemes == 'Yes' %}checked{% endif %} required>
+                        <label for="haveSpecificThemesYes" class="form-check-label">Yes</label>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="form-check">
+                        <input type="radio" name="haveSpecificThemes" id="haveSpecificThemesNo" class="form-check-input" value="No" {% if service.other.serviceDetails.haveSpecificThemes == 'No' %}checked{% endif %} required>
+                        <label for="haveSpecificThemesNo" class="form-check-label">No</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-box">
+            <label for="recommendLocation" class="ph-q-label">Can you recommend suitable locations for maternity sessions?</label>
+            <div class="input-box">
+                <div class="icon-box"><i class="bi bi-caret-right-fill"></i></div>
+                <input type="text" name="recommendLocation" id="recommendLocation" class="q-control form-control shadow-none w-md" placeholder="--" value="{{ service.other.serviceDetails.recommendLocation }}">
+            </div>
+        </div>
+        <div class="form-box">
+            <label for="provideWardrobeOptions" class="ph-q-label">Do you provide wardrobe options for the expecting mother?</label>
+            <div class="row">
+                <div class="col-auto">
+                    <div class="form-check">
+                        <input type="radio" name="provideWardrobeOptions" id="provideWardrobeOptionsYes" class="form-check-input" value="Yes" {% if service.other.serviceDetails.provideWardrobeOptions == 'Yes' %}checked{% endif %} required>
+                        <label for="provideWardrobeOptionsYes" class="form-check-label">Yes</label>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="form-check">
+                        <input type="radio" name="provideWardrobeOptions" id="provideWardrobeOptionsNo" class="form-check-input" value="No" {% if service.other.serviceDetails.provideWardrobeOptions == 'No' %}checked{% endif %} required>
+                        <label for="provideWardrobeOptionsNo" class="form-check-label">No</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-box">
+            <label for="offerCoupleOrFamily" class="ph-q-label">Do you offer couple or family maternity sessions?</label>
+            <div class="row">
+                <div class="col-auto">
+                    <div class="form-check">
+                        <input type="radio" name="offerCoupleOrFamily" id="offerCoupleOrFamilyYes" class="form-check-input" value="Yes" {% if service.other.serviceDetails.offerCoupleOrFamily == 'Yes' %}checked{% endif %} required>
+                        <label for="offerCoupleOrFamilyYes" class="form-check-label">Yes</label>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="form-check">
+                        <input type="radio" name="offerCoupleOrFamily" id="offerCoupleOrFamilyNo" class="form-check-input" value="No" {% if service.other.serviceDetails.offerCoupleOrFamily == 'No' %}checked{% endif %} required>
+                        <label for="offerCoupleOrFamilyNo" class="form-check-label">No</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-box">
+            <label for="bestTimeForShoot" class="ph-q-label">What is the best time during pregnancy for a maternity shoot?</label>
+            <div class="row">
+                <div class="col-auto">
+                    <div class="form-check">
+                        <input type="radio" name="bestTimeForShoot" id="bestTimeForShoot2ndTrimester" class="form-check-input" value="2nd Trimester" {% if service.other.serviceDetails.bestTimeForShoot == '2nd Trimester' %}checked{% endif %} required>
+                        <label for="bestTimeForShoot2ndTrimester" class="form-check-label">2nd Trimester</label>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="form-check">
+                        <input type="radio" name="bestTimeForShoot" id="bestTimeForShoot3rdTrimester" class="form-check-input" value="3rd Trimester" {% if service.other.serviceDetails.bestTimeForShoot == '3rd Trimester' %}checked{% endif %} required>
+                        <label for="bestTimeForShoot3rdTrimester" class="form-check-label">3rd Trimester</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-box">
+            <label for="openToOutdoorOrIndoorSetups" class="ph-q-label">Are you open to outdoor or indoor setups for maternity photography?</label>
+            <div class="row">
+                <div class="col-auto">
+                    <div class="form-check">
+                        <input type="radio" name="openToOutdoorOrIndoorSetups" id="openToOutdoorOrIndoorSetupsOutdoor" class="form-check-input" value="Outdoor" {% if service.other.serviceDetails.openToOutdoorOrIndoorSetups == 'Outdoor' %}checked{% endif %} required>
+                        <label for="openToOutdoorOrIndoorSetupsOutdoor" class="form-check-label">Outdoor</label>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="form-check">
+                        <input type="radio" name="openToOutdoorOrIndoorSetups" id="openToOutdoorOrIndoorSetupsIndoor" class="form-check-input" value="Indoor" {% if service.other.serviceDetails.openToOutdoorOrIndoorSetups == 'Indoor' %}checked{% endif %} required>
+                        <label for="openToOutdoorOrIndoorSetupsIndoor" class="form-check-label">Indoor</label>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="form-check">
+                        <input type="radio" name="openToOutdoorOrIndoorSetups" id="openToOutdoorOrIndoorSetupsBoth" class="form-check-input" value="Both" {% if service.other.serviceDetails.openToOutdoorOrIndoorSetups == 'Both' %}checked{% endif %} required>
+                        <label for="openToOutdoorOrIndoorSetupsBoth" class="form-check-label">Both</label>
+                    </div>
+                </div>
+            </div>           
+        </div>
+        <div class="form-box">
+            <label for="noOfimagesIncluded" class="ph-q-label">How many final images are included in your package?</label>
+            <div class="row">
+                <div class="col-auto">
+                    <div class="form-check">
+                        <input type="radio" name="noOfimagesIncluded" id="noOfimagesIncluded10" class="form-check-input" value="10" {% if service.other.serviceDetails.noOfimagesIncluded == '10' %}checked{% endif %} required>
+                        <label for="noOfimagesIncluded10" class="form-check-label">10</label>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="form-check">
+                        <input type="radio" name="noOfimagesIncluded" id="noOfimagesIncluded20" class="form-check-input" value="20" {% if service.other.serviceDetails.noOfimagesIncluded == '20' %}checked{% endif %} required>
+                        <label for="noOfimagesIncluded20" class="form-check-label">20</label>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="form-check">
+                        <input type="radio" name="noOfimagesIncluded" id="noOfimagesIncluded50" class="form-check-input" value="50+" {% if service.other.serviceDetails.noOfimagesIncluded == '50+' %}checked{% endif %} required>
+                        <label for="noOfimagesIncluded50" class="form-check-label">50+</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-box">
+            <label for="customProps" class="ph-q-label">Do you provide custom props like baby shoes or ultrasound scans for the session?</label>
+            <div class="row">
+                <div class="col-auto">
+                    <div class="form-check">
+                        <input type="radio" name="customProps" id="customPropsYes" class="form-check-input" value="Yes" {% if service.other.serviceDetails.customProps == 'Yes' %}checked{% endif %} required>
+                        <label for="customPropsYes" class="form-check-label">Yes</label>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="form-check">
+                        <input type="radio" name="customProps" id="customPropsNo" class="form-check-input" value="No" {% if service.other.serviceDetails.customProps == 'No' %}checked{% endif %} required>
+                        <label for="customPropsNo" class="form-check-label">No</label>
+                    </div>
+                </div>
+            </div> 
+        </div>
+        <div class="form-box">
+            <label for="clientRequestEditingStyles" class="ph-q-label">Can clients request specific editing styles (e.g., natural, moody)?</label>
+            <div class="row">
+                <div class="col-auto">
+                    <div class="form-check">
+                        <input type="radio" name="clientRequestEditingStyles" id="clientRequestEditingStylesYes" class="form-check-input" value="Yes" {% if service.other.serviceDetails.clientRequestEditingStyles == 'Yes' %}checked{% endif %} required>
+                        <label for="clientRequestEditingStylesYes" class="form-check-label">Yes</label>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="form-check">
+                        <input type="radio" name="clientRequestEditingStyles" id="clientRequestEditingStylesNo" class="form-check-input" value="No" {% if service.other.serviceDetails.clientRequestEditingStyles == 'No' %}checked{% endif %} required>
+                        <label for="clientRequestEditingStylesNo" class="form-check-label">No</label>
+                    </div>
+                </div>
+            </div>          
+        </div>
+        <div class="content-area-container form-box mb-0" id="privacyAndComfortContentArea">
+            <label for="privacyAndComfort" class="ph-q-label"><span class="content-area-label-text">How do you ensure privacy and comfort during the shoot?</span></label>
+            <div class="content-area-box bg-white border">
+                <div class="content-area custom-scrollbar" id="privacyAndComfort" data-bs-target="#contentAreaModal" data-bs-toggle="modal" data-id="privacyAndComfortContentArea">{% if service..other.serviceDetails.privacyAndComfort %}{{ service..other.serviceDetails.privacyAndComfort | safe }}{% endif %}</div>
+                <textarea name="privacyAndComfort" class="d-none">{% if service..other.serviceDetails.privacyAndComfort %}{{ service..other.serviceDetails.privacyAndComfort }}{% endif %}</textarea>
+            </div>
+        </div>
+    </div>
+    <!-- Add On's -->
+    <div class="ph-container">
+        <div class="ph-container-header mb-0">
+            <div>
+            <h3 class="ph-container-title"><i class="bi bi-capslock"></i>&nbsp; Add On's <small class="fs-6"><i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="Add on's are extra services that are not included in the package. E.g. Album, Video, etc"></i></small></h3>
+            <div class="form-text">Add On's are extra services that are not included in the package. E.g. Album, Video, Row Shot Images, etc</div>
+            </div>
+            <button type="button" class="btn btn-add" id="createAddOnBtn" onclick="createAddOn();"><i class="bi bi-plus-lg"></i></button>
+        </div>
+        <div class="row" id="addOnContainer">
+            {% for addOn in service.other.addOns %}
+            <div class="col-md-6 mt-4 addOn" id="addOn_{{ forloop.counter }}">
+                <div class="form-box mb-0">
+                    <label for="addOnName_{{ forloop.counter }}">
+                        <div class="row align-items-center">
+                            <div class="col">Add On Name</div>
+                            <div class="col-auto">
+                                <button type="button" class="btn btn-outline-danger border-0 btn-sm" id="addOnRemoveBtn_{{ forloop.counter }}" data-remove-id="addOn_{{ forloop.counter }}" onclick="removeBlock(this);"><i class="bi bi-trash3"></i></button>
+                            </div>
+                        </div>
+                    </label>
+                    <div class="input-box mb-2">
+                        <div class="icon-box"><i class="bi bi-postcard-heart"></i></div>
+                        <input type="text" name="addOnName" id="addOnName_{{ forloop.counter }}" class="q-control form-control" placeholder="--" value="{{ addOn.name }}" required>
+                    </div>
+                    <div class="text-box">
+                        <div class="row align-items-center mb-1">
+                            <div class="col-md-7 col-6 pe-1">
+                                <label for="addOnPrice_{{ forloop.counter }}" class="text-secondary"><small>Price</small></label>
+                                <div class="input-box mb-2">
+                                    <div class="icon-box"><i class="bi bi-currency-rupee"></i></div>
+                                    <input type="number" name="addOnPrice" id="addOnPrice_{{ forloop.counter }}" class="q-control form-control" min="0" value="{{ addOn.price }}" placeholder="--">
+                                </div>
+                            </div>
+                            <div class="col-md-5 col-6 ps-0">
+                                <label for="addOnPriceUnit_{{ forloop.counter }}" class="text-secondary"><small>Price Per</small></label>
+                                <div class="input-box mb-2">
+                                    <div class="icon-box"><i class="bi bi-slash-lg"></i></div>
+                                    <input type="text" name="addOnPriceUnit" class="q-control form-control" id="addOnPriceUnit_{{ forloop.counter }}" value="{{ addOn.priceUnit }}" placeholder="Day, Hour...">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="content-area-container form-box mb-0" id="addOnDetails_{{ forloop.counter }}ContentArea">
+                            <label for="content" class="ph-q-label"><span class="content-area-label-text">Add On Details</span></label>
+                            <div class="content-area-box bg-white border">
+                                <div class="content-area custom-scrollbar" data-bs-target="#contentAreaModal" data-bs-toggle="modal" data-id="addOnDetails_{{ forloop.counter }}ContentArea">{% if addOn.details %}{{ addOn.details | safe }}{% endif %}</div>
+                                <textarea name="addOnDetails" class="d-none">{% if addOn.details %}{{ addOn.details }}{% endif %}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% if not service.gallery_count >= 10 %}
+    <!-- Pictures -->
+    <div class="ph-container">
+        <div class="ph-container-header">
+            <div>
+                <h3 class="ph-container-title"><i class="bi bi-images"></i>&nbsp; Pictures</h3>
+                <p class="text-secondary mb-0">You can upload up to <span class="text-dark">10</span> images {{ page }}</p>
+                {% if page == 'update' %}
+                <h6 class="mb-0 text-secondary">Currently You Have <span class="text-dark">{% if service.gallery_count > 0 %}{{ service.gallery_count }}{% else %}0{% endif %}</span> images uploaded in gallery.</h6>
+                {% endif %}
+            </div>
+        </div>
+        <div class="drop-zone" id="dropZone">
+            <h5>Drag & Drop images here or click to select</h5>
+            <h6 class="mb-0 text-secondary">Image Format: <span class="text-dark">JPG/JPEG/PNG</span>.&nbsp;Max Size: <span class="text-dark">5MB</span></h6>
+            <input type="file" name="imageFiles" id="fileInput" accept="jpg/jpeg/png" multiple hidden>
+        </div>
+        <div class="image-cards custom-scrollbar" id="imageCards"></div>
+    </div>
+    {% endif %}
+    <!-- Policies -->
+    <div class="ph-container">
+        <div class="ph-container-header">
+            <h3 class="ph-container-title"><i class="bi bi-folder"></i>&nbsp; Policies</h3>
+        </div>
+        <div class="form-box">
+            <label for="paymentTerms" class="ph-q-label">What are your payment terms?</label>
+            <div class="form-check">
+                <input type="radio" name="paymentTerms" id="25Advance" class="form-check-input" value="Upto 25% Advance" {% if service.policy.paymentTerms == "Upto 25% Advance" %} checked {% endif %} required>
+                <label for="25Advance" class="form-check-label">Upto 25% Advance</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" name="paymentTerms" id="50Advance" class="form-check-input" value="Approx 50% Advance while booking" {% if service.policy.paymentTerms == "Approx 50% Advance while booking" %} checked {% endif %} required>
+                <label for="50Advance" class="form-check-label">Approx 50% Advance while booking</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" name="paymentTerms" id="100Advance" class="form-check-input" value="100% Advance while booking" {% if service.policy.paymentTerms == "100% Advance while booking" %} checked {% endif %} required>
+                <label for="100Advance" class="form-check-label">100% Advance while booking</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" name="paymentTerms" id="canBeNegotiable" class="form-check-input" value="Can be negotiable" {% if service.policy.paymentTerms == "Can be negotiable" %} checked {% endif %} required>
+                <label for="canBeNegotiable" class="form-check-label">Can be negotiable</label>
+                <div class="invalid-feedback">Please choose one of the options.</div>
+            </div>
+        </div>
+        <div class="form-box">
+            <label for="userCancelPolicy" class="ph-q-label">What are your cancellation terms if a client cancels the booking?</label>
+            <div class="form-check">
+                <input type="radio" name="userCancelPolicy" id="uiPartialRefundOffered" class="form-check-input" value="Partial Refund Offered" {% if service.policy.userCancelPolicy == "Partial Refund Offered" %} checked {% endif %} required>
+                <label for="uiPartialRefundOffered" class="form-check-label">Partial Refund Offered</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" name="userCancelPolicy" id="uiNoRefundOffered" class="form-check-input" value="No Refund Offered" {% if service.policy.userCancelPolicy == "No Refund Offered" %} checked {% endif %} required>
+                <label for="uiNoRefundOffered" class="form-check-label">No Refund Offered</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" name="userCancelPolicy" id="uiDateAdjustment" class="form-check-input" value="No Refund Offered However Date Adjustment Can Be Done" {% if service.policy.userCancelPolicy == "No Refund Offered However Date Adjustment Can Be Done" %} checked {% endif %} required>
+                <label for="uiDateAdjustment" class="form-check-label">No Refund Offered However Date Adjustment Can Be Done</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" name="userCancelPolicy" id="uiFullRefundOffered" class="form-check-input" value="Full Refund Offered" {% if service.policy.userCancelPolicy == "Full Refund Offered" %} checked {% endif %} required>
+                <label for="uiFullRefundOffered" class="form-check-label">Full Refund Offered</label>
+            </div>
+        </div>
+        <div class="form-box">
+            <label for="vendorCancelPolicy" class="ph-q-label">What are your cancellation terms if you cancel the booking?</label>
+            <div class="form-check">
+                <input type="radio" name="vendorCancelPolicy" id="partialRefundOffered" class="form-check-input" value="Partial Refund Offered" {% if service.policy.vendorCancelPolicy == "Partial Refund Offered" %} checked {% endif %} required>
+                <label for="partialRefundOffered" class="form-check-label">Partial Refund Offered</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" name="vendorCancelPolicy" id="noRefundOffered" class="form-check-input" value="No Refund Offered" {% if service.policy.vendorCancelPolicy == "No Refund Offered" %} checked {% endif %} required>
+                <label for="noRefundOffered" class="form-check-label">No Refund Offered</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" name="vendorCancelPolicy" id="fullRefundOffered" class="form-check-input" value="Full Refund Offered" {% if service.policy.vendorCancelPolicy == "Full Refund Offered" %} checked {% endif %} required>
+                <label for="fullRefundOffered" class="form-check-label">Full Refund Offered</label>
+            </div>
+        </div>
+        <div class="content-area-container form-box mb-0" id="termsAndConditions">
+            <label for="content" class="ph-q-label"><span class="content-area-label-text">Terms and Conditions</span></label>
+            <div class="content-area-box bg-white border">
+                <div class="content-area custom-scrollbar" data-bs-target="#contentAreaModal" data-bs-toggle="modal" data-id="termsAndConditions">{% if service.policy.termsAndConditions %}{{ service.policy.termsAndConditions | safe }}{% endif %}</div>
+                <textarea name="termsAndConditions" class="d-none">{% if service.policy.termsAndConditions %}{{ service.policy.termsAndConditions }}{% endif %}</textarea>
+            </div>
+        </div>
+    </div>
+    {% if cp == 'create' %}
+    <div class="ph-bottom-buttons mx-0">
+        <div class="form-box">
+            <div class="form-check mb-0">
+                <input class="form-check-input" type="checkbox" id="agreeTermsCheck" required>
+                <label class="form-check-label mb-0" for="agreeTermsCheck">I Agree to all the terms and conditions</label>
+            </div>
+        </div>
+        <div class="form-box">
+            <button type="submit" class="btn btn-submit" name="create_service"><i class="bi bi-stars"></i>&nbsp; Create Service</button>
+        </div>
+    </div>
+    {% else %}
+    <div class="ph-container">
+        <div class="ph-container-header">
+            <h3 class="ph-container-title"><i class="bi bi-gear"></i>&nbsp; Settings</h3>
+        </div>
+        <div class="row align-items-center">
+            <div class="col-auto">
+                <div class="checkbox-wrapper">
+                    <label for="isServiceActive">Is Service Active</label>
+                </div>
+            </div>
+            <div class="col"><hr></div>
+            <div class="col-auto">
+                <div class="checkbox-wrapper">
+                    <input class="switch" type="checkbox" id="isServiceActive" name="is_active" {% if service.is_active %} checked {% endif %}>
+                </div>
+            </div>
+        </div>
+        <br>
+        <hr>
+        <br>
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <div class="form-group mb-0">
+                    <button type="button" class="btn btn-outline-danger shadow-none" id="deleteServiceBtn" data-bs-toggle="modal" data-bs-target="#deleteServiceModal"><i class="bi bi-trash3"></i>&nbsp; Delete Service</button></button>
+                </div>
+            </div>
+        </div>
+        <br>
+    </div>
+    {% endif %}
+</div>

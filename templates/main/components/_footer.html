@@ -1,0 +1,72 @@
+{% load static auth_extras %}
+<div id="pageFooter">
+    <div class="footer-box-container">
+        <div class="footer-box">
+            <div class="footer-box-header">
+                <a href="{% url 'photographer:search_service' %}" class="section-title" role="button" tooltip="Photographer"><i class="bi bi-camera2"></i></a>
+            </div>
+            <ul>
+                <li><a href="{% url 'photographer:search' category='wedding' %}{% if q.search_term %}?q={{ q.search_term }}{% endif %}" role="button"><div>Wedding Photographer</div></a></li>
+                <li><a href="{% url 'photographer:search' category='maternity' %}{% if q.search_term %}?q={{ q.search_term }}{% endif %}" role="button"><div>Maternity Photographer</div></a></li>
+                <li><a href="{% url 'photographer:search' category='portrait' %}{% if q.search_term %}?q={{ q.search_term }}{% endif %}" role="button"><div>Portrait Photographer</div></a></li>
+                <li><a href="{% url 'photographer:search' category='product' %}{% if q.search_term %}?q={{ q.search_term }}{% endif %}" role="button"><div>Product Photographer</div></a></li>
+                <li><a href="{% url 'photographer:search' category='baby' %}{% if q.search_term %}?q={{ q.search_term }}{% endif %}" role="button"><div>Baby Photographer</div></a></li>
+                <li><a href="{% url 'photographer:search' category='birthday' %}{% if q.search_term %}?q={{ q.search_term }}{% endif %}" role="button"><div>Birthday Photographer</div></a></li>
+                <li><a href="{% url 'photographer:search' category='newborn' %}{% if q.search_term %}?q={{ q.search_term }}{% endif %}" role="button"><div>Newborn Photographer</div></a></li>
+                <li><a href="{% url 'photographer:search' category='travel' %}{% if q.search_term %}?q={{ q.search_term }}{% endif %}" role="button"><div>Travel Photographer</div></a></li>
+            </ul>
+        </div>
+        <div class="footer-box">
+            <div class="footer-box-header">
+                <a href="{% url 'videographer:search_service' %}" class="section-title" role="button" tooltip="Videographer"><i class="bi bi-camera-video"></i></a>
+            </div>
+            <ul>
+                <li><a href="{% url 'videographer:search' category='wedding' %}{% if q.search_term %}?q={{ q.search_term }}{% endif %}" role="button"><div>Wedding Videographer</div></a></li>
+                <li><a href="{% url 'videographer:search' category='event' %}{% if q.search_term %}?q={{ q.search_term }}{% endif %}" role="button"><div>Event Videographer</div></a></li>
+                <li><a href="{% url 'videographer:search' category='travel' %}{% if q.search_term %}?q={{ q.search_term }}{% endif %}" role="button"><div>Travel and Adventure Videographer</div></a></li>
+                <li><a href="{% url 'videographer:search' category='documentary' %}{% if q.search_term %}?q={{ q.search_term }}{% endif %}" role="button"><div>Documentary Videographer</div></a></li>
+            </ul>
+        </div>
+        <div class="footer-box">
+            <div class="footer-box-header poppins">
+                <h5 class="section-title poppins">Useful Links</h5>
+            </div>
+            <ul>
+                <li><a href="{% url 'main:about' %}" role="button"><div>About Us</div></a></li>  
+                <li><a href="{% url 'main:contact' %}" role="button"><div>Contact Us</div></a></li>
+                <li><a href="{% url 'docs:Docs' %}" role="button"><div>Docs</div></a></li>
+            </ul>
+        </div>
+        <div class="footer-box">
+            {% if not request.user|has_group:"vendor" and not request.user.is_staff %}
+            <div class="business-registration-promote">
+                <div class="promo-body">
+                    <h2 class="promo-title">Join Us Today as a Vendor</h2>
+                    <p class="promo-text">Register to be a part of our community of event professionals.</p>
+                    <a href="{% url 'auth:business_registration' %}" role="button" class="btn btn-primary rounded-5 px-3 py-2">Join Now</a>
+                </div>
+            </div>
+            {% endif %}
+            <img class="mb-4" src="{% static 'assets/logos/Eventic-golden-dark-lg-logo-new.png' %}" alt="Eventic Gold Dark Logo" width="auto" height="24">
+            <h6 class="mb-0 poppins text-dark">Connect with us</h6>
+            <div class="social-feeds">
+                <a href="https://www.instagram.com/{{ INSTAGRAM }}/" target="_blank" class="social-icon"><i class="bi bi-instagram"></i></a>
+                <a href="https://whatsapp.com/channel/{{ WHATSAPP }}" target="_blank" class="social-icon"><i class="bi bi-whatsapp"></i></a>
+                <a href="https://www.facebook.com/people/{{ FACEBOOK }}" target="_blank" class="social-icon"><i class="bi bi-facebook"></i></a>
+                <a href="https://x.com/{{ TWITTER }}" target="_blank" class="social-icon"><i class="bi bi-twitter-x"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="cc-box">
+        <p>
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-c-circle" viewBox="0 0 18 18">
+                <path d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.146 4.992c-1.212 0-1.927.92-1.927 2.502v1.06c0 1.571.703 2.462 1.927 2.462.979 0 1.641-.586 1.729-1.418h1.295v.093c-.1 1.448-1.354 2.467-3.03 2.467-2.091 0-3.269-1.336-3.269-3.603V7.482c0-2.261 1.201-3.638 3.27-3.638 1.681 0 2.935 1.054 3.029 2.572v.088H9.875c-.088-.879-.768-1.512-1.729-1.512"/>
+            </svg>
+             2025 <a href="/" class="text-decoration-none" role="button">Eventic</a>. All rights reserved.
+        </p>
+        <div class="tc-pp">
+            <a href="{% url 'main:privacy_policy' %}" role="button" target="_blank">Privacy Policy</a>
+            <a href="{% url 'main:terms_of_use' %}" role="button" target="_blank">Terms of Use</a>
+        </div>
+    </div>
+</div>

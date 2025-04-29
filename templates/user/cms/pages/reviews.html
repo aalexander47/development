@@ -1,0 +1,76 @@
+{% extends 'user/cms/base.html' %}{% load static auth_extras %}
+{% block title %}My Reviews | Eventic{% endblock %}
+
+{% block content %}
+<div class="content-block">
+    <div class="main-header" id="MH01">
+        <div class="header-top">
+            <h1>My Reviews</h1>
+        </div>
+    </div>
+    <div class="main-body">
+        {% include 'vendor/comps/messages.html' %}
+        <div id="notificationsContainer">
+            {% if reviews|length == 0 %}
+            <div class="no-notification-box text-center py-5 bg-light rounded-5">
+                <h2>(つ﹏<。)</h2>
+                <h5 class="mb-0 text-secondary">No given reviewes</h5>
+            </div>
+            {% else %}
+            <h5 class="mb-3 text-secondary"><span class="text-dark">{{ reviews|length }}</span> Given Reviews</h5>
+            <div id="reviewedServiceContainer">
+                {% for review in reviews %}
+                <div class="reviewed-service-card">
+                    <div class="service-card-header">
+                        <div class="header-title">
+                            <h6>{{ review.object.service.category | title }} {{ review.app_label | title }}</h6>
+                            <h5>{{ review.object.vendor.name | truncatechars:20 }}</h5>
+                        </div>
+                        <div class="header-action-btn">
+                            <div class="btn-group dropstart">
+                                <button type="button" class="btn btn-sm dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-three-dots-vertical"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <form method="post">
+                                            {% csrf_token %}
+                                            <input type="hidden" value="{{ review.id }}" name="review_id">
+                                            <button type="submit" class="dropdown-item dropdown-item-danger" name="delete_review"><i class="bi bi-trash"></i>&nbsp; Delete</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="service-card-body">
+                        <ul class="recommend-for">
+                            {% for recommend in review.object.recommend_for %}
+                            <li>
+                                {% if recommend == 'On Time' %}
+                                <i class="bi bi-clock"></i>&nbsp;
+                                {% elif recommend == 'Price' %}
+                                <i class="bi bi-currency-rupee"></i>
+                                {% elif recommend == 'Quality' %}
+                                <i class="bi bi-patch-check"></i>&nbsp;
+                                {% elif recommend == 'Value' %}
+                                <i class="bi bi-coin"></i>&nbsp;
+                                {% else %}
+                                <i class="bi bi-stars"></i>&nbsp;
+                                {% endif %}
+                                {{ recommend }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        <p class="review"><span class="bg-light px-2 py-1 rounded"><small><i class="bi bi-star{% if review.object.rating == 5 %}-fill{% else %}-half{% endif %} text-warning"></i>&nbsp;{{ review.object.rating }}</small></span>&nbsp;<i class="bi bi-dot text-secondary"></i>&nbsp;{{ review.object.review }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

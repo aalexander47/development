@@ -1,0 +1,195 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Roboto:wght@400;700&family=Poppins:wght@400;600;700&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow-x: hidden;
+  scrollbar-width: none;
+}
+
+.container {
+  text-align: center;
+  width: 100vw;
+  height: auto;
+  padding: 20px;
+}
+
+.title {
+  max-width: 540px;
+  margin: 0 auto;
+  margin-top: 70px;
+  font-size: 3.5rem;
+  text-align: center;
+  font-family: "Poppins", sans-serif;
+  font-weight: 900;
+  line-height: 1.2;
+  color: rgb(92, 3, 3);
+}
+
+h2 {
+  margin-top: 40px;
+  font-size: 4.7rem;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: rgb(70, 51, 2);
+}
+
+.and {
+  color: goldenrod;
+  padding: 10px 30px 10px 30px;
+}
+
+.main {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  text-align: center;
+}
+
+.couple {
+  height: 320px;
+  margin: 5px 60px;
+}
+
+.text {
+  padding: 40px 18px;
+}
+.text h3 {
+  font-family: "Poppins", sans-serif;
+  font-weight: 800;
+  font-size: 45px;
+}
+.text h4 {
+  font-family: "Poppins", sans-serif;
+  font-size: 30px;
+  font-weight: 600;
+}
+.text p {
+  font-family: "Poppins", sans-serif;
+  font-size: 25px;
+  font-weight: 100;
+}
+
+.date {
+  font-family: "Poppins", sans-serif;
+  font-size: 18px;
+  font-weight: 100;
+  padding: 5px;
+}
+
+.mehendi {
+  font-family: "Poppins", sans-serif;
+  color: darkgreen;
+}
+
+.haldi {
+  font-family: "Poppins", sans-serif;
+  color: rgb(136, 136, 8);
+}
+
+.sangeet {
+  font-family: "Poppins", sans-serif;
+  color: rgb(163, 10, 10);
+}
+
+.phere {
+  font-family: "Poppins", sans-serif;
+  color: rgb(74, 1, 74);
+}
+
+.address {
+  max-width: 500px;
+  margin: 0 auto;
+  font-family: "Poppins", sans-serif;
+  font-size: 2rem;
+  font-weight: 100;
+  padding: 5px;
+}
+
+.bg-flower-top-left, .bg-flower-top-right, .bg-flower-bottom-left, .bg-flower-bottom-right {
+  position: absolute;
+  width: 50%;
+}
+.bg-flower-top-left {
+  top: -100px;
+  right: -100px;
+  transform: rotate(180deg);
+}
+.bg-flower-top-right {
+  top: -100px;
+  left: -100px;
+  transform: rotate(180deg);
+}
+.bg-flower-bottom-left {
+  bottom: -1200px;
+  left: -120px;
+}
+.bg-flower-bottom-right {
+  bottom: -1200px;
+  right: -120px;
+}
+
+@media (max-width: 768px) {
+  .title {
+    max-width: 300px;
+    font-size: 2rem;
+    padding-top: 15px;
+    line-height: 2rem;
+    margin-bottom: 25px;
+  }
+  h2 {
+    max-width: 200px;
+    margin: 0 auto;
+    font-size: 2.2rem;
+  }
+  .and {
+    font-size: 2.2rem;
+  }
+  .couple {
+    height: 200px;
+    margin: 5px 0 5px 0;
+  }
+  .text h3 {
+    font-size: 28px;
+  }
+  .text h4 {
+    font-size: 18px;
+  }
+  .text p {
+    font-size: 14px;
+  }
+  .bg-flower-top-left, .bg-flower-top-right, .bg-flower-bottom-left, .bg-flower-bottom-right {
+    width: 50%;
+    position: absolute;
+  }
+  .bg-flower-top-left {
+    top: 0px;
+    right: -15px;
+  }
+  .bg-flower-top-right {
+    top: 0px;
+    left: -15px;
+  }
+  .bg-flower-bottom-left {
+    bottom: -580px;
+    left: -15px;
+  }
+  .bg-flower-bottom-right {
+    bottom: -580px;
+    right: -15px;
+  }
+  .address {
+    margin-top: 18px;
+    max-width: 250px;
+    font-size: 1.2rem;
+  }
+}/*# sourceMappingURL=style.css.map */

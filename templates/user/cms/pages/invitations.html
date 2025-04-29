@@ -1,0 +1,42 @@
+{% extends 'user/cms/base.html' %}{% load static auth_extras %}
+{% block title %}My Invitations | Eventic{% endblock %}
+
+{% block content %}
+<div class="content-block">
+    <div class="main-header" id="MH01">
+        <div class="header-top">
+            <h1>My Invitations</h1>
+            <a href="{% url 'invitation:home' %}" class="save-btn"><i class="bi bi-search"></i><span>Templates</span></a>
+        </div>
+    </div>
+    <div class="main-body">
+        {% include 'vendor/comps/messages.html' %}
+        <div id="notificationsContainer">
+            {% if invitations|length == 0 %}
+            <div class="no-notification-box text-center py-5 bg-light rounded-5">
+                <h2>(つ﹏<。)</h2>
+                <h5 class="mb-0 text-secondary">No Invitations created</h5>
+                <a href="{% url 'invitation:home' %}" class="btn btn-primary shadow-none mt-3 rounded-5" target="_blank">Create Invitation</a>
+            </div>
+            {% else %}
+            <h5 class="mb-3 text-secondary"><span class="text-dark">{{ invitations|length }}</span> Invitations Created</h5>
+            <div id="likedServiceContainer"> 
+                {% for invitation in invitations %}
+                <a href="{% url 'invitation:cms_dashboard' invitation.id %}" class="card-link" role="button">
+                    <div class="liked-service-card">
+                        <div class="service-header">
+                            <img src="{{ invitation.template.thumbnail }}" alt="{{ invitation.template.name }} Digital Invitation Template - Eventic" height="auto" width="100%">
+                        </div>
+                        <div class="service-body">
+                            <h6 class="service-subtitle">{{ invitation.template.name }}</h6>
+                            <h6 class="service-title">{{ invitation.details.groom }} & {{ invitation.details.bride }}</h6>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'user/cms/base.html' %}{% load static auth_extras %}
+{% block title %}Saved Services | Eventic{% endblock %}
+
+{% block content %}
+<div class="content-block">
+    <div class="main-header" id="MH01">
+        <div class="header-top">
+            <div class="header-title">
+                <a href="{% url 'user:Saves' %}" class="back-btn"><i class="bi bi-arrow-left"></i></a>
+                <h1>Saved Services</h1>
+            </div>
+        </div>
+        <div class="header-bottom">
+            <ul>
+                <li><a href="{% url 'user:SavesService' %}" class="active">Services</a></li>
+                <li><a href="{% url 'user:SavesTemplate' %}">Templates</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main-body">
+        {% include 'vendor/comps/messages.html' %}
+        {% if saved_services %}
+        <div class="row">
+            {% for service in saved_services %}
+            <div class="col-md-4 mb-4">
+                <div class="card position-relative">
+                    <a href="{{ service.slug }}" target="_blank">
+                        <img src="{{ service.service.thumbnail.url }}" class="card-img-top" alt="{{ service.service.category }}">
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ service.service.vendor.name }}</h5>
+                        <p class="card-text">{{ service.service.category | title }}</p>
+                        <p class="card-text"><strong>Price:</strong> ₹{{ service.service.price }} / {{ service.service.price_unit }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-notification-box text-center py-5 bg-light rounded-5">
+            <h2>(つ﹏<。)</h2>
+            <h5 class="mb-0 text-secondary">No saved services</h5>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

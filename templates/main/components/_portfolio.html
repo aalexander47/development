@@ -1,0 +1,15 @@
+<h5 class="section-title">Featured Work</h5>
+<h2 class="portfolio-title">Explore <span>Stunning Creations</span> by Our Vendors</h2>
+<div class="portfolio-box">
+    <div class="portfolio-images" id="portfolioImages">
+        <div class="space-box-start"></div>
+        {% for image in portfolio_images %}
+        <img class="portfolio-img {% if forloop.first %}active{% else %}next{% endif %}" src="{{ image.url }}" alt="{{ image.description }}">
+        {% endfor %}
+        <div class="space-box-end"></div>
+    </div>
+    <div class="slider-btn-box">
+        <button type="button" class="prev-btn"><i class="bi bi-chevron-left"></i></button>
+        <button type="button" class="next-btn"><i class="bi bi-chevron-right"></i></button>
+    </div>
+</div>

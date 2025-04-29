@@ -1,0 +1,39 @@
+<div class="card rsvp-card mb-4 rounded-4 p-3 bg-light border-0 cursor-pointer" id="rsvp_{{ rsvp.id }}" data-bs-toggle="modal" data-bs-target="#rsvpMessageModal" data-bs-rsvp-id="{{ rsvp.id }}" data-bs-rsvp-name="{{ rsvp.name }}" data-bs-rsvp-status="{{ rsvp.attending }}" data-bs-rsvp-date="{{ rsvp.created_at|timesince }} ago" data-bs-rsvp-phone="{{ rsvp.phone }}" data-bs-rsvp-email="{{ rsvp.email }}">
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <h6 class="mb-0 text-dark fw-bold poppins">{{ rsvp.name }}</h6>
+            </div>
+            <div class="col-auto text-end" id="rsvp_{{ rsvp.id }}_status">
+                {% if rsvp.attending == 'yes' %}
+                <h6 class="text-success mb-0">Let's Goo...🥳</h6>
+                {% elif rsvp.attending == 'no' %}
+                <h6 class="text-danger mb-0">I can't....😭</h6>
+                {% elif rsvp.attending == 'maybe' %}
+                <h6 class="text-dark mb-0">Don't Know...😅</h6>
+                {% endif %}
+            </div>
+        </div>
+        <p class="my-3 fs-5 poppins"><i class="bi bi-chat-heart me-2"></i>{{ rsvp.message|truncatewords:20 }}</p>
+        <input type="hidden" id="rsvp_{{ rsvp.id }}_message" value="{{ rsvp.message }}">
+        <div class="row">
+            <div class="col">
+                <span><small class="text-muted">{{ rsvp.created_at|timesince }} ago</small></span>
+            </div>
+            <div class="col-auto">
+                <div class="row">
+                    {% if rsvp.phone %}
+                    <div class="col-auto pe-2">
+                        <a href="tel:{{ rsvp.phone }}" class="btn p-0 btn-sm"><i class="bi bi-telephone"></i></a>
+                    </div>
+                    {% endif %}
+                    {% if rsvp.email %}
+                    <div class="col-auto ps-1">
+                        <a href="mailto:{{ rsvp.email }}" class="btn p-0 btn-sm"><i class="bi bi-envelope"></i></a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

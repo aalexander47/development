@@ -1,0 +1,178 @@
+@import '../../core/scss/_theme.scss';
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: #ffffff !important;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 50px;
+    position: sticky;
+    top: 0;
+    background-color: #ffffff;
+    z-index: 999;
+    .logo {
+        height: 24px;
+        width: auto;
+        img {
+            height: 100%;
+            width: auto;
+        }
+    }
+    nav {
+        ul.pages {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin: 0;
+            padding: 0;
+            li {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                a {
+                    text-decoration: none;
+                    color: black;
+                    font-size: 16px;
+                    margin-bottom: 0;
+                    font-weight: 500;
+                    transition: all 0.3s ease-in-out;
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
+            }
+        }
+    }
+}
+
+main {
+    padding: 24px 50px 50px 50px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    section.thumbnail-container {
+        display: grid;
+        place-items: center;
+        aspect-ratio: 4/3;
+        background: #e3e4e9;
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
+        img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
+    }
+    section.details-container {
+        h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        p {
+            font-size: 16px;
+            font-weight: 400;
+            margin-bottom: 12px;
+        }
+        ul.features-list {
+            list-style: none;
+            margin-bottom: 12px;
+            padding: 0;
+            li {
+                margin-bottom: 8px;
+                i {
+                    margin-right: 8px;
+                }
+            }
+        }
+        .action-btns {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 50px;
+            a {
+                text-decoration: none;
+                padding: 12px 20px;
+                font-size: 18px;
+                border-radius: 50px;
+                transition: all 0.3s ease-in-out;
+            }
+            a.btn-create {
+                text-decoration: none;
+                color: #fff;
+                background: #007bff;
+                &:hover {
+                    background: #0069d9;
+                }
+            }
+            a.btn-preview {
+                color: #202020;
+                background: #f0f0f0;
+                border: 1px solid #ccc;
+                &:hover {
+                    background: #dddddd;
+                    color: #111;
+                }
+            }
+        }
+    }
+}
+
+footer {
+    padding: 24px 50px;
+    text-align: center;
+    p {
+        font-size: 16px;
+        color: #6d6d7e;
+        margin-bottom: 12px;
+        a {
+            text-decoration: none;
+            color: #3b3b3b;
+            transition: all 0.25s ease-in-out;
+        }
+        a:hover {
+            color: $primary-color;
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    header {
+        padding: 24px;
+        .logo {
+            height: 20px;
+            width: auto;
+        }
+        nav {
+            ul.pages {
+                display: none;
+            }
+        }
+    }
+    main {
+        padding: 8px 24px 50px 24px;
+        grid-template-columns: 1fr;
+        gap: 32px;
+        section.details-container {
+            h1 {
+                font-size: 2rem;
+            }
+            h5 {
+                font-size: 16px;
+            }
+            .action-btns {
+                margin-top: 24px;
+            }
+        }
+    }
+}

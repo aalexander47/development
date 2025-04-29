@@ -1,0 +1,220 @@
+@import '../../core/scss/theme';
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: $geist;
+}
+
+.d-none {
+    display: none;
+} 
+
+body {
+    background: #1a1a1a !important;
+    main {
+        display: grid;
+        place-items: center;
+        min-height: 100vh;
+        width: 100%;
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            #headerLogo {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                column-gap: 12px;
+                height: 50px;
+                margin-bottom: 42px;
+                img {
+                    height: 36px;
+                    width: auto;
+                }
+                .logo-icon {
+                    height: 32px;
+                }
+            }
+            .title {
+                font-size: 4rem;
+                text-align: center;
+                font-weight: 800;
+                line-height: 4.5rem;
+                margin-bottom: 48px;
+                color: white;
+                font-family: $poppins !important;
+            }
+            .start-form-group {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                column-gap: 12px;
+                margin: 0 auto;
+                input {
+                    font-size: 24px;
+                    border-radius: 50px;
+                    padding: 16px 24px;
+                    max-width: 500px;
+                    letter-spacing: 0.05em;
+                    width: 100%;
+                    outline: none;
+                    color: white;
+                    background: #4848488f;
+                    border: none;
+                    transition: all 0.25s ease-in-out;
+                }
+                input.is-invalid {
+                    border: 1px solid red;
+                    background: #ff00001a;
+                }
+                input:focus {
+                    background: #484848c2;
+                }
+                button {
+                    position: relative;
+                    padding: 12px;
+                    border-radius: 50px;
+                    border: none;
+                    outline: none;
+                    background: #ffffff24;
+                    color: #ffffff;
+                    font-size: 24px;
+                    font-weight: 500;
+                    display: flex;
+                    align-items: center;
+                    overflow: hidden;
+                    cursor: pointer;
+                    gap: 12px;
+                    transition: all 0.25s ease-in-out;
+                    .btn-text {
+                        text-wrap: nowrap;
+                        line-height: 36px;
+                        margin-right: 10px;
+                        letter-spacing: 0.5px;
+                        overflow-x: hidden;
+                        z-index: 2;
+                    }
+                    .overlay {
+                        position: absolute;
+                        display: flex;
+                        align-items: center;
+                        left: 12px;
+                        height: 36px;
+                        width: 36px;
+                        border-radius: 50px;
+                        z-index: 1;
+                        transition: all 0.5s ease-in-out;
+                    }
+                    .btn-icon {
+                        height: 36px;
+                        width: 36px;
+                        display: grid;
+                        border-radius: 50px;
+                        place-content: center;
+                        background: #6275f1;
+                        color: #ffffff;
+                        z-index: 2;
+                        transition: all 0.25s ease-in-out 0.3s;
+                        i {
+                            font-size: 16px;
+                            width: 36px;
+                            height: 36px;
+                            display: grid;
+                            place-content: center;
+                        }
+                    }
+                }
+                // Animated Button on Hover Effect the little dark color get from the button
+                button:hover {
+                    color: #1e1e1e;
+                    .btn-icon {
+                        background: #3249e0;
+                    }
+                    .overlay {
+                        width: 150px;
+                        scale: 2.5;
+                        background: #ffffff;
+                    }
+                }
+                button:disabled {
+                    cursor: not-allowed;
+                    opacity: 0.75;
+                }
+            }
+            p {
+                text-align: center;
+            }
+            #cuponBtn {
+                margin: 24px auto 0 auto;
+                padding: 12px 16px 12px 12px;
+                border: none;
+                border-radius: 50px;
+                display: flex;
+                flex-wrap: nowrap;
+                align-items: center;
+                column-gap: 4px;
+                cursor: pointer;
+                font-size: 1rem;
+                i {
+                    font-size: 1.2rem;
+                    height: 28px;
+                    width: 28px;
+                    display: grid;
+                    place-content: center;
+                    border-radius: 50px;
+                }
+            }
+            .coupon-applied {
+                background: $gold-gradient;
+                color: white;
+            }
+        }
+    }
+}
+
+.toast-container {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 1055;
+}
+
+@media screen and (max-width: 768px) {
+    body {
+        main {
+            .container {
+                padding: 18px;
+                #headerLogo {
+                    margin-bottom: 32px;
+                    height: 24px;
+                    justify-content: center;
+                    img {
+                        height: 24px;
+                    }
+                }
+                .title {
+                    font-size: 2.25rem;
+                    line-height: 2.75rem;
+                    margin-bottom: 24px;
+                    text-align: center;
+                    font-weight: 700;
+                    letter-spacing: 0;
+                }
+                .start-form-group {
+                    display: flex;
+                    align-items: center;
+                    flex-direction: column;
+                    justify-content: center;
+                    row-gap: 12px;
+                    input {
+                        font-size: 24px;
+                        border-radius: 12px;
+                        padding: 12px 16px;
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,39 @@
+{% extends 'user/cms/base.html' %}{% load static auth_extras %}
+{% block title %}My Saves | Eventic{% endblock %}
+
+{% block content %}
+<div class="content-block">
+    <div class="main-header" id="MH01">
+        <div class="header-top">
+            <h1>My Saves</h1>
+        </div>
+        <div class="header-bottom">
+            <ul>
+                <li><a href="{% url 'user:SavesService' %}">Services</a></li>
+                <li><a href="{% url 'user:SavesTemplate' %}">Templates</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main-body">
+        {% include 'vendor/comps/messages.html' %}
+        <div class="row mx-0">
+            <div class="col-md-6 col-6 mb-md-4 mb-2 px-0 pe-md-1 pe-1">
+                <div class="card rounded-5 shadow-sm border p-3 bg-primary">
+                    <div class="card-body">
+                        <h5 class="mb-1 text-white">Saved Services</h5>
+                        <h2 class="mb-0 text-white">{{ saved_services_count }}</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-6 mb-md-4 mb-2 px-0 px-md-1 ps-1">
+                <div class="card rounded-5 shadow-sm border p-3 bg-secondary">
+                    <div class="card-body">
+                        <h5 class="mb-1 text-white">Saved Templates</h5>
+                        <h2 class="mb-0 text-white">{{ saved_templates_count }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

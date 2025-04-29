@@ -1,0 +1,76 @@
+{% extends 'vendor/cms/base.html' %}
+{% block title %}Legal - Eventic{% endblock %}
+
+{% block content %}
+<div class="content-block">
+    <form action="{% url 'vendor:Legal' %}" method="post">
+        {% csrf_token %}
+        <div class="main-header" id="MH01">
+            <div class="header-top">
+                <div class="header-title">
+                    {% if request.META.HTTP_REFERER %}
+                    <a href="{{ request.META.HTTP_REFERER }}" class="back-btn"><i class="bi bi-arrow-left"></i></a>
+                    {% else %}
+                    <a href="{% url 'vendor:Details' %}" class="back-btn"><i class="bi bi-arrow-left"></i></a>
+                    {% endif %}
+                    <h1>Legal</h1>
+                </div>
+                <button type="submit" class="save-btn" name="update_legal_details"><i class="bi bi-floppy"></i><span>Save</span></button>
+            </div>
+            <div class="header-bottom">
+                <ul>
+                    <li><a href="{% url 'vendor:Team' %}" class="active">Team</a></li>
+                    <li><a href="{% url 'vendor:Details' %}">Details</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="main-body">
+            {% include 'vendor/comps/messages.html' %}
+            <div class="content-area-container mt-2 mb-5" id="termsAndConditions">
+                <label for="content" class="content-area-label mb-3"><h4><span class="content-area-label-text"><i class="bi bi-folder me-2"></i>Terms and Conditions</span></h4></label>
+                <div class="content-area-box">
+                    <div class="content-area custom-scrollbar" data-bs-target="#contentAreaModal" data-bs-toggle="modal" data-id="termsAndConditions">{% if vendor.legal.terms_conditions %}{{ vendor.legal.terms_conditions | safe }}{% endif %}</div>
+                    <textarea name="terms_conditions" class="d-none">{% if vendor.legal.terms_conditions %}{{ vendor.legal.terms_conditions }}{% endif %}</textarea>
+                </div>
+            </div>
+            <div class="content-area-container mt-2 mb-5" id="refundPolicy">
+                <label for="content" class="content-area-label mb-3"><h4><span class="content-area-label-text"><i class="bi bi-arrow-repeat me-2"></i>Refund Policy</span></h4></label>
+                <div class="content-area-box">
+                    <div class="content-area custom-scrollbar" data-bs-target="#contentAreaModal" data-bs-toggle="modal" data-id="refundPolicy">{% if vendor.legal.refund_policy %}{{ vendor.legal.refund_policy | safe }}{% endif %}</div>
+                    <textarea name="refund_policy" class="d-none">{% if vendor.legal.refund_policy %}{{ vendor.legal.refund_policy }}{% endif %}</textarea>
+                </div>
+            </div>
+            <div class="content-area-container mt-2 mb-5" id="cancellationPolicy">
+                <label for="content" class="content-area-label mb-3"><h4><span class="content-area-label-text"><i class="bi bi-folder-x me-2"></i>Cancellation Policy</span></h4></label>
+                <div class="content-area-box">
+                    <div class="content-area custom-scrollbar" data-bs-target="#contentAreaModal" data-bs-toggle="modal" data-id="cancellationPolicy">{% if vendor.legal.cancellation_policy %}{{ vendor.legal.cancellation_policy | safe }}{% endif %}</div>
+                    <textarea name="cancellation_policy" class="d-none">{% if vendor.legal.cancellation_policy %}{{ vendor.legal.cancellation_policy }}{% endif %}</textarea>
+                </div>
+            </div>
+            <div class="content-area-container mt-2 mb-5" id="paymentPolicy">
+                <label for="content" class="content-area-label mb-3"><h4><span class="content-area-label-text"><i class="bi bi-currency-rupee me-2"></i>Payment Policy</span></h4></label>
+                <div class="content-area-box">
+                    <div class="content-area custom-scrollbar" data-bs-target="#contentAreaModal" data-bs-toggle="modal" data-id="paymentPolicy">{% if vendor.legal.payment_policy %}{{ vendor.legal.payment_policy | safe }}{% endif %}</div>
+                    <textarea name="payment_policy" class="d-none">{% if vendor.legal.payment_policy %}{{ vendor.legal.payment_policy }}{% endif %}</textarea>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% include 'cms/modals/_contentAreaModal.html' %}
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        const textareas = document.querySelectorAll('.autoResizeTextarea');
+
+        textareas.forEach(textarea => {
+            textarea.addEventListener('input', function() {
+                this.style.height = 'auto';  // Reset height to auto to correctly calculate new scrollHeight
+                this.style.height = this.scrollHeight + 'px';  // Set height to new scrollHeight
+            });
+        });
+    });
+</script>
+{% endblock %}

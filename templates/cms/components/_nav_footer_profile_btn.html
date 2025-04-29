@@ -1,0 +1,24 @@
+{% load static %}
+<div class="nav-btn">
+    <div class="nav-profile-btn{% if cp == 'profile' %} active{% endif %}">
+        <div class="profile-img">
+            <a href="{% if user.priority == 'vendor' %}{% url 'vendor:Profile' %}{% elif user.priority == 'staff' %}{% url 'dashboard:Profile' %}{% else %}{% url 'user:Profile' %}{% endif %}">
+                <img src="{% if user.profile_picture %}{{ user.profile_picture.url }}{% else %}{% static 'assets/defaults/profile.png' %}{% endif %}" alt="{{ request.user.first_name }} {{ request.user.last_name }} Eventic Profile Picture">
+            </a>
+        </div>
+        <div class="profile-info">
+            <a href="{% if user.priority == 'vendor' %}{% url 'vendor:Profile' %}{% elif user.priority == 'staff' %}{% url 'dashboard:Profile' %}{% else %}{% url 'user:Profile' %}{% endif %}">
+                <h6 class="profile-fullname">{{ request.user.first_name|truncatechars:"12" }}</h6>
+                <p class="profile-username">@{{ request.user.username|truncatechars:"16" }}</p>
+            </a>
+        </div>
+        <div class="btn-group dropup">
+            <button class="btn dropdown" type="button" id="dropdownMenuProfile" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-three-dots"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item dropdown-item-danger" href="{% url 'auth:logout' %}"><i class="bi bi-box-arrow-left"></i>&nbsp; Logout</a></li>
+            </ul>
+        </div>
+    </div>
+</div>

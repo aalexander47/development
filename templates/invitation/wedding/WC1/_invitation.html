@@ -1,0 +1,100 @@
+{% load static auth_extras %}
+<div id="mainCanvas">
+    <div class="background-top">
+        <img src="{% static 'assets/invitation/wedding/WC1/green-leafs-frame-bg.png' %}" alt="Green Leaf Background">
+    </div>
+    <div class="content">
+        <h3 animate>We Invite You To Celebrate Our Wedding</h3>
+        <h2 animate>Save The Date</h2>
+        <div class="names">
+            <div>
+                <p 
+                    {% if page == "create" or page == 'update' %}
+                    class="name editor-data" 
+                    data-type="text" 
+                    data-key="groom" 
+                    data-label="Groom's Name" 
+                    id="groom_text" 
+                    {% else %}
+                    class="name"
+                    {% endif %}
+                    animate
+                >{% if page == 'create' or page == 'preview' %}Groom{% else %}{{ invitation.details.groom }}{% endif %}</p>
+            </div>
+            <div>
+                <p class="and" animate>&</p>
+            </div>
+            <div>
+                <p 
+                    {% if page == "create" or page == 'update' %}
+                    class="name editor-data" 
+                    data-type="text" 
+                    data-key="bride" 
+                    data-label="Bride's Name" 
+                    id="bride_text" 
+                    {% else %}
+                    class="name"
+                    {% endif %}
+                    animate
+                >{% if page == 'create' or page == 'preview' %}Bride{% else %}{{ invitation.details.bride }}{% endif %}</p>
+            </div>
+        </div>
+        {% if page == 'create' or page == 'preview' or page == 'update' %}
+        <div class="datetime-box">
+            <p 
+                {% if page == "create" or page == "update" %}
+                class="date editor-data" 
+                id="date_text" 
+                data-type="datetime" 
+                data-key="datetime" 
+                data-label="Date and Time" 
+                {% else %}
+                class="date"
+                {% endif %}
+                animate
+            >{% if page == 'create' or page == 'preview' %}11th April, 2021{% else %}{% if invitation.details.eventDate %}{{ invitation.details.eventDate|date_strftime:"%B %d, %Y" }}{% endif %}{% endif %}</p>
+            <span animate>|</span>
+            <p 
+                {% if page == "create" or page == "update" %}
+                class="time editor-data" 
+                id="time_text" 
+                data-type="datetime" 
+                data-key="datetime" 
+                data-label="Date and Time" 
+                {% else %}
+                class="time"
+                {% endif %}
+                animate
+            >{% if page == "create" or page == 'preview' %}10:00 AM{% else %}{% if invitation.details.eventTime %}{{ invitation.details.eventTime|to_12_hour_format }}{% endif %}{% endif %}</p>
+        </div>
+        {% endif %}
+        {% if IN_DEVELOPMENT and HIDDEN %}
+        <div class="datetime-container">
+            <div class="time-box">11:00 AM</div>
+            <div class="day-box">Friday</div>
+            <div class="date-box">28</div>
+            <div class="month-box">October</div>
+            <div class="year-box">2021</div>
+        </div>
+        {% endif %}
+        <div class="address">
+            <img src="https://cdn-icons-png.flaticon.com/512/14036/14036748.png" height="30px" width="30px" alt="location icon" animate>
+            <p 
+                class="editor-data" 
+                {% if page == 'create' or page == 'update' %}
+                id="address_text" 
+                data-type="address" 
+                data-key="address" 
+                data-label="Venue Location" 
+                {% endif %}
+                animate
+            >{% if page == 'create' or page == 'preview' %}Vakil Nagar, Erandwane, Pune, Maharashtra, India - 411004{% else %}{% if invitation.details.venueLocation.address %}{{ invitation.details.venueLocation.address }}{% endif %}{% if invitation.details.venueLocation.city %}, {{ invitation.details.venueLocation.city }}{% endif %}{% if invitation.details.venueLocation.state %}, {{ invitation.details.venueLocation.state }}{% endif %}{% if invitation.details.venueLocation.countryName %}, {{ invitation.details.venueLocation.countryName }}{% endif %}{% if invitation.details.venueLocation.postalCode %}, {{ invitation.details.venueLocation.postalCode }}{% endif %}{% endif %}</p>
+            {% if page != 'create' and page != 'update' %}
+            <a href="{{ invitation.details.venueLocation.mapUrl }}" class="btn-location" target="_blank"><i class="bi bi-geo-fill me-1"></i>Location</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="background-bottom">
+        <img animate src="{% static 'assets/invitation/wedding/WC1/winter-leaf-fall-bg.png' %}" alt="Winter Leaf Fall Background">
+    </div>
+</div>

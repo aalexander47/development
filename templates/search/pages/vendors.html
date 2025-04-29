@@ -1,0 +1,54 @@
+{% extends 'main/base.html' %}
+{% load auth_extras static %}
+{% block title %}Search for event vendors - Eventic{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/main/styles/search.css' %}">
+{% endblock %}
+
+{% block content %}
+{% include 'main/components/_search_container.html' %}
+<section id="main">
+    <div class="results-header-box">
+        <p>About <span>{{ results|length }}</span> result{% if results|length > 1 %}s{% endif %} for <span> {% if request.GET.q %}{{ request.GET.q }}{% endif %}</span></p>
+    </div>
+    {% if results %}
+    <div class="cards">
+        {% for result in results %}
+        <a href="{% url 'main:Profile' result.account_id result.slug %}" role="button" target="_blank" class="eventron-card">
+            <div class="thumbnail">
+                {% if result.sponsorship_active %}
+                <div class="sponsor-active"><h6>SPONSORED</h6></div>
+                {% endif %}
+                {% if IN_DEVELOPMENT and result.eps_score %}
+                <div class="eps-score">
+                    <i class="bi bi-speedometer2"></i>
+                    <p>{{ result.eps_score }}</p>
+                </div>
+                {% endif %}
+                <img src="{% if result.has_profile_picture %}{{ result.profile_picture.url }}{% else %}{% static 'assets/defaults/eventic-x-mas.png' %}{% endif %}" onerror=`this.onerror=null; this.src="{% static 'assets/defaults/1x1.png' %}";` alt="{{ result.name }}, {{ result.city }} - Eventic" loading="lazy" decoding="async">
+                <div class="overlay"></div>
+                <div class="card-header">
+                    <div class="eventron-info">
+                        <p class="eventron-service">{% if result.ad_active %}<i class="bi bi-badge-ad-fill"></i>{% endif %}</p>
+                        <h2>{{ result.name|title|truncatechars:20 }} {% if result.is_verified %}<small><i class="bi bi-patch-check-fill text-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Verified Vendor by Eventic"></i></small>{% endif %}</h2>
+                        <p class="info-text"><i class="bi bi-geo-alt-fill"></i>&nbsp;{{ result.city|title }}</p>
+                    </div>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="no-results-box">
+        <h2>(っ◞‸◟c)</h2>
+        <h3>No Matches Found</h3>
+        <p>We couldn’t find any vendors matching your search.</p>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'scripts/search/search.js' %}"></script>
+{% endblock %}

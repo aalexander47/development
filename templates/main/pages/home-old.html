@@ -1,0 +1,95 @@
+{% extends 'main/base.html' %}{% load auth_extras static %}
+{% block title %}Eventic - Crafting moments that matter.{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/main/styles/home.css' %}">
+{% include 'main/components/_meta.html' %}
+{% include 'main/utils/_google-analytics.html' %}
+{% endblock %}
+
+{% block content %}
+{% if IN_DEVELOPMENT and HIDDEN %}
+<section class="hero-banner">
+    <div class="hero-banner-content">
+        <div class="banner-content">
+            <h3 class="banner-content-title"><i class="bi bi-stars"></i>&nbsp;Join As a <span>Event Professional</span></h3>
+            <a href="{% url 'auth:business_registration' %}" class="banner-content-btn">Register Now</a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if not request.user|has_group:"vendor" and not request.user.is_staff %}
+<section id="businsess_register_section">
+    <div class="box">
+        <img src="{% static 'assets/defaults/d662502ccd66ae1c558091087fcaf020.jpg' %}" alt="Background Gold and Black Textured Image" class="bg-cover">
+        <h3 class="poppins">Level Up Your Events: Join the Pro Network</h3>
+        <p class="geist">Showcase your skills, connect with clients, and book gigs. It's free!</p>
+        <a href="{% url 'auth:business_registration' %}" role="button" class="link-btn"><i class="bi bi-person-check-fill"></i> Join Now</a>
+    </div>
+</section>
+{% endif %}
+
+<div class="search-main-box">
+    {% include 'main/components/_search_container.html' %}
+</div>
+
+{% if featured_vendors %}
+<section id="featuredVendors">
+    <h5 class="section-subheading">Featured Vendors</h5>
+    <h2 class="section-title">Our <span>Top Rated</span> Vendors</h2>
+    <div class="eventron-box custom-scrollbar">
+        {% for vendor in featured_vendors %}
+        <a class="eventron-box-item" href="{% url 'main:vendor' vendor.user.username %}" target="_blank">
+            <div class="eventron-box-item-img">
+                <img src="{% if vendor.profile_picture %}{{ vendor.profile_picture.url }}{% else %}{% static 'assets/defaults/eventic-x-mas.png' %}{% endif %}" alt="Eventron Box Item Image" onerror=`this.onerror=null; this.src="{% static 'assets/defaults/eventic.png' %}";` loading="lazy" decoding="async">
+            </div>
+            <div class="eventron-box-item-content">
+                <h3>{{ vendor.name|title|truncatechars:16 }}{% if vendor.is_verified %} <i class="bi bi-patch-check-fill text-primary"></i>{% endif %}</h3>
+                <p>{{ vendor.city|truncatechars:18 }}</p>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+{% if featured_photographers %}
+<div class="service-cards-container">
+    <div class="carousel">
+        <div class="carousel__wrapper">
+            <div class="carousel__header">
+                <h2 class="carousel__headline">Photography Services
+                </h2>
+                <div class="carousel__controls">
+                    <button class="carousel__arrow disabled arrow-prev"></button>
+                    <button class="carousel__arrow arrow-next"></button>
+                </div>
+            </div>
+            <ul class="carousel__content">
+                {% for service in featured_photographers %}
+                <li class="carousel__item">
+                    <a href="{% url 'photographer:service' service.id service.slug %}" class="carousel__item__link" target="_blank"><img class="carousel__item__image" src="{% if service.thumbnail %}{{ service.thumbnail.url }}{% else %}{% static 'assets/defaults/no-thumbnail-dark-x-mas.png' %}{% endif %}" alt="" />
+                        <div class="carousel__description">
+                            <h6 class="carousel__subtitle">{{ service.category|title }}</h6>
+                            <h6 class="carousel__title">{{ service.vendor.name|title|truncatechars:24 }}{% if service.is_verified %}&nbsp;<small><i class="bi bi-patch-check-fill text-primary"></i></small>{% endif %}</h6>
+                            <h6 class="carousel__text"><i class="bi bi-geo-alt-fill me-1"></i>{{ service.vendor.city }}</h6>
+                        </div>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% if portfolio_images %}
+<section id="portfolioContainer">
+    {% include 'main/components/_portfolio.html' %}
+</section>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'scripts/main/home.js' %}"></script>
+{% endblock %}

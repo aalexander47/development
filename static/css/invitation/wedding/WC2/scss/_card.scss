@@ -1,0 +1,171 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Engagement&display=swap');
+   
+.invitation-card {
+    width: 100%;
+    max-width: 380px;
+    background: white;
+    border-radius: 15px;
+    padding: 0;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    .brand-logo {
+        height: 42px;
+        width: 42px;
+        margin-top: 0;
+        margin-bottom: 24px;
+    }
+    h1 {
+        font-size: 26px;
+        font-weight: 600;
+        color: #d63384;
+    }
+    .invite-text {
+        font-size: 16px;
+        color: #666;
+        margin: 8px auto 0 auto;
+        max-width: 250px;
+        padding: 0;
+      text-align:center;
+    }
+    .names {
+        font-size: 4rem;
+        color: #ff3366;
+        font-family: "Engagement", cursive;
+        white-space: nowrap; /* Ensure text stays in one line */
+        font-size: clamp(24px, 10vw, 50px); /* Adjust min, preferred, and max font size */
+    }
+    span {
+    font-size: 32px;
+    color: black;
+    white-space: nowrap; /* Ensure text stays in one line */
+    font-size: clamp(12px, 5vw, 24px); /* Adjust min, preferred, and max font size */
+    }
+    .date {
+        font-size: 18px;
+        font-weight: 500;
+        color: #d63384;
+    }
+    .venue {
+        font-size: 16px;
+        font-weight: 400;
+        color: #444;
+    }
+    .footer {
+        margin-top: 20px;
+        font-size: 14px;
+        color: #999;
+    }
+    .qr-container {
+        width: 100%;
+        max-width: 120px;
+        margin: 20px auto 12px auto;
+        display: flex;
+        justify-content: center;
+        position: relative;
+        .qrcode-box {
+            width: 100%;
+            aspect-ratio: 1/1;
+            background: white;
+            padding: 0;
+            border-radius: 12px;
+            display: grid;
+            place-content: center;
+            img {
+                width: 100%;
+                height: 100%;
+                aspect-ratio: 1/1;
+                object-fit: contain;
+            }
+        }
+        .qr-logo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 25%; /* Logo size */
+            aspect-ratio: 1/1;
+            padding: 0;
+            background: white;
+            border-radius: 10px;
+        }
+    }
+    .header-bg {
+        width: 100%;
+        height: auto;
+        margin-top: 0;
+        /* Make white background to transparent */
+        mix-blend-mode: multiply;
+    }
+    .footer-img {
+        width: 100%;
+        height: auto;
+        margin-top: 0;
+        /* Make white background to transparent */
+        mix-blend-mode: multiply;
+        transform: translateY(20px);
+    }
+    .footer, .footer-cc {
+        font-size: 14px;
+        color: #555;
+        margin-top: 20px;
+        max-width: 280px;
+        text-align: center;
+        margin: 0 auto;
+    }
+    .footer {
+        margin-top: 8px;
+        margin-bottom: 0;
+    }
+    .footer-cc {
+        margin-top: 24px;
+        color: #666;
+    }
+    .footer-cc span {
+        font-size: 14px;
+        font-weight: 600;
+        color: #3e3e3e;
+    }
+}
+
+.card-qrcode {
+    padding: 12px;
+    background-color: transparent;
+    .qr-container {
+        width: 100%;
+        max-width: 180px;
+        margin-bottom: 12px;
+        display: flex;
+        justify-content: center;
+        position: relative;
+        .qrcode-box {
+            width: 90%;
+            aspect-ratio: 1/1;
+            background: transparent;
+            padding: 0;
+            border-radius: 12px;
+            display: grid;
+            place-content: center;
+            img {
+                width: 100%;
+                height: 100%;
+                aspect-ratio: 1/1;
+                object-fit: contain;
+            }
+        }
+        .qr-logo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 25%; /* Logo size */
+            aspect-ratio: 1/1;
+            padding: 0;
+            background: white;
+            border-radius: 8%;
+        }
+    }
+}

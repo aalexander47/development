@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting...</title>
+    <link rel="stylesheet" href="{% static 'css/payment/styles/br_payment_success.css' %}">
+    <link rel="shortcut icon" href="{% static 'assets/logos/eventic-golden-favicon.png' %}" type="image/x-icon">
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var url = "{% url 'auth:auth_redirect_view' %}"; // Replace with your target URL
+            var countdown = 5;
+
+            function updateCountdown() {
+                if (countdown > 0) {
+                    document.getElementById("countdown").innerText = `0${countdown}`;
+                    countdown--;
+                } else {
+                    window.location.href = url;
+                }
+            }
+
+            setInterval(updateCountdown, 1000);
+            updateCountdown();
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="logo" id="headerLogo">
+            <a href="{% url 'main:home' %}"><img class="logo-icon" src="{% static 'assets/logos/Eventic-golden-white-lg-logo-new.png' %}" alt="Eventic Gold Icon Logo"></a>
+        </div>
+        <div class="box">
+            <h1>Payment Successful!</h1>
+            <h3>Thank you for your payment. Your registration is now complete.</h3>
+            <p>You will be redirected to the your <span>Eventic dashboard</span> page in <span id="countdown">5</span> seconds.</p>
+        </div>
+    </div>
+</body>
+</html>

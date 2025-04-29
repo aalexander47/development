@@ -1,0 +1,225 @@
+{% extends 'dashboard/cms/base.html' %}{% load auth_extras %}
+{% block title %}Pricings | Eventic{% endblock %}
+
+{% block content %}
+<div class="content-block">
+    <div class="main-header" id="MH01">
+        <div class="header-top">
+            <div class="header-title">
+                <h1>Pricings</h1>
+            </div>
+            <button type="button" class="save-btn" name="add_pricing_tag" data-bs-toggle="modal"
+                data-bs-target="#addPricingModal"><i class="bi bi-plus"></i><span>Add</span>
+            </button>
+        </div>
+        <div class="header-bottom">
+            <ul>
+                <li><a href="{% url 'dashboard:Coupons' %}">Coupons</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main-body">
+        {% include 'vendor/comps/messages.html' %}
+        <div id="pricingContainer">
+            <h6 class="text-secondary">Total <span class="text-dark">{{ pricing_tags|length }}</span> Pricing Tags</h6>
+            {% for price_tag in pricing_tags %}
+            <div class="vendor-box card p-3 rounded-4 mb-1" id="priceTag{{ price_tag.id }}">
+                <div class="row align-items-start">
+                    <div class="col-11 pe-1">
+                        <h5 class="mb-0"><span class="price-tag-name">{{ price_tag.name }}</span></h5>
+                    </div>
+                    <div class="col-auto text-end ms-auto ps-1">
+                        <div class="dropdown dropstart">
+                            <button class="btn dropdown p-0 border-0 shadow-none" type="button" id="dropdownMenuButton{{ forloop.counter }}" data-bs-toggle="dropdown" aria-expanded="false">
+                              <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu p-1 rounded-3 shadow" aria-labelledby="dropdownMenuButton{{ forloop.counter }}">
+                                <li><button class="dropdown-item py-2 rounded" data-bs-toggle="modal" data-bs-target="#updatePricingModal" data-id="{{ price_tag.id }}" onclick="updatePricingTag(this)"><i class="bi bi-pencil me-2"></i>Edit</button></li>
+                                <li><button class="dropdown-item dropdown-item-danger py-2 rounded" data-bs-toggle="modal" data-bs-target="#deletePriceTagModal" data-id="{{ price_tag.id }}" onclick="deletePricingTag(this)"><i class="bi bi-trash me-2"></i>Delete</button></li>
+                            </ul>
+                        </div> 
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md col-12">
+                        <h6 class="mb-0 mt-1"><small><i class="bi bi-tag"></i></small>&nbsp;<span class="price-tag">{{ price_tag.tag }}</span>&emsp;<small><i class="bi bi-bezier2"></i></small>&nbsp;<span class="price-tag-category">{% if price_tag.category %}{{ price_tag.category }}{% else %}--{% endif %}</span></h6>
+                    </div>
+                    <div class="col-md-auto col-12">
+                        <p class="mb-0"><small><i class="bi bi-currency-rupee"></i></small><span class="price-tag-price">{{ price_tag.price }}</span> / <span class="price-tag-unit">{{ price_tag.unit }}</span></p>
+                    </div>
+                </div>
+                <p class="mb-0"><span class="price-tag-description">{{ price_tag.description }}</span></p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Add Pricing Modal -->
+<div class="modal fade" id="addPricingModal" tabindex="-1" aria-labelledby="addPricingModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="addPricingModalLabel">Add Pricing Tag</h5>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-0">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"><i class="bi bi-card-heading"></i></span>
+                        <input type="text" class="form-control shadow-none" placeholder="Name" name="name" required>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8 col-12 mb-3 pe-md-1">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-tag"></i></span>
+                                <input type="text" class="form-control shadow-none" placeholder="Tag" name="tag" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12 mb-3 ps-md-1">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-bezier2"></i></span>
+                                <select name="category" id="category" class="form-select shadow-none">
+                                    <option value="Service">Service</option>
+                                    <option value="Feature">Feature</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row align-items-center mb-3 mx-0">
+                        <div class="col-md-7 col-6 px-0">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-currency-rupee"></i></span>
+                                <input type="number" class="form-control shadow-none" placeholder="Price" name="price" step=".01" required>
+                            </div>
+                        </div>
+                        <div class="col-1 px-1 text-center">/</div>
+                        <div class="col-md-4 col-5 px-0">
+                            <div class="select-group">
+                                <select class="form-select shadow-none border-0" name="unit" required>
+                                    <option value="Day">Day</option>
+                                    <option value="Month">Month</option>
+                                    <option value="Once">Once</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control shadow-none" name="description" rows="3" placeholder="--" maxlength="500"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary shadow-none rounded-3" name="add_pricing_tag"><i class="bi bi-plus"></i>&nbsp;Add Tag</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Update Pricing Modal -->
+<div class="modal fade" id="updatePricingModal" tabindex="-1" aria-labelledby="updatePricingModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="updatePricingModalLabel">Update Pricing Tag</h5>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-0">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"><i class="bi bi-card-heading"></i></span>
+                        <input type="text" class="form-control shadow-none" placeholder="Name" id="update_name" name="name" required>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8 col-12 mb-3 pe-md-1">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-tag"></i></span>
+                                <input type="text" class="form-control shadow-none" placeholder="Tag" id="update_tag" name="tag" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12 mb-3 ps-md-1">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-bezier2"></i></span>
+                                <select name="category" id="update_category" class="form-select shadow-none">
+                                    <option value="Service">Service</option>
+                                    <option value="Feature">Feature</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row align-items-center mb-3 mx-0">
+                        <div class="col-md-7 col-6 px-0">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-currency-rupee"></i></span>
+                                <input type="number" class="form-control shadow-none" placeholder="Price" id="update_price" name="price" step=".01" required>
+                            </div>
+                        </div>
+                        <div class="col-1 px-1 text-center">/</div>
+                        <div class="col-md-4 col-5 px-0">
+                            <div class="select-group">
+                                <select class="form-select shadow-none border-0" id="update_unit" name="unit" required>
+                                    <option value="Day">Day</option>
+                                    <option value="Month">Month</option>
+                                    <option value="Once">Once</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control shadow-none" id="update_description" name="description" rows="3" placeholder="--" maxlength="500"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary shadow-none rounded-3" name="update_pricing_tag" id="update_pricing_tag">Update Tag</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Delete Pricing Modal Popup -->
+<div class="modal fade" id="deletePriceTagModal" tabindex="-1" aria-labelledby="deletePriceTagModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4">
+        <div class="modal-header border-0">
+          <h5 class="modal-title" id="deletePriceTagModalLabel">Delete Price Tag</h5>
+          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            <div class="modal-body text-center mb-3">
+                <p>Are you sure you want to remove <strong><span id="remove_price_tag"></span></strong>?</p>
+                <button type="submit" class="btn btn-danger text-white shadow-none" name="delete_pricing_tag" id="delete_pricing_tag"><i class="bi bi-trash3"></i>&nbsp; Delete</button>
+            </div>
+        </form>
+      </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+<script type="text/javascript">
+    function updatePricingTag(elem) {
+        const id = elem.getAttribute('data-id');
+        const info_card = document.getElementById(`priceTag${id}`);
+        document.getElementById('update_pricing_tag').value = id;
+        document.getElementById('update_name').value = info_card.querySelector('.price-tag-name').textContent;
+        document.getElementById('update_tag').value = info_card.querySelector('.price-tag').textContent;
+        document.getElementById('update_price').value = info_card.querySelector('.price-tag-price').textContent;
+        document.getElementById('update_unit').value = info_card.querySelector('.price-tag-unit').textContent;
+        document.getElementById('update_category').value = info_card.querySelector('.price-tag-category').textContent;
+        document.getElementById('update_description').value = info_card.querySelector('.price-tag-description').textContent;
+    }
+
+    function deletePricingTag(elem) {
+        const id = elem.getAttribute('data-id');
+        const info_card = document.getElementById(`priceTag${id}`);
+        document.getElementById('delete_pricing_tag').value = id;
+        document.getElementById('remove_price_tag').innerText = info_card.querySelector('.price-tag').innerText;
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,36 @@
+@import '../../../../core/scss/_theme.scss';
+@import '../../../../core/scss/bootstrap5.scss';
+
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: $poppins;
+}
+
+
+body {
+    main {
+        position: relative;
+        min-height: 100vh;
+    } 
+    footer {
+        padding: 24px;
+        text-align: center;
+        .edit-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            a {
+                color: #222;
+                text-decoration: none;
+            }
+        }
+    }
+}
+
+@import '_invitation.scss'; 
+@import '_card.scss'; 
+@import '../../details.scss';

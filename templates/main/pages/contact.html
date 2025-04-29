@@ -1,0 +1,87 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %}Contact Us - Eventic{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/main/styles/contact.css' %}">
+    {% include 'main/utils/_google-analytics.html' %}
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>Contact Us</h1>
+        <p>We're here to help! Reach out to us for any support or inquiries.</p>
+    </div>
+</section>
+
+<!-- Company Details & Contact Form Section -->
+<section class="contact-section">
+    <div class="container px-0">
+        <div class="contact-info">
+            <h2>Get in Touch</h2>
+            <p>We’re eager to hear from you. Drop us a line with your queries or feedback, and we’ll get back to you promptly.</p>
+            <div class="info-item">
+                <i class="bi bi-telephone-fill"></i>&nbsp; <p>+91 {{ CONTACT_PHONE }}</p>
+            </div>
+            <div class="info-item">
+                <i class="bi bi-envelope-fill"></i>&nbsp; <p>contact@eventic.in</p>
+            </div>
+            <div class="info-item">
+                <i class="bi bi-geo-alt-fill"></i>&nbsp; <p>Kalewadi Phata, Pimpri-Chinchwad, Maharashtra, India</p>
+            </div>
+        </div>
+
+        <!-- Contact Form -->
+            {% if not enquired %}
+        <div class="contact-form">
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn" name="contact">Send Message</button>
+            </form>
+        </div>
+        {% else %}
+        <div class="card border-0">
+            <div class="card-body text-center p-5 d-flex flex-column justify-content-center align-items-center">
+                <h2 class="card-title text-success">Thank You!</h2>
+                <p>Your message has been submitted successfully. We will get back to you soon.</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Promotion Section -->
+<section class="promo-section">
+    <div class="promo-container">
+        <img src="https://us.123rf.com/450wm/katerinaperes/katerinaperes1803/katerinaperes180300016/96729067-hand-sketched-lettering-typography-for-webpage-with-lettering-join-us-promotional-banner-for-market.jpg?ver=6" alt="Register with Eventic">
+        <div class="promo-content">
+            <h2>Join Eventic Today!</h2>
+            <p>Register now and become part of a thriving event management community. Unlock endless opportunities!</p>
+            <a href="{% url 'auth:business_registration' %}" class="btn promo-btn" role="button">Register Now</a>
+        </div>
+    </div>
+</section>
+
+<!-- Find Us Section -->
+<section class="find-us">
+    <h2>Find Us</h2>
+    <div class="map-container">
+        <!-- Embed Google Map -->
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d542.2072747856016!2d73.78162035040269!3d18.60796467498756!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2b90f69ac5363%3A0xcb950a43ef584624!2s63%2F1%2F21%2C%20Indrayani%20Nagar%2C%20Madhuban%20Colony%2C%20Kalewadi%2C%20Pimpri-Chinchwad%2C%20Maharashtra%20411033!5e1!3m2!1sen!2sin!4v1738073018736!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+</section>
+{% endblock %}

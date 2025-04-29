@@ -1,0 +1,228 @@
+#mainCanvas {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 150px 400px 0 0;
+    background: linear-gradient(to bottom right, #b0b0b0, #b7b7b7, #b4bbc3, #b4bbc3, #b2b9c1);
+    img.invitation-header-image {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        width: 100%;
+        max-height: 100vh;
+        object-fit: cover;
+        z-index: 0;
+        background: white;
+    }
+    .content {
+        z-index: 1;
+    }
+    .invitation-header {
+        font-size: 2rem;
+        margin-bottom: 80px;
+        font-family: "PT Serif", serif;
+        letter-spacing: 0.05em;
+        font-weight: 500;
+        color: #546068;
+        text-align: center;
+        span, .char {
+            font-family: "PT Serif", serif;
+        }
+    }
+    .names {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 60px;
+        gap: 30px;
+        color: #4c565c;
+        .name {
+            font-size: 5rem;
+            font-family: "Great Vibes", cursive;
+            font-weight: 500;
+            span, .char {
+                font-family: "Great Vibes", cursive;
+            }
+        }
+        .and {
+            font-size: 4rem;
+            font-family: "Great Vibes", cursive;
+            font-weight: 500;
+            span, .char {
+                font-family: "Great Vibes", cursive;
+            }
+        }
+    }
+    .date-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 80px;
+        color: #5c676e;
+        .day {
+            font-size: 3rem;
+        }
+        .date-box {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            .month, .year {
+                font-size: 2rem;
+                width: 250px;
+                border-top: 1px solid #6b7880;
+                border-bottom: 1px solid #6b7880;
+                line-height: 4rem;
+                font-weight: 600;
+            }
+            .month {
+                text-align: right;
+            }
+            .date {
+                font-size: 5rem;
+            }
+            .year {
+                text-align: left;
+            }
+        }
+    }
+    .follow {
+        font-size: 1rem;
+        letter-spacing: 0.05em;
+        margin-bottom: 100px;
+        color: #5b666c;
+        text-align: center;
+    }
+}
+
+.desktop-view #mainContainer {
+    max-width: 100%;
+}
+
+.tablet-view #mainContainer {
+    border-radius: 42px;
+    max-width: 600px;
+    #mainCanvas {
+        .background-top {
+            width: 80%;
+        }
+        .background-bottom {
+            width: 50%;
+        }
+        .content {
+            h2 {
+                font-size: 2.5rem;
+            }
+            h3 {
+                font-size: 0.8rem;
+                max-width: 200px;
+                text-align: center;
+            }
+            .names {
+                .name {
+                    span {
+                        font-size: 4rem;
+                        line-height: 4rem;
+                    }
+                }
+                span.and {
+                    margin-bottom: 12px;
+                    font-size: 2.5rem;
+                    line-height: 2.5rem;
+                }
+            }
+        }
+    }
+}
+
+.mobile-view #mainContainer {
+    border-radius: 42px;
+    max-width: 400px;
+    #mainCanvas {
+        .background-top {
+            width: 80%;
+        }
+        .background-bottom {
+            width: 50%;
+        }
+        .content {
+            h2 {
+                font-size: 2rem;
+            }
+            h3 {
+                font-size: 0.8rem;
+                max-width: 200px;
+                text-align: center;
+            }
+            .names {
+                flex-direction: column;
+                .name {
+                    span {
+                        font-size: 4rem;
+                        line-height: 4rem;
+                    }
+                }
+                span.and {
+                    margin-bottom: 12px;
+                    font-size: 2.5rem;
+                    line-height: 2.5rem;
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 600px) {
+    #mainCanvas {
+        padding: 20vh 0 0 0;
+        img.invitation-header-image {
+            top: 0px;
+        }
+        .invitation-header {
+            font-size: 1rem;
+            margin-bottom: 40px;
+        }
+        img.invitation-center-image {
+            max-width: 300px;
+            margin-bottom: 40px;
+        }
+        .names {
+            gap: 10px;
+            margin-bottom: 40px;
+            flex-direction: column;
+            .groom {
+                font-size: 3rem;
+            }
+            .and {
+                font-size: 2rem;
+            }
+            .bride {
+                font-size: 3rem;
+            }
+        }
+        .date-container {
+            margin-bottom: 40px;
+            .day {
+                font-size: 2rem;
+            }
+            .date-box {
+                gap: 8px;
+                .month, .year {
+                    font-size: 1rem;
+                    width: 100px;
+                    line-height: 2rem;
+                }
+                .date {
+                    font-size: 3rem;
+                }
+            }
+        }
+        .follow {
+            font-size: 0.8rem;
+            margin-bottom: 80px;
+        }
+    }
+}

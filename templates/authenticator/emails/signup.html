@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Eventic!</title>
+    <style>
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        .container {
+            max-width: 500px;
+            background-color: #ffffff;
+            padding: 40px;
+            margin: 40px auto;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        p {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.6;
+            margin: 10px 0;
+        }
+        .password-box {
+            background-color: #f4f4f4;
+            padding: 12px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 15px 0;
+        }
+        .btn {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 20px;
+            font-size: 16px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .footer {
+            font-size: 14px;
+            color: #999;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎉 Welcome to Eventic</h1>
+        <p>We’re excited to have you on board. Your account has been created successfully.</p>
+        
+        <p>Here is your auto-generated password:</p>
+        <div class="password-box">{{ password }}</div>
+
+        <p>You can update your password anytime from your profile page.</p>
+
+        <a href="https://eventic.in/user/" class="btn">Go to Profile</a>
+
+        <p class="footer">If you didn’t sign up for Eventic, you can ignore this email.</p>
+        <p class="footer">Click here to <a href="https://eventic.in">visit our website</a>.</p>
+    </div>
+</body>
+</html>

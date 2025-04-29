@@ -1,0 +1,97 @@
+@import '../../core/scss/_theme.scss';
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: $geist;
+}
+
+body {
+    width: 100%;
+    min-height: 100vh;
+    display: grid;
+    place-content: center;
+    background: #1a1a1a;
+}
+
+.container {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 80px 0;
+    display: grid;
+    place-content: center;
+    #headerLogo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        -moz-column-gap: 12px;
+        column-gap: 12px;
+        height: 50px;
+        margin-bottom: 42px;
+        img {
+            height: 40px;
+            width: auto;
+        }
+    }
+    h1 {
+        font-size: 64px;
+        font-weight: 900;
+        margin-bottom: 12px;   
+        text-align: center; 
+        color: #ffffff;
+    }
+    h3 {
+        font-size: 32px;
+        font-weight: 600;
+        margin-bottom: 32px;
+        text-align: center;
+        color: #ffffff;
+        span {
+            i {
+                font-size: 28px;
+                color: #f44e4e;
+            }
+        }
+    }
+    p {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 32px;
+        text-align: center;
+        color: #a1a1a1;
+        span {
+            color: #ffffff;
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    body {
+        min-height: 50vh;
+    }
+    .container {
+        padding: 12px 24px;
+        #headerLogo {
+            height: 32px;
+            column-gap: 8px;
+            img {
+                height: 42px;
+            }
+            .logo-icon {
+                height: 24px;
+            }
+        }
+        h1 {
+            font-size: 32px;
+        }
+        h3 {
+            font-size: 24px;
+            font-weight: 500;
+        }
+        p {
+            font-size: 16px;
+        }
+    }
+}

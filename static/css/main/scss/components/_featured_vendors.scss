@@ -1,0 +1,125 @@
+#featuredVendors {
+    width: 100%;
+    background: #17161600;
+    padding: 50px 0 0 0;
+
+    .section-subheading {
+        text-align: center;
+        color: #7f7f7f;
+        font-family: $poppins;
+        margin-bottom: 12px;
+    }
+
+    .section-title {
+        text-align: center;
+        color: #2a2a2a;
+        font-size: 3rem;
+        font-family: $poppins;
+        font-weight: 600;
+        max-width: 50%;
+        margin: 0 auto;
+        span {
+            color: #ff8585;
+            font-family: $playfair;
+            font-style: italic;
+        }
+    }
+    
+    .eventron-box {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 50px 0;
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: start;
+        justify-content: center;
+        column-gap: 24px;
+        overflow-x: scroll;
+        scrollbar-width: none;
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+        &::-webkit-scrollbar {
+            display: none;
+        }
+        .eventron-box-item {
+            display: grid;
+            grid-template-columns: 1fr;
+            border-radius: 20px 20px 12px 12px;
+            gap: 16px;
+            text-decoration: none;
+            transition: all 0.3s ease-in-out;
+            .eventron-box-item-img {
+                max-width: 180px;
+                aspect-ratio: 1/1;
+                border-radius: 20px;
+                background: #ffffff;
+                overflow: hidden;
+                img {
+                    width: 100%;
+                    height: auto;
+                    object-fit: contain;
+                    transition: all 0.3s ease-in-out;
+                }
+            }
+            .eventron-box-item-content {
+                display: flex;
+                flex-direction: column;
+                padding: 0 12px;
+                h3 {
+                    color: #2a2a2a;
+                    font-size: 1rem;
+                    font-family: $poppins;
+                    margin-bottom: 0;
+                }
+                p {
+                    color: #5b5b5b;
+                    font-family: $poppins;
+                    font-size: 0.875rem;
+                    margin-bottom: 0;
+                }
+            }
+            &:hover {
+                .eventron-box-item-img {
+                    img {
+                        transform: scale(1.05);
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    #featuredVendors {
+        padding: 24px 12px;
+        .section-title {
+            font-size: 2rem;
+            max-width: 90%;
+        }
+        .eventron-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            padding: 24px 0;
+            .eventron-box-item {
+                width: 100%;
+                max-width: 100%;
+                gap: 8px;
+                .eventron-box-item-img {
+                    width: 100%;
+                }
+                .eventron-box-item-content {
+                    h3 {
+                        font-size: 0.9rem;
+                        i {
+                            font-size: 0.8rem;
+                        }
+                    }
+                    p {
+                        font-size: 0.75rem;
+                    }
+                }
+            }
+        }
+    }
+}

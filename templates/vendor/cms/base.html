@@ -1,0 +1,5 @@
+{% extends 'cms/base.html' %}{% load static %}
+{% block cms_head %}
+    <link rel="stylesheet" href="{% static 'css/vendor/styles/base.css' %}">
+    {% block head %}{% endblock %}
+{% endblock %}

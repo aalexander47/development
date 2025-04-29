@@ -1,0 +1,447 @@
+{% extends 'vendor/cms/base.html' %}
+{% block title %}Billing and Credits - Eventic{% endblock %}
+
+{% block head %}
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Assigning Jinja data to JavaScript variables
+    const graphData = JSON.parse('{{ graph_data|safe }}');
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="content-block">
+    <div class="main-header" id="MH01">
+        <div class="header-top">
+            <div class="header-title">
+                <h1>Billing & Credits</h1>
+            </div>
+        </div>
+        <div class="header-bottom">
+            <ul>
+                <li><a href="{% url 'vendor:Transactions' %}">Transactions</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main-body">
+        {% include 'vendor/comps/messages.html' %}
+        <div id="billingContentBlock">
+            <section class="banner-section-container">
+                <div class="refferal-redeem-card">
+                    <h5><i class="bi bi-gift me-2"></i>Referral or Redeem Coupons</h5>
+                    <div class="btns">
+                        <button type="button" class="referral-code-btn" data-bs-toggle="modal" data-bs-target="#referralCodeModal">Referral Code</button>
+                        <button type="button" class="redeem-coupon-btn" data-bs-toggle="modal" data-bs-target="#applyCouponModal">Redeem</button>
+                    </div>
+                </div>
+            </section>
+            <div class="bill-card">
+                <i class="bi bi-receipt"></i>
+                <h5>Bill</h5>
+                <div class="pay-box">
+                    <p><i class="bi bi-currency-rupee"></i>{% if vendor.bill %}{{ vendor.bill }}{% else %}0.00{% endif %}</p>
+                    {% if payment %}
+                    <form id="payment-form">
+                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#payMethodModal"><i class="bi bi-wallet2"></i>&nbsp; Pay Now</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="credits-card">
+                <i class="bi bi-wallet2"></i>
+                <h5>Credits</h5>
+                <div class="pay-box">
+                    <p>{% if vendor.credits %}{{ vendor.credits }}{% else %}0{% endif %}</p>
+                    <a href="{% url 'vendor:CreditPlans' %}" class="btn" role="button"><i class="bi bi-wallet2"></i>&nbsp; Buy Credits</a>
+                </div>
+            </div>
+            <section class="main-section-container">
+                <div class="row mt-3">
+                    <div class="col-md-6 col mb-md-0 mb-3">
+                        <div class="billing-graph-container card p-4 rounded-4">
+                            <h4 class="poppins text-secondary">Track Billing</h4>
+                            <canvas id="monthlyPricingChart" width="500" height="400"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col">
+                        <div class="estimited-bill-container card p-4 rounded-4">
+                            <h4 class="poppins text-secondary mb-4">Estimated Bill</h4>
+                            <h5>This Month</h5>
+                            <!-- estimated_bill_for_features -->
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <p class="mb-0">Active Services</p>
+                                    {% if active_services %}
+                                    <small>
+                                        <ol>
+                                            {% for service in active_services %}
+                                            <li class="text-secondary">{{ service.service }} (₹{{ service.price }}/{{ service.unit }})</li>
+                                            {% endfor %}
+                                        </ol>
+                                    </small>
+                                    {% endif %}
+                                </div>
+                                <div class="col-auto">
+                                    <p class="mb-0">₹{{ estimated_bill_for_services }}</p>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <p class="mb-0">Active Features</p>
+                                </div>
+                                <div class="col-auto">
+                                    <p class="mb-0">₹{{ estimated_bill_for_features }}</p>
+                                </div>
+                            </div>
+                            <!-- Other -->
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <p class="mb-0">Other</p>
+                                    <small>
+                                        <ol>
+                                            <li class="text-secondary">Platform Fees</li>
+                                        </ol>
+                                    </small>
+                                </div>
+                                <div class="col-auto">
+                                    <p class="mb-0">₹{{ estimated_bill_for_other_fee }}</p>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <p class="mb-0">Current Bill</p>
+                                </div>
+                                <div class="col-auto">
+                                    <p class="mb-0">₹{{ vendor.bill }}</p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col">
+                                    <p class="mb-0">Total</p>
+                                </div>
+                                <div class="col-auto">
+                                    <p class="mb-0">₹{{ estimated_bill }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<!-- Referral Code Modal -->
+<div class="modal fade" id="referralCodeModal" tabindex="-1" aria-labelledby="referralCodeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-5 p-2">
+        <div class="modal-header border-0">
+          <h5 class="modal-title" id="referralCodeModalLabel"><i class="bi bi-link-45deg"></i>&nbsp; Referral Code</h5>
+          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            <div class="modal-body pt-0">
+                <!-- My Referral Code -->
+                 <div class="row">
+                    <div class="col pe-1">
+                        <div class="form-floating">
+                            <input type="text" class="form-control bg-light shadow-none rounded-5 ps-4" id="referralCode" name="referralCode" value="{{ vendor.referral_code }}" readonly>
+                            <label for="referralCode" class="ps-4">Referral Code</label>
+                        </div>
+                    </div>
+                    <div class="col-auto ps-1">
+                        <button type="button" class="btn btn-primary shadow-none h-100 px-3 rounded-5" id="copyReferralCodeBtn" data-clipboard-target="#referralCode"><i class="bi bi-clipboard"></i>&nbsp; Copy</button>
+                    </div>
+                 </div>
+                 <hr>
+                 <!-- Referral Code Benefits -->
+                <h6 class="text-dark">Benefits</h6>
+                <small>
+                    <ul>
+                        <li>Get <strong>100</strong> credit points for every successful referral.</li>
+                        <li>Referral must sign up using your code.</li>
+                        <li>Referral must list at least one service.</li>
+                        <li>Referral code can be combined with other offers and discounts.</li>
+                    </ul>
+                </small>
+                 <hr>
+                <!-- I Agree to Terms and Conditions note -->
+                 <p class="mb-0">I agree to <a href="{% url 'main:terms_of_use' %}" class="text-decoration-none" target="_blank">Terms and Conditions</a></p>
+            </div>
+        </form>
+      </div>
+    </div>
+</div>
+
+<!-- Apply Coupon Modal -->
+<div class="modal fade" id="applyCouponModal" tabindex="-1" aria-labelledby="applyCouponModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-5 p-2">
+        <div class="modal-header border-0">
+          <h5 class="modal-title" id="applyCouponModalLabel"><i class="bi bi-gift"></i>&nbsp; Redeem Coupon | Referral Code</h5>
+          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="post" action="{% url 'payment:ApplyCode' %}" id="applyCodeForm">
+            {% csrf_token %}
+            <div class="modal-body py-0">
+                <div class="form-floating">
+                    <input type="text" class="form-control shadow-none" id="apply_code" name="apply_code" placeholder="Code here..." required autofocus autocomplete="off">
+                    <label for="apply_code">Code</label>
+                </div>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn text-primary shadow-none" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary shadow-none rounded-5 px-3 py-2" id="applyCodeBtn">Apply</button>
+            </div>
+        </form>
+      </div>
+    </div>
+</div>
+
+{% if vendor.bill %}
+<!-- Payment Settelement Modal -->
+<div class="modal fade" id="payMethodModal" tabindex="-1" aria-labelledby="payMethodModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-5 p-2">
+        <div class="modal-header border-0">
+          <h5 class="modal-title" id="payMethodModalLabel">Pay Method</h5>
+          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <table class="table table-borderless">
+                <tr class="vertical-align">
+                    <td><i class="bi bi-receipt me-2"></i>Invoice Bill</td>
+                    <td class="text-end"><span>₹</span>{{ vendor.bill }}</td>
+                </tr>
+                <tr class="vertical-align">
+                    <td><i class="bi bi-wallet2 me-2"></i>Credits</td>
+                    <td class="text-end">{% if vendor.credits %}{{ vendor.credits }}{% else %}0{% endif %}</td>
+                </tr>
+            </table>
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-12 pe-md-1 mb-2">
+                    <button type="button" class="btn btn-primary w-100 py-3 rounded-5" id="payBtn"><i class="bi bi-wallet"></i>&nbsp; Pay Online</button>
+                </div>
+                <div class="col-md-6 col-12 ps-md-1"> 
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-primary w-100 py-3 rounded-5" id="cashBtn" name="payWithCredits" {% if not vendor.credits %}disabled{% endif %}><i class="bi bi-wallet2"></i>&nbsp; Pay with Credits</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{% if vendor.bill %}
+<script type="text/javascript">
+    var options = {
+        "key": "{{ payment.razorpay_key_id }}", // Razorpay API Key
+        "amount": "{{ payment.amount }}", // Amount in paise
+        "currency": "INR",
+        "name": "Eventic",  
+        "description": "Bill Payment",
+        "order_id": "{{ payment.order_id }}", // This is a sample Order ID
+        "handler": function (response){
+            // Send response to the server to verify the payment
+            var form = document.getElementById('payment-form');
+            form.action = "{% url 'payment:handle_payment_success' %}";
+            form.method = 'POST';
+
+            var csrf_token = document.createElement("input");
+            csrf_token.setAttribute("type", "hidden");
+            csrf_token.setAttribute("name", "csrfmiddlewaretoken");
+            csrf_token.setAttribute("value", '{{ csrf_token }}');
+            form.appendChild(csrf_token);
+            
+            var payment_type = document.createElement("input");
+            payment_type.setAttribute("type", "hidden");
+            payment_type.setAttribute("name", "payment_type");
+            payment_type.setAttribute("value", '{{ payment.payment_type }}');
+            form.appendChild(payment_type);
+
+            var razorpay_payment_id = document.createElement("input");
+            razorpay_payment_id.setAttribute("type", "hidden");
+            razorpay_payment_id.setAttribute("name", "razorpay_payment_id");
+            razorpay_payment_id.setAttribute("value", response.razorpay_payment_id);
+            form.appendChild(razorpay_payment_id);
+
+            var razorpay_order_id = document.createElement("input");
+            razorpay_order_id.setAttribute("type", "hidden");
+            razorpay_order_id.setAttribute("name", "razorpay_order_id");
+            razorpay_order_id.setAttribute("value", response.razorpay_order_id);
+            form.appendChild(razorpay_order_id);
+
+            var razorpay_signature = document.createElement("input");
+            razorpay_signature.setAttribute("type", "hidden");
+            razorpay_signature.setAttribute("name", "razorpay_signature");
+            razorpay_signature.setAttribute("value", response.razorpay_signature);
+            form.appendChild(razorpay_signature);
+
+            form.submit();
+        }
+    };
+    var rzp1 = new Razorpay(options);
+    document.getElementById('payBtn').onclick = function(e){
+        rzp1.open();
+        e.preventDefault();
+    }
+
+</script>
+{% endif %}
+<script type="text/javascript">
+    // Apply Code
+    document.getElementById('applyCodeBtn').onclick = function(e){
+        document.getElementById('applyCodeForm').submit();
+        e.preventDefault();
+        // Add spinner to the button
+        var btn = document.getElementById('applyCodeBtn');
+        btn.innerHTML = '<div class="spinner-border spinner-border-sm" role="status"><span class="visually-hidden">Loading...</span></div>&nbsp; Applying...';
+        btn.disabled = true;
+    }
+
+    // Map the months to short names
+    const monthShortNames = {
+        "01": "Jan",
+        "02": "Feb",
+        "03": "Mar",
+        "04": "Apr",
+        "05": "May",
+        "06": "Jun",
+        "07": "Jul",
+        "08": "Aug",
+        "09": "Sep",
+        "10": "Oct",
+        "11": "Nov",
+        "12": "Dec",
+    };
+
+    // Convert YYYY-MM format to short month names
+    const shortMonthLabels = graphData.months.map(date => {
+        const [year, month] = date.split("-");
+        return monthShortNames[month];
+    }).reverse(); // Reverse order for display
+
+    const ctx = document.getElementById('monthlyPricingChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: shortMonthLabels, // Use short month names as labels
+            datasets: [
+                {
+                    label: 'Active Services',
+                    data: graphData.active_services_totals.reverse(),
+                    backgroundColor: 'rgba(75, 192, 192, 0.6)', // Color for "Active Services"
+                    borderRadius: 4, // Rounded corners
+                },
+                {
+                    label: 'Active Features',
+                    data: graphData.active_features_totals.reverse(),
+                    backgroundColor: 'rgba(153, 102, 255, 0.6)', // Color for "Active Features"
+                    borderRadius: 4, // Rounded corners
+                },
+                {
+                    label: 'Other',
+                    data: graphData.other_totals.reverse(),
+                    backgroundColor: 'rgba(255, 159, 64, 0.6)', // Color for "Other" 
+                    borderRadius: 4, // Rounded corners
+                },
+            ],
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top', // Legend position
+                },
+                tooltip: {
+                    enabled: true,
+                    mode: 'index',
+                    intersect: false,
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)', // Tooltip background
+                    borderColor: 'rgba(255, 255, 255, 0.6)', // Tooltip border color
+                    borderWidth: 1, // Tooltip border width
+                    cornerRadius: 12, // Tooltip border-radius
+                    caretSize: 10, // Tooltip caret size
+                    padding: 10, // Tooltip caret padding
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            // Add the year dynamically based on index
+                            const index = tooltipItems[0].dataIndex;
+                            const date = graphData.months[graphData.months.length - 1 - index]; // Reverse mapping
+                            const [year, month] = date.split("-");
+                            return `${monthShortNames[month]} ${year}`; // Tooltip title with short month and year
+                        },
+                        label: function(tooltipItem) {
+                            const datasetLabel = tooltipItem.dataset.label || '';
+                            const value = tooltipItem.raw;
+                            return ` ${datasetLabel}: ₹${value}`;
+                        },
+                        footer: function(tooltipItems) {
+                            const totals = {
+                                'Active Features': 0,
+                                'Active Services': 0,
+                                'Other': 0,
+                            };
+
+                            tooltipItems.forEach(item => {
+                                const datasetLabel = item.dataset.label;
+                                const value = item.raw;
+
+                                if (totals.hasOwnProperty(datasetLabel)) {
+                                    totals[datasetLabel] += value;
+                                }
+                            });
+
+                            const totalValue = totals['Active Features'] + totals['Active Services'] + totals['Other'];
+                            return [
+                                `Total: ₹${totalValue.toFixed(2)}`,
+                            ];
+                        },
+                    },
+                },
+                title: {
+                    display: true,
+                    text: 'Monthly Pricing Overview',
+                },
+            },
+            scales: {
+                x: {
+                    stacked: true, // Enable stacking on x-axis
+                    grid: {
+                        display: false, // Remove grid lines
+                    },
+                },
+                y: {
+                    stacked: true, // Enable stacking on y-axis
+                    grid: {
+                        display: false, // Remove grid lines
+                    },
+                    title: {
+                        display: true,
+                        text: 'Cost (in Rupees)',
+                    },
+                },
+            },
+        },
+    });
+
+    // Copy Referral Code
+    const copyReferralCodeBtn = document.getElementById('copyReferralCodeBtn');
+    copyReferralCodeBtn.addEventListener('click', () => {
+        const referralCode = document.getElementById('referralCode');
+        navigator.clipboard.writeText(referralCode.value);
+        copyReferralCodeBtn.innerHTML = '<i class="bi bi-clipboard-check"></i>&nbsp; Copied';
+        setTimeout(() => {
+            copyReferralCodeBtn.innerHTML = '<i class="bi bi-clipboard"></i>&nbsp;Copy';
+        }, 2000);
+    });
+</script>
+{% endblock %}

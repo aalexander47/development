@@ -1,0 +1,46 @@
+{% load auth_extras %}
+<table class="table table-borderless">
+    <tbody>
+        <tr>
+            <td colspan="2" class="pb-3">
+                <small><i class="bi bi-calendar me-2"></i>Invitation Period: <br><span class="text-muted">From</span> {{ start_date|date_strftime:"%d %b %Y" }} <span class="text-muted">to</span> {{ end_date|date_strftime:"%d %b %Y" }} ({{ total_days }}{% if page == 'update' %} Extra{% endif %} days)</small>
+            </td>
+        </tr>
+        <tr>
+            <td class="py-1">Wedding Invitation</td>
+            <td class="text-end py-1"><small>{{ symbol }}</small>{{ template_total_amount|floatformat:2 }}</td>
+        </tr>
+        <tr>
+            <td class="py-1"><i class="bi bi-people-fill me-2"></i>RSVP</td>
+            <td class="text-end py-1"><small>{{ symbol }}</small>{{ rsvp_amount|floatformat:2 }}</td>
+        </tr>
+        <tr>
+            <td class="py-1"><i class="bi bi-chat-heart me-2"></i>Messages</td>
+            <td class="text-end py-1"><small>{{ symbol }}</small>{{ comment_amount|floatformat:2 }}</td>
+        </tr>
+        <tr>
+            <td class="py-1"><i class="bi bi-hearts me-2"></i>Thank You Page <small>( {{ thank_you_page_days }}{% if page == 'update' %} Extra{% endif %} days )</small></td>
+            <td class="text-end py-1"><small>{{ symbol }}</small>{{ thank_you_page_amount|floatformat:2 }}</td>
+        </tr>
+        {% if page == 'create' %}
+        <tr>
+            <td class="py-1"><i class="bi bi-gift-fill me-2"></i>Eligible for <u>{{ free_days }} days</u> for free offer</td>
+            <td class="text-end py-1 text-success">-<small>{{ symbol }}</small>{{ template_offer_amount|floatformat:2 }}</td>
+        </tr>
+        {% endif %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <th class="h5 pt-3">Total</th>
+            <th class="h5 text-end pt-3"><small>{{ symbol }}</small>{{ invoice_amount|floatformat:2 }}</th>
+        </tr>
+    </tfoot>
+</table>
+
+<div class="d-flex justify-content-end p-1 pt-0">
+    {% if is_payment_required %}
+    <button class="btn btn-primary px-3 py-2 rounded-5" id="payNowBtn">{% if page == 'create' %}Pay & Publish{% else %}Pay & Update{% endif %}</button>
+    {% else %}
+    <button class="btn btn-primary px-3 py-2 rounded-5" id="publishBtn" name="publish">{% if page == 'create' %}Publish{% else %}Update{% endif %}</button>
+    {% endif %}
+</div>

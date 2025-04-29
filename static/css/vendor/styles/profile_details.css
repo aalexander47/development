@@ -1,0 +1,360 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+header {
+  width: 100%;
+  padding: 24px 12px;
+}
+header .logo {
+  width: 100%;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+header .logo img {
+  height: 40px;
+  width: auto;
+}
+header nav {
+  padding: 24px 0 0 0;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+header nav ul {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin-bottom: 0;
+}
+header nav ul li a {
+  color: #060606;
+  padding: 8px 16px 8px 12px;
+  border-radius: 50px;
+  background: #dcdee8;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  -moz-column-gap: 2px;
+       column-gap: 2px;
+  font-family: "poppins", sans-serif;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
+  border: 1px solid #ffffff;
+  transition: all 0.25s ease-in-out;
+}
+header nav ul li a i {
+  color: rgb(108, 108, 108);
+  transition: all 0.25s ease-in-out;
+  height: 24px;
+  width: 24px;
+  display: grid;
+  place-items: center;
+}
+header nav ul li a span {
+  font-size: 16px;
+  line-height: 16px;
+  letter-spacing: 0.02em;
+}
+header nav ul li a:hover {
+  background: #ffffff;
+  color: #282828;
+}
+header nav ul li a:hover i {
+  color: #141414;
+}
+header nav ul li a.active {
+  background: #2e2e2e;
+  color: #fff;
+}
+header nav ul li a.active i {
+  color: #fff;
+}
+
+footer .footer {
+  padding: 24px;
+  text-align: center;
+}
+footer .footer p {
+  font-size: 16px;
+  letter-spacing: 0.03em;
+  color: #282828;
+  margin-bottom: 0;
+}
+
+@font-face {
+  font-family: "Geist";
+  src: url("https://eventic-webapp.s3.ap-south-1.amazonaws.com/static/fonts/Geist/GeistVariableVF.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Google-sans";
+  src: url("https://eventic-webapp.s3.ap-south-1.amazonaws.com/static/fonts/google-sans-cufonfonts/ProductSans-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Roboto";
+  src: url("https://eventic-webapp.s3.ap-south-1.amazonaws.com/static/fonts/Roboto/Roboto-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Platypi";
+  src: url("https://eventic-webapp.s3.ap-south-1.amazonaws.com/static/fonts/Platypi/static/Platypi-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "SF Pro", "SF Pro Text", "Myriad Set Pro", system-ui, "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  src: url("https://eventic-webapp.s3.ap-south-1.amazonaws.com/static/fonts/SF-Pro/SFPRODISPLAYREGULAR.woff2") format("woff2");
+  font-weight: normal;
+}
+@font-face {
+  font-family: "Great Vibes";
+  src: url("https://eventic-webapp.s3.ap-south-1.amazonaws.com/static/fonts/great-vibes/GreatVibes-Regular.ttf") format("truetype");
+  font-weight: normal;
+}
+.geist {
+  font-family: "Geist", "Open Sans", sans-serif !important;
+}
+
+.google-sans {
+  font-family: "Google-sans", "Open Sans", sans-serif !important;
+}
+
+.poppins {
+  font-family: "Poppins", sans-serif !important;
+}
+
+.roboto {
+  font-family: "Roboto", sans-serif !important;
+}
+
+.platypi {
+  font-family: "Platypi", sans-serif !important;
+}
+
+.sf-pro {
+  font-family: "SF Pro", "Open Sans", Helvetica, sans-serif !important;
+}
+
+.playfair {
+  font-family: "Playfair Display", serif !important;
+}
+
+.noto-sans {
+  font-family: "Noto Sans", sans-serif !important;
+}
+
+.great-vibes {
+  font-family: "Great Vibes" !important;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "SF Pro", "Open Sans", Helvetica, sans-serif;
+}
+
+body::-webkit-scrollbar {
+  width: 8px;
+  height: 0;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: rgb(217, 224, 231);
+  border-radius: 8px;
+}
+
+body {
+  background: #eceef3 !important;
+}
+body main {
+  max-width: 1000px;
+  padding: 12px;
+  margin: 0 auto;
+}
+body main .main-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+body main .main-header h1 {
+  font-size: 3rem;
+  margin-bottom: 0;
+  color: #252525;
+  font-family: "Poppins", sans-serif;
+}
+body main .main-header .save-btn {
+  border: none;
+  outline: none;
+  text-decoration: none;
+  background: #4364d3;
+  color: white;
+  border-radius: 8px;
+  letter-spacing: 0.03em;
+  padding: 8px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: rgba(0, 0, 0, 0.09) 0px 3px 12px;
+  transition: all 0.25s ease-in-out;
+}
+body main .main-header .save-btn span {
+  font-size: 16px;
+  line-height: 16px;
+}
+body main .main-header .save-btn i {
+  font-size: 16px;
+}
+body main .main-header .save-btn:hover {
+  color: white;
+  background: #2b4cba;
+}
+body main h2 {
+  margin-bottom: 24px;
+  color: #252525;
+  font-family: "Poppins", sans-serif;
+}
+body main .form-group {
+  margin-bottom: 18px;
+}
+body main label {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 0;
+  display: block;
+  color: #434343;
+  letter-spacing: 0.03em;
+}
+body main label span.star {
+  color: #ff0000;
+}
+body main label span.note {
+  color: #818181;
+  font-size: 14px;
+}
+body main input[type=text], body main input[type=password], body main input[type=email], body main input[type=number], body main input[type=date] {
+  border: none;
+  border-bottom: 2px solid rgba(121, 121, 121, 0.2901960784);
+  outline: none;
+  border-radius: 0;
+  padding: 4px 0 8px 0;
+  font-size: 18px;
+  letter-spacing: 0.02em;
+  width: 100%;
+  background: transparent;
+  color: #000000;
+  transition: all 0.25s ease-in-out;
+}
+body main input[type=text]:hover, body main input[type=password]:hover, body main input[type=email]:hover, body main input[type=number]:hover, body main input[type=date]:hover,
+body main input[type=text]:focus, body main input[type=password]:focus, body main input[type=email]:focus, body main input[type=number]:focus, body main input[type=date]:focus {
+  animation: appearBottomBorderLine 0.5s ease-in-out;
+  border-bottom: 2px solid #4364d3;
+}
+body main input[type=checkbox] {
+  border-color: #252525;
+}
+body main input[type=checkbox]:hover, body main input[type=checkbox]:focus {
+  border-color: #4364d3;
+}
+body main select {
+  border: none;
+  border-bottom: 2px solid rgba(121, 121, 121, 0.2901960784);
+  outline: none;
+  border-radius: 0;
+  padding: 6px 0 10px 0;
+  font-size: 18px;
+  letter-spacing: 0.02em;
+  width: 100%;
+  background: transparent;
+  color: #000000;
+  transition: all 0.25s ease-in-out;
+}
+body main select option {
+  color: #000000;
+  letter-spacing: 0.02em;
+}
+body main select:hover, body main select:focus {
+  animation: appearBottomBorderLine 0.5s ease-in-out;
+}
+@keyframes appearBottomBorderLine {
+  0% {
+    border-width: 0%;
+  }
+  100% {
+    border-width: 100%;
+  }
+}
+body main .text-box {
+  width: 100%;
+  background: #f1f3f5;
+  padding: 16px 8px 16px 16px;
+  border-radius: 12px;
+  transition: all 0.25s ease-in-out;
+}
+body main .text-box:hover, body main .text-box:focus-within {
+  background: #ecf0f3;
+}
+body main textarea {
+  width: 100%;
+  padding-right: 12px;
+  min-height: 80px;
+  max-height: 320px;
+  letter-spacing: 0.03em;
+  overflow-y: scroll;
+  font-size: 16px;
+  background: transparent;
+  border: none;
+  outline: none;
+  resize: none;
+  transition: all 0.25s ease-in-out;
+}
+body main textarea::-webkit-scrollbar {
+  width: 8px;
+  height: 0;
+}
+body main textarea::-webkit-scrollbar-thumb {
+  background-color: rgb(217, 224, 231);
+  border-radius: 8px;
+}
+
+@media screen and (max-width: 768px) {
+  body main .main-header h1 {
+    font-size: 2rem;
+  }
+}
+main section {
+  padding: 50px;
+  border-radius: 24px;
+  margin-bottom: 50px;
+  background: white;
+}
+main section label .profile-picture {
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  -o-object-fit: contain;
+     object-fit: contain;
+  border: 1px solid #dadada;
+}
+main section label .profile-picture img {
+  width: 100%;
+  aspect-ratio: 1/1;
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+
+@media screen and (max-width: 768px) {
+  main section {
+    padding: 28px 24px;
+    margin-bottom: 24px;
+  }
+}/*# sourceMappingURL=profile_details.css.map */

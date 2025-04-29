@@ -1,0 +1,119 @@
+{% extends 'dashboard/cms/base.html' %}{% load auth_extras %}
+{% block title %}Templates Dashboard | Eventic{% endblock %}
+{% block content %}
+<div class="content-block">
+    <div class="main-header" id="MH01">
+        <div class="header-top">
+            <div class="header-title">
+                {% if request.META.HTTP_REFERER %}
+                <a href="{{ request.META.HTTP_REFERER }}" class="back-btn"><i class="bi bi-arrow-left"></i></a>
+                {% else %}
+                <a href="{% url 'dashboard:Dashboard' %}" class="back-btn"><i class="bi bi-arrow-left"></i></a>
+                {% endif %}
+                <h1>Templates</h1>
+            </div>
+            <a href="{% url 'invitation:add_template' %}" class="btn btn-primary save-btn">
+                <i class="bi bi-plus"></i><span>Add</span>
+            </a>
+        </div>
+        <div class="header-bottom">
+            <ul>
+                <li><a href="{% url 'dashboard:Invitations' %}">Invitations</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main-body">
+        {% include 'vendor/comps/messages.html' %}
+
+        <!-- Template Analytics Section -->
+        <div class="row mx-0">
+            <div class="col-md-3 col-6 mb-md-4 mb-2 px-0 pe-md-1 pe-1">
+                <div class="card rounded-5 shadow-sm border p-3 bg-primary text-white">
+                    <div class="card-body">
+                        <h5 class="mb-1">Number of Templates</h5>
+                        <h2 class="mb-0">{{ templates|length }}</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-md-4 mb-2 px-0 px-md-1 ps-1">
+                <div class="card rounded-5 shadow-sm border p-3 bg-light">
+                    <div class="card-body">
+                        <h5 class="mb-1">Number of Templates Sold</h5>
+                        <h2 class="mb-0">{{ sold_templates_count }}</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-md-4 mb-2 px-0 px-md-1 pe-1">
+                <div class="card rounded-5 shadow-sm border p-3 bg-light">
+                    <div class="card-body">
+                        <h5 class="mb-1">Most Sold Templates</h5>
+                        <ul class="list-unstyled mb-0">
+                            {% for template in most_sold_templates %}
+                            <li>{{ template.name }}</li>
+                            {% empty %}
+                            <li>No templates available</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- All Templates Section -->
+        <div class="row">
+            {% for template in templates %}
+            <div class="col-md-4 col-6 mb-4">
+                <div class="card shadow-sm rounded-4 overflow-hidden position-relative">
+                    <img src="{{ template.thumbnail }}" class="card-img-top" alt="{{ template.name }}">
+                    <div class="card-body">
+                        <h6 class="mb-0 poppins">{{ template.name }}</h6>
+                        {% if template.active %}
+                        <p class="mb-0 text-success"><small><i class="bi bi-check-circle me-1"></i>Active</small></p>
+                        {% else %}
+                        <p class="mb-0 text-danger"><small><i class="bi bi-exclamation-triangle me-1"></i>Inactive</small></p>
+                        {% endif %}
+                    </div>
+                    <div class="position-absolute top-0 end-0 p-2">
+                        <div class="dropdown dropstart">
+                            <button class="btn btn-sm rounded-5 bg-white shadow border-0 dropdown" type="button" id="dropdownMenuButton{{ template.id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-three-dots"></i>
+                            </button>
+                            <ul class="dropdown-menu p-1 border-0 rounded-3 shadow" aria-labelledby="dropdownMenuButton{{ template.id }}">
+                                <li>
+                                    <form method="POST" class="d-inline">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="template_id" value="{{ template.id }}">
+                                        <input type="hidden" name="status" value="{% if template.active %}disapproved{% else %}approved{% endif %}">
+                                        <button type="submit" name="update_status" class="dropdown-item rounded-2 px-2 py-1">
+                                            {% if template.active %}
+                                            <i class="bi bi-exclamation-triangle text-danger me-2"></i>Deactivate
+                                            {% else %}
+                                            <i class="bi bi-check-circle text-success me-2"></i>Activate
+                                            {% endif %}
+                                        </button>
+                                    </form>
+                                </li>
+                                <li>
+                                    <a href="{% url 'invitation:edit_template' template.id %}" class="dropdown-item rounded-2 px-2 py-1"><i class="bi bi-pencil-square me-2"></i>Edit</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'dashboard:TemplatesAnalytics' %}?template_id={{ template.id }}" class="dropdown-item rounded-2 px-2 py-1"><i class="bi bi-bar-chart-line me-2"></i>Details</a>
+                                </li>
+                                <li><hr class="dropdown-divider my-1"></li>
+                                <li>
+                                    <form method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this template?');">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="template_id" value="{{ template.id }}">
+                                        <button type="submit" name="delete_template" class="dropdown-item text-danger rounded-2 px-2 py-1"><i class="bi bi-trash3 me-2"></i>Delete</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

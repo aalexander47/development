@@ -1,0 +1,310 @@
+{% extends "main/base.html" %}
+{% load i18n socialaccount static %}
+
+{% block title %}Sign Up | Eventic{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/account/styles/login.css' %}">
+    <!-- Meta Tags -->
+    <meta name="description" content="Eventic - Crafting moments that matter.">
+    <meta name="author" content="Eventic">
+    <meta name="keywords" content="Eventic, Event, Event Management, Event Planner, Event Organizer, Photographer, Videographer, Photography, Videography">
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+    <!-- Open Graph -->
+    <meta property="og:title" content="Eventic">
+    <meta property="og:description" content="Eventic - Crafting moments that matter.">
+    <meta property="og:image" content="{% static 'assets/logos/dd53a99b3cae8c8ea6654619c7765e57.png' %}">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Eventic" />
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Eventic">
+    <meta name="twitter:description" content="Eventic - Crafting moments that matter.">
+    <meta name="twitter:image" content="{% static 'assets/logos/dd53a99b3cae8c8ea6654619c7765e57.png' %}">
+    <meta name="twitter:url" content="{{ request.build_absolute_uri }}">
+    <meta name="twitter:site" content="@_Eventic">
+    <meta name="twitter:creator" content="@_Eventic">
+    <!-- Robots -->
+    <meta name="robots" content="noindex, nofollow">
+{% endblock %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center pt-3 pb-0">
+    <div class="col col-md-6 col-lg-4">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="mb-2 poppins">Sign Up</h2>
+
+                <!-- Django Form for Signup -->
+                <form method="post" class="form-box" action="{% url 'auth:signup' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}">
+                    {% csrf_token %}
+                    
+                    {% if errors.general %}
+                        <div class="my-3">
+                            {% if errors.general|length > 1 %}
+                                {% for error in errors.general %}
+                                <ul class="m-0 ps-3">
+                                    <li class="text-danger form-text m-0 p-0">{{ error }}</li>
+                                </ul>
+                                {% endfor %}
+                            {% else %}
+                            <div class="text-danger form-text">{{ errors.general | first }}</div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                  
+                    <div class="row mt-2">
+                        <div class="col-md-6 pe-md-1">
+                            <div class="input-group-01">
+                                <label for="id_first_name">First Name</label>
+                                <input type="text" name="first_name" id="id_first_name" placeholder="--" value="{{ first_name }}" required>
+                                <div class="errors">
+                                    {% if errors.first_name %}
+                                    <div class="text-danger form-text">{{ errors.first_name | first }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 ps-md-1">
+                            <div class="input-group-01">
+                                <label for="id_last_name">Last Name</label>
+                                <input type="text" name="last_name" id="id_last_name" placeholder="--" value="{{ last_name }}" required>
+                                <div class="errors">
+                                    {% if errors.last_name %}
+                                    <div class="text-danger form-text">{{ errors.last_name | first }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group-01">
+                        <label for="id_username"><i class="bi bi-person"></i>&nbsp; Username</label>
+                        <input type="text" name="username" id="id_username" placeholder="--" value="{{ username }}" required oninput="debouncedUsernameValidation();">
+                        <div class="errors">
+                            {% if errors.username %}
+                                {% if errors.username|length > 1 %}
+                                    {% for error in errors.username %}
+                                    <ul class="m-0 ps-3">
+                                        <li class="text-danger form-text m-0 p-0">{{ error }}</li>
+                                    </ul>
+                                    {% endfor %}
+                                {% else %}
+                                <div class="text-danger form-text">{{ errors.username | first }}</div>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="input-group-01">
+                        <label for="id_email"><i class="bi bi-envelope"></i>&nbsp; Email</label>
+                        <input type="email" name="email" id="id_email" placeholder="--" value="{{ email }}" required>
+                        <div class="errors">
+                            {% if errors.email %}
+                                {% if errors.email|length > 1 %}
+                                    {% for error in errors.email %}
+                                    <ul class="m-0 ps-3">
+                                        <li class="text-danger form-text m-0 p-0">{{ error }}</li>
+                                    </ul>
+                                    {% endfor %}
+                                {% else %}
+                                <div class="text-danger form-text">{{ errors.email | first }}</div>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="input-group-01">
+                        <label for="id_phone"><i class="bi bi-telephone"></i>&nbsp; Phone</label>
+                        <input type="text" name="phone" id="id_phone" placeholder="--" value="{{ phone }}" required>
+                        <div class="errors">
+                            {% if errors.phone %}
+                                {% if errors.phone|length > 1 %}
+                                    {% for error in errors.phone %}
+                                    <ul class="m-0 ps-3">
+                                        <li class="text-danger form-text m-0 p-0">{{ error }}</li>
+                                    </ul>
+                                    {% endfor %}
+                                {% else %}
+                                <div class="text-danger form-text">{{ errors.phone | first }}</div>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="input-group-01">
+                        <label for="id_password1"><i class="bi bi-lock"></i>&nbsp; Password</label>
+                        <div class="password-input-group" id="passwordInput">
+                            <input type="password" class="form-control shadow-none" id="id_password" name="password" placeholder="******" value="{{ password }}" required oninput="debouncedPasswordValidation();">
+                            <i class="bi bi-eye-slash toggle-password" data-id="id_password" onclick="togglePassword(this)"></i>
+                        </div>
+                        <div class="errors">
+                            {% if errors.password %}
+                                {% if errors.password|length > 1 %}
+                                    {% for error in errors.password %}
+                                    <ul class="m-0 ps-3">
+                                        <li class="text-danger form-text m-0 p-0">{{ error }}</li>
+                                    </ul>
+                                    {% endfor %}
+                                {% else %}
+                                <div class="text-danger form-text">{{ errors.password | first }}</div>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <button type="submit" name="signup" id="signUpBtn">Sign Up</button>
+                    </div>
+                </form>                
+                {% if IN_DEVELOPMENT and HIDDEN %}
+                <!-- Social Signup Options -->
+                <div class="mt-4">
+                    <hr>
+                    <p class="text-center">Or sign up with</p>
+                    <div class="d-flex justify-content-center">
+                        <a href="{% provider_login_url 'google' process='signup' %}" class="btn btn-outline-dark shadow-none me-2">
+                            <i class="bi bi-google"></i>&nbsp; Google
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Login Link -->
+                <div class="mt-3 text-center">
+                    <p class="mb-0">Already have an account? <a href="{% url 'auth:login' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}" class="text-decoration-none">Login</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+    // Check username has at least 3 characters and no spaces or special characters
+    function username_validation() {
+        const usernameInput = document.getElementById('id_username');
+        const username = usernameInput.value;
+        const regex = /^[a-zA-Z0-9_.]{3,}$/;
+        if (!regex.test(username)) {
+            // Take usernameInput next element
+            const nextElement = usernameInput.nextElementSibling.innerHTML= "<div class='text-danger form-text'>Username must be at least 3 characters and contain only letters, numbers, dots and underscores.</div>";
+        } else {
+            // Take usernameInput next element
+            const nextElement = usernameInput.nextElementSibling.innerHTML= "";
+        }
+    }
+
+    // Add a debounce function
+    function debounce(func, delay) {
+        let timerId;
+        return function (...args) {
+            if (timerId) {
+                clearTimeout(timerId);
+            }
+            timerId = setTimeout(() => {
+                func.apply(this, args);
+                timerId = null;
+            }, delay);
+        };
+    }
+    const debouncedUsernameValidation = debounce(username_validation, 500);
+
+    // Toggle Password
+    function togglePassword(el) {
+        const input = document.getElementById(el.dataset.id);
+        if (input.type === 'password') {
+            input.type = 'text';
+            el.classList.remove('bi-eye-slash');
+            el.classList.add('bi-eye');
+        } else {
+            input.type = 'password';
+            el.classList.remove('bi-eye');
+            el.classList.add('bi-eye-slash');
+        }
+    }
+
+    // Password Validation
+    function password_validation() {
+        const passwordInput = document.getElementById('passwordInput');
+        const password = document.getElementById('id_password').value;
+        let errors = {
+            "length": {
+                message: "Password must be at least 8 characters.",
+                check: false
+            },
+            "uppercase": {
+                message: "Contain at least 1 uppercase letter.",
+                check: false
+            },
+            "lowercase": {
+                message: "Contain at least 1 lowercase letter.",
+                check: false
+            },
+            "number": {
+                message: "Must contain at least 1 number.",
+                check: false
+            },
+            "special": {
+                message: "Must contain at least 1 special character.",
+                check: false
+            },
+            "space": {
+                message: "Password must not contain spaces.",
+                check: false
+            }
+        };
+        // Check password has at least 8 characters
+        if (password.length < 8) {
+            errors.length.check = false;
+        } else {
+            errors.length.check = true;
+        }
+        // Check password has at least 1 uppercase letter
+        if (!/[A-Z]/.test(password)) {
+            errors.uppercase.check = false;
+        } else {
+            errors.uppercase.check = true;
+        }
+        // Check password has at least 1 lowercase letter
+        if (!/[a-z]/.test(password)) {
+            errors.lowercase.check = false;
+        } else {
+            errors.lowercase.check = true;
+        }
+        // Check password has at least 1 number
+        if (!/[0-9]/.test(password)) {
+            errors.number.check = false;
+        } else {
+            errors.number.check = true;
+        }
+        // Check password has at least 1 special character
+        if (!/[^a-zA-Z0-9]/.test(password)) {
+            errors.special.check = false;
+        } else {
+            errors.special.check = true;
+        }
+        // Check password has no spaces
+        if (/\s/.test(password) || password.length == 0) {
+            errors.space.check = false;
+        } else {
+            errors.space.check = true;
+        }
+
+        // Display errors. By looping through the errors object
+        let errorElement = "<ul class='m-0 ps-3'>";
+        for (const [key, value] of Object.entries(errors)) {
+            if (value.check) {
+                errorElement += "<li class='text-success form-text m-0 p-0'>" + value.message + "</li>";
+            } else {
+                errorElement += "<li class='text-danger form-text m-0 p-0'>" + value.message + "</li>";
+            }
+        }
+        errorElement += "</ul>";
+        passwordInput.nextElementSibling.innerHTML = errorElement;
+        // Disable sign up button if there are any errors
+        if (errors.length.check && errors.uppercase.check && errors.lowercase.check && errors.number.check && errors.special.check && errors.space.check) {
+            document.getElementById('signUpBtn').disabled = false;
+        } else {
+            document.getElementById('signUpBtn').disabled = true;
+        }
+    }
+    const debouncedPasswordValidation = debounce(password_validation, 300);
+</script>
+{% endblock %}

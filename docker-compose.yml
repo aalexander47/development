@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .  # Use the current directory as the build context
+      dockerfile: Dockerfile  # Specify the Dockerfile
+    container_name: django_app
+    command: gunicorn --workers 3 --bind 0.0.0.0:8000 core.wsgi:application  # Use Gunicorn with 3 workers
+    volumes:
+      - .:/app  # Mount the project directory to the container
+      - ./collected_static:/app/static  # Mount the collected static directory
+    expose:
+      - 8000
+    env_file:
+      - ./core/.env
+    depends_on:
+      - db
+
+  db:
+    image: postgres:13
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - ./core/.env
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - ./collected_static:/app/static  # Mount the collected static directory
+    depends_on:
+      - web
+
+volumes:
+  postgres_data:

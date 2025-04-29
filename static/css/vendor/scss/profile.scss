@@ -1,0 +1,230 @@
+@import '../../core/scss/_theme.scss';
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: $google-sans;
+}
+
+body {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    background: #eceef3 !important;
+    article {
+        padding: 12px 24px;
+        height: 100vh;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        header {
+            height: 80px;
+            #articleHeaderLogo {
+                display: flex;
+                align-items: center;
+                height: 100%;
+                img {
+                    height: 50px;
+                    width: auto;
+                }
+            }
+        }
+        section {
+            padding: 24px 0;
+            h6 {
+                margin-bottom: 12px;
+                color: #8a98a2;
+                font-size: 12px;
+                letter-spacing: 2.5px;
+                font-family: $poppins;
+                font-weight: 600;
+            }
+            ul {
+                display: flex;
+                flex-direction: column;
+                padding: 0;
+                margin: 0;
+                list-style: none;
+                li {
+                    padding: 0;
+                    width: 100%;
+                    input[type=radio] {
+                        display: none;
+                    }
+                    label {
+                        padding: 8px 12px;
+                        margin-bottom: 4px;
+                        color: #5e6467;
+                        cursor: pointer;
+                        width: 100%;
+                        display: flex;
+                        column-gap: 8px;
+                        font-size: 16px;
+                        font-weight: 500;
+                        border-radius: 8px 25px 25px 8px;
+                        transition: all 0.25s ease-in-out;
+                    }
+                    label:hover {
+                        background: #f2f3f5;
+                    }
+                    input[type=radio]:checked + label {
+                        background: $primary-color;
+                        color: white;
+                    }
+                }
+            }
+            .nav-menu-box {
+                margin-bottom: 12px;
+                padding: 12px;
+                border-radius: 12px;
+                background: white;
+            }
+        }
+        footer {
+            padding: 0;
+            .logout-btn {
+                padding: 8px 12px;
+                margin-bottom: 4px;
+                color: #ff6262;
+                width: 100%;
+                display: flex;
+                column-gap: 8px;
+                font-size: 16px;
+                background: white;
+                text-decoration: none;
+                border-radius: 8px 25px 25px 8px;
+                transition: all 0.25s ease-in-out;
+            }
+            .logout-btn:hover {
+                background: #ff6262;
+                color: white;
+            }
+            .logout-btn:active {
+                background: #f74040;
+                color: white;
+            }
+        }
+    }
+    main {
+        height: 100vh;
+        input, textarea, select {
+          border-color: #8f8f8f !important;
+        }
+        input:hover, input:focus, textarea:hover, textarea:focus, select:hover, select:focus {
+          border-color: #212125 !important;
+        }
+        select option {
+            padding: 0;
+        }
+        input, textarea, label {
+            font-family: $geist !important;
+        }
+        .form-label {
+            color: #414f58 !important;
+        }
+        .main-tab {
+            padding: 12px 24px;
+            height: 100vh;
+            display: grid;
+            grid-template-rows: auto 1fr;
+            ul.tabs-btns {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                display: flex;
+                align-items: center;
+                column-gap: 8px;
+                li {
+                    label {
+                      padding: 4px 12px;
+                      background: #fff;
+                      font-size: 16px;
+                      border-radius: 50px;
+                      border: 1px solid #e6eaef;
+                      cursor: pointer;
+                      display: flex;
+                      align-items: center;
+                      column-gap: 6px;
+                      transition: all 0.25s ease-in-out;
+                      text-wrap: nowrap;
+                    }
+                    label:hover {
+                      background: #f6f7f8;
+                    }
+                    input[type=radio] {
+                      display: none;
+                    }
+                    input[type=radio]:checked + label {
+                      background: $primary-color;
+                      color: white;
+                      border: 1px solid $primary-color;
+                    }
+                }
+            }
+            header {
+                height: 80px;
+                margin-bottom: 24px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                background: rgba(230, 234, 239, 0.233);
+                h4 {
+                    font-size: 2rem;
+                    margin-bottom: 0;
+                }
+            }
+            section {
+                padding: 0 12px 0 0;
+                border-radius: 12px;
+                overflow: scroll;
+                .sub-tab-header {
+                    margin-bottom: 24px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    &.-btns {
+                        display: flex; 
+                        align-items: center;
+                        column-gap: 12px;
+                    }
+                    h2 {
+                        font-size: 2.7rem;
+                        margin-bottom: 0;
+                    }
+                    .tab-form-submit-btn {
+                        padding: 6px 12px;
+                        display: flex;
+                        align-items: center;
+                        column-gap: 8px;
+                        border: none;
+                        border-radius: 12px 4px 12px 4px;
+                        font-size: 16px;
+                        background: #8a98a2;
+                        color: #fff;
+                        box-shadow: $shadow-3;
+                        outline: none;
+                        transition: all 0.25s ease-in-out;
+                    }
+                    .tab-form-submit-btn:hover {
+                        background: #414f58;
+                    }
+                }
+                .sub-tab-main {
+                    #selectServicesContainer {
+                        label > #serviceThumbnailBox {
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            height: 240px;
+                            width: 240px;
+                            overflow: hidden;
+                            img {
+                                height: 100%;
+                                width: 100%;
+                                object-fit: cover;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

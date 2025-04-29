@@ -1,0 +1,515 @@
+{% load static auth_extras %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invitation Information</title>
+    <link rel="stylesheet" href="{% static 'css/invitation/styles/template_information.css' %}">
+    <link rel="shortcut icon" href="{% static 'assets/logos/eventic-golden-favicon.png' %}" type="image/x-icon">
+    <!-- Add bootstrap CSS and JS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    {% include 'main/utils/_google-analytics.html' %}
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="{% static 'assets/logos/Eventic-golden-dark-lg-logo-new.png' %}" alt="Eventic Logo">
+        </div>
+        <nav class="d-none d-md-block">
+            <ul class="pages">
+                <li><a href="{% url 'main:home' %}">Home</a></li>
+                <li><a href="{% url 'main:about' %}">About</a></li>
+                <li><a href="{% url 'invitation:home' %}">Templates</a></li>
+            </ul>
+        </nav>
+        <button class="btn p-0 d-md-none d-block shadow-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarOffcanvas" aria-controls="offcanvasTop"><i class="bi bi-list"></i></button>
+        <div class="offcanvas offcanvas-top" tabindex="-1" id="navbarOffcanvas" aria-labelledby="navbarOffcanvasLabel">
+            <div class="offcanvas-header">
+                <h5 id="navbarOffcanvasLabel">Navigation</h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <ul class="d-flex flex-column">
+                    <li class="w-100"><a href="{% url 'main:home' %}" class="w-100 px-3 py-2 rounded-2">Home</a></li>
+                    <li class="w-100"><a href="{% url 'main:about' %}" class="w-100 px-3 py-2 rounded-2">About</a></li>
+                    <li class="w-100"><a href="{% url 'invitation:home' %}" class="w-100 px-3 py-2 rounded-2">Templates</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+    <main>
+        <section class="thumbnail-container">
+            <img src="{{ template.thumbnail }}" alt="Eventic {{ template.type }} Card - {{ template.name }} Thumbnail">
+        </section>
+        <section class="details-container">
+            <div class="row justify-content-between align-items-center mb-3">
+                <div class="col-auto">
+                    {% if template.is_liked %}
+                    <button type="button" class="btn btn-lg shadow-none border-0 p-0 like-template-btn" data-template-id="{{ template.id }}" title="Unlike Template" data-bs-toggle="tooltip" data-bs-placement="top">
+                        <i class="bi bi-heart-fill text-danger fs-3"></i>
+                    </button>
+                    {% else %}
+                    <button type="button" class="btn btn-lg shadow-none border-0 p-0 like-template-btn" data-template-id="{{ template.id }}" title="Like Template" data-bs-toggle="tooltip" data-bs-placement="top">
+                        <i class="bi bi-heart text-dark fs-3"></i>
+                    </button>
+                    {% endif %}
+                </div>
+                <div class="col-auto d-flex align-items-center">
+                    {% if template.is_saved %}
+                    <button type="button" class="btn btn-lg shadow-none border-0 p-0 me-3 save-template-btn" data-template-id="{{ template.id }}" title="Unsave Template" data-bs-toggle="tooltip" data-bs-placement="top">
+                        <i class="bi bi-bookmark-fill text-primary fs-3"></i>
+                    </button>
+                    {% else %}
+                    <button type="button" class="btn btn-lg shadow-none border-0 p-0 me-3 save-template-btn" data-template-id="{{ template.id }}" title="Save Template" data-bs-toggle="tooltip" data-bs-placement="top">
+                        <i class="bi bi-bookmark text-dark fs-3"></i>
+                    </button>
+                    {% endif %}
+                    <button type="button" class="btn btn-lg shadow-none border-0 p-0" title="Share Template" data-bs-toggle="tooltip" data-bs-placement="top"><i class="bi bi-share fs-3"></i></button>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-gift me-2"></i>Free for {{ template.free_days }} days</h5>
+                {% if user.is_authenticated %}
+                <button class="btn btn-sm text-secondary report-template-btn border-0" data-template-id="{{ template.id }}" data-bs-toggle="modal" data-bs-target="#reportTemplateModal">
+                    <i class="bi bi-flag me-1"></i> Report Template
+                </button>
+                {% endif %}
+            </div>
+            <h1>{{ template.name }}</h1>
+            <div class="average-rating my-3 d-flex align-items-center">
+                <span>
+                    {% with full_stars=template.avg_rating|floatformat:"0"|add:"0" %}
+                    {% with has_half_star=template.avg_rating|stringformat:"f"|slice:"-2:"|cut:"0."|add:"0"|divisibleby:"5" %}
+                    
+                    {% for i in "12345"|make_list %}
+                        {% if forloop.counter <= template.avg_rating %}
+                            <i class="bi bi-star-fill text-warning"></i>  {# Full star #}
+                        {% elif forloop.counter == full_stars and has_half_star %}
+                            <i class="bi bi-star-half text-warning"></i>  {# Half star #}
+                        {% else %}
+                            <i class="bi bi-star text-warning"></i>  {# Empty star #}
+                        {% endif %}
+                    {% endfor %}
+                    {% endwith %}
+                    {% endwith %}
+                    <span class="m1-2">{{ template.avg_rating }} <small>({{ template.review_count }} reviews)</small></span>
+                </span>
+            </div>
+            <p>{{ template.description }}</p>
+            <ul class="features-list">
+                <li><i class="bi bi-people me-2"></i>RSVP Tracker</li>
+                <li><i class="bi bi-geo-alt me-2"></i>Venue Location</li>
+                <li><i class="bi bi-calendar me-2"></i>Event Dates</li>
+            </ul>
+            <div class="action-btns">
+                <a href="{% url 'invitation:create_invitation' id=template.id %}" class="btn btn-create"><i class="bi bi-calendar2-event me-2"></i>Customize</a>
+                <a href="{% url 'invitation:template_preview' id=template.id %}" class="btn btn-preview"><i class="bi bi-eye me-2"></i>Preview</a>
+            </div>
+        </section>
+
+        <section id="reviews">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">Reviews</h4>
+                {% if user.is_authenticated and template.has_purchased %}
+                    <button class="btn btn-outline-primary shadow-none rounded-5" data-bs-toggle="modal" data-bs-target="#addReviewModal"><i class="bi bi-chat-heart me-2"></i>Add Review</button>
+                {% endif %}
+            </div>
+            <div id="reviewContent" class="collapse show">
+                <ul class="list-unstyled mt-3">
+                    <!-- Reviews -->
+                    {% for review in template.reviews.all %}
+                    <li class="mb-3 border-bottom pb-2 d-flex justify-content-between align-items-start " id="review-{{ review.id }}">
+                        <div>
+                            {% if review.other.template_type == "wedding" %}
+                            <h6 class="mb-0"><small><i class="bi bi-arrow-through-heart-fill text-danger me-2"></i>{{ review.other.groom }} & {{ review.other.bride }}<small>{% if review.pinned %}<i class="bi bi-pin-angle-fill ms-1"></i>{% endif %}</small></small></h6>
+                            {% endif %}
+                            <div>
+                                {% for i in "12345"|make_list %}
+                                    {% if forloop.counter <= review.rating %}
+                                        <i class="bi bi-star-fill text-warning"></i>
+                                    {% else %}
+                                        <i class="bi bi-star text-warning"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <p class="mb-1">{{ review.comment }}</p>
+                            {% if review.other.template_type == "wedding" %}
+                            <p class="text-secondary"><small><i class="bi bi-calendar2-event me-2"></i>{% if review.other.date %}{{ review.other.date|date_strftime:"%d %b %Y" }}{% endif %} - <i class="bi bi-geo-alt me-1"></i> {% if review.other.venue %}{{ review.other.venue }}, {% endif %}{% if review.other.city %}{{ review.other.city }}, {% endif %}{% if review.other.state %}{{ review.other.state }}, {% endif %}{% if review.other.country %}{{ review.other.country }}{% endif %}</small></p>
+                            {% endif %}
+                        </div>
+                        <div class="ms-3 d-flex align-items-center">
+                            <div class="btn-group dropstart">
+                                <button type="button" class="btn border-0 dropdown shadow-none" id="reviewDropdownButton-{{ review.id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-three-dots-vertical"></i>
+                                </button>
+                                <ul class="dropdown-menu p-1 shadow rounded-3" aria-labelledby="dropdownMenuButton2">
+                                    {% if review.user == user %}
+                                    <li><button type="button" class="rounded-2 dropdown-item px-2 py-1 edit-review-btn" id="editreview-btn-{{ review.id }}"><i class="bi bi-pencil-square me-2"></i>Edit</button></li>
+                                    {% endif %}
+                                    {% if user.is_admin or user.is_operations or user.superuser %}
+                                    {% if not review.pinned %}
+                                    <li>
+                                        <form action="{% url 'invitation:toggle_pin_unpin_review' review_id=review.id template_id=template.id %}" method="post">
+                                            {% csrf_token %}
+                                            <button type="submit" class="rounded-2 dropdown-item px-2 py-1" name="pinUnpin"><i class="bi bi-pin me-2"></i>Pin</button>
+                                        </form>
+                                    </li>
+                                    {% else %}
+                                    <li>
+                                        <form action="{% url 'invitation:toggle_pin_unpin_review' review_id=review.id template_id=template.id %}" method="post">
+                                            {% csrf_token %}
+                                            <button type="submit" class="rounded-2 dropdown-item px-2 py-1" name="pinUnpin"><i class="bi bi-pin-fill me-2"></i>Unpin</button>
+                                        </form>
+                                    </li>
+                                    {% endif %}
+                                    {% endif %}
+                                    <li><button type="button" class="rounded-2 dropdown-item px-2 py-1 report-review-btn" data-review-id="{{ review.id }}"><i class="bi bi-flag me-2"></i>Report</button></li>
+                                    {% if review.user == request.user %}
+                                    <li><hr class="dropdown-divider my-1"></li>
+                                    <li>
+                                        <!-- Delete Review -->
+                                        <form method="POST" action="{% url 'invitation:delete_review' review.id %}" class="d-inline">
+                                            {% csrf_token %}
+                                            <button type="submit" class="dropdown-item px-2 py-1 text-danger rounded-2" title="Delete">
+                                                <i class="bi bi-trash3 me-2"></i>Delete
+                                            </button>
+                                        </form>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                    {% empty %}
+                    <div class="card px-4 py-5 rounded-4">
+                        <p class="mb-0 text-center">No reviews yet. Be the first to review!</p>
+                    </div>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="mt-3">
+                <button class="btn btn-sm w-100 p-0 border-0" type="button" data-bs-toggle="collapse" data-bs-target="#reviewContent" aria-expanded="false" aria-controls="reviewContent">
+                    Show/Hide Reviews
+                </button>
+            </div>
+        </section>
+
+        <!-- Add Review Modal -->
+        <div class="modal fade" id="addReviewModal" tabindex="-1" aria-labelledby="addReviewModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content rounded-5 p-md-3 p-2">
+                    <form method="POST" id="editReviewForm" action="{% url 'invitation:add_review' template.id %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="modal-header border-0">
+                            <h5 class="modal-title" id="addReviewModalLabel">Add Review</h5>
+                            <button type="button" class="btn-close btn-sm p-2 rounded-5 shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body pt-0">
+                            <div class="mb-3">
+                                <label for="editRating" class="form-label">Rating</label>
+                                <div id="edit-star-rating">
+                                    {% for i in "12345"|make_list %}
+                                        <i class="bi bi-star" data-value="{{ i }}" style="cursor: pointer;"></i>
+                                    {% endfor %}
+                                </div>
+                                <input type="hidden" id="editRating" name="rating" required>
+                            </div>
+                            <div class="mb-1">
+                                <label for="editComment" class="form-label">Comment</label>
+                                <textarea class="form-control shadow-none rounded-3 border-secondary" id="editComment" name="comment" rows="3" required></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer border-0 pt-0">
+                            <button type="submit" class="btn btn-primary border-0 shadow-none rounded-5 px-3 py-2">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Report Review Modal -->
+        <div class="modal fade" id="reportReviewModal" tabindex="-1" aria-labelledby="reportReviewModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content rounded-5 p-md-3 p-2">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="reportReviewModalLabel">Report Review</h5>
+                        <button type="button" class="btn-close border-0 shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="POST" id="reportReviewForm">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                            <input type="hidden" id="reportReviewId" name="review_id">
+                            <div class="mb-1">
+                                <label for="reportReason" class="form-label">Reason</label>
+                                <input type="text" class="form-control shadow-none rounded-3 border-secondary" id="reportReason" name="reason" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer border-0 pt-0">
+                            <button type="button" class="btn shadow-none border-0" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary shadow-none border-0 rounded-5 px-3 py-2">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Report Template Modal -->
+        <div class="modal fade" id="reportTemplateModal" tabindex="-1" aria-labelledby="reportTemplateModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content rounded-5 p-md-3 p-2">
+                    <div class="modal-header border-0 pb-0">
+                        <h5 class="modal-title" id="reportTemplateModalLabel">Report Template</h5>
+                        <button type="button" class="btn-close shadow-none border-0 rounded-5" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="POST" id="reportTemplateForm" action="{% url 'invitation:report_template' template.id %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="reportReason" class="form-label">Reason</label>
+                                <input type="text" class="form-control shadow-none rounded-3 border-secondary" id="reportReason" name="reason" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="reportDescription" class="form-label">Description</label>
+                                <textarea class="form-control shadow-none rounded-3 border-secondary" id="reportDescription" name="description" rows="3" required></textarea>
+                            </div>
+                            <div class="mb-1">
+                                <label for="reportScreenshot" class="form-label">Screenshot (optional)</label>
+                                <input type="file" class="form-control shadow-none rounded-3 border-secondary" id="reportScreenshot" name="screenshot" accept="image/*">
+                            </div>
+                        </div>
+                        <div class="modal-footer border-0 pt-0">
+                            <button type="button" class="btn shadow-none border-0" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary rounded-5 shadow-none border-0 px-3 py-2">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <section id="related-templates">
+            <h4>Related Templates</h4>
+            {% for template in related_templates %}
+            <a href="{% url 'invitation:template_information' template.id %}">
+                {{ template.name }}
+            </a>
+            {% empty %}
+            <div class="card px-4 py-5 rounded-4">
+                <p class="mb-0 text-center">No related templates found.</p>
+            </div>
+            {% endfor %}
+        </section>            
+    </main>
+    <footer>
+        <p class="copyright">&copy; 2025 <a href="/" target="_blank">Eventic</a>. All rights reserved.</p>
+    </footer>
+    {% include 'main/utils/_toast.html' %}
+    <script type="text/javascript">
+        var tooltipTriggerList = [].slice.call(
+            document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        );
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl, {
+            delay: { show: 500, hide: 100 }, // Custom delay in milliseconds
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+            var toastList = toastElList.map(function (toastEl) {
+            return new bootstrap.Toast(toastEl)
+            })
+            toastList.forEach(toast => toast.show())  // Show all the toasts
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Event listener for Edit Review
+            document.querySelectorAll('.edit-review-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const reviewId = this.getAttribute('id').split('-')[2];
+                    const comment = this.closest('li').querySelector('p').innerText;
+                    const rating = this.closest('li').querySelector('span').querySelectorAll('.bi-star-fill').length;
+                    openEditReviewModal(reviewId, comment, rating);
+                });
+            });
+
+            // Event listener for Report Review
+            document.querySelectorAll('.report-review-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const reviewId = this.getAttribute('data-review-id');
+                    openReportReviewModal(reviewId);
+                });
+            });
+
+            // Event listener for Pin/Unpin Review
+            document.querySelectorAll('.pin-review-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const reviewId = this.getAttribute('data-review-id');
+                    togglePinReview(reviewId);
+                });
+            });
+
+            // Event listener for Report Template
+            document.querySelectorAll('.report-template-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const templateId = this.getAttribute('data-template-id');
+                    openReportTemplateModal(templateId);
+                });
+            });
+
+            // Event listener for Like Template
+            document.querySelectorAll('.like-template-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const templateId = this.getAttribute('data-template-id');
+                    const icon = button.querySelector('i');
+                    icon.classList.toggle('bi-heart');
+                    icon.classList.toggle('bi-heart-fill');
+                    icon.classList.toggle('text-dark');
+                    icon.classList.toggle('text-danger');
+                    // Also want to toggle the tooltip title Like/Unlike
+                    const tooltip = bootstrap.Tooltip.getInstance(button);
+                    if (tooltip) {
+                        tooltip.setContent({ '.tooltip-inner': icon.classList.contains('bi-heart') ? 'Like Template' : 'Unlike Template' });
+                    }
+                    toggleLikeTemplate(templateId, this);
+                });
+            });
+
+            // Event listener for Save Template
+            document.querySelectorAll('.save-template-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const templateId = this.getAttribute('data-template-id');
+                    const icon = button.querySelector('i');
+                    icon.classList.toggle('bi-bookmark');
+                    icon.classList.toggle('bi-bookmark-fill');
+                    icon.classList.toggle('text-dark');
+                    icon.classList.toggle('text-primary');
+                    // Also want to toggle the tooltip title Save/Unsave
+                    const tooltip = bootstrap.Tooltip.getInstance(button);
+                    if (tooltip) {
+                        tooltip.setContent({ '.tooltip-inner': icon.classList.contains('bi-bookmark') ? 'Save Template' : 'Unsave Template' });
+                    }
+                    toggleSaveTemplate(templateId, this);
+                });
+            });
+
+            // Star rating logic for adding/editing reviews
+            const starContainers = document.querySelectorAll('#edit-star-rating, #star-rating');
+            starContainers.forEach(container => {
+                const stars = container.querySelectorAll('.bi');
+                const ratingInput = container.closest('form').querySelector('input[name="rating"]');
+
+                stars.forEach((star, index) => {
+                    star.addEventListener('click', function () {
+                        // Update the hidden input value
+                        ratingInput.value = index + 1;
+
+                        // Reset all stars
+                        stars.forEach(s => {
+                            s.classList.remove('bi-star-fill', 'text-warning');
+                            s.classList.add('bi-star');
+                        });
+
+                        // Highlight the selected stars
+                        for (let i = 0; i <= index; i++) {
+                            stars[i].classList.remove('bi-star');
+                            stars[i].classList.add('bi-star-fill', 'text-warning');
+                        }
+                    });
+                });
+            });
+        });
+
+        function openEditReviewModal(reviewId, comment, rating) {
+            const editForm = document.getElementById("editReviewForm");
+            editForm.action = `/invitation/review/${reviewId}/edit/`;
+            document.getElementById("editComment").value = comment;
+            document.getElementById("editRating").value = rating;
+
+            const stars = document.querySelectorAll("#edit-star-rating .bi");
+            stars.forEach(star => {
+                star.classList.remove("bi-star-fill", "text-warning");
+                star.classList.add("bi-star");
+            });
+
+            for (let i = 0; i < rating; i++) {
+                stars[i].classList.remove("bi-star");
+                stars[i].classList.add("bi-star-fill", "text-warning");
+            }
+
+            const editReviewModal = new bootstrap.Modal(document.getElementById('addReviewModal'));
+            editReviewModal.show();
+        }
+
+        function openReportReviewModal(reviewId) {
+            const reportReviewModal = new bootstrap.Modal(document.getElementById('reportReviewModal'));
+            document.getElementById("reportReviewId").value = reviewId;
+            document.getElementById("reportReviewForm").action = `/invitation/review/${reviewId}/report/`;
+            reportReviewModal.show();
+        }
+
+        function togglePinReview(reviewId) {
+            fetch(`/invitation/review/${reviewId}/pin/`, {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}",
+                },
+            }).then(response => {
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    alert("Failed to pin/unpin the review.");
+                }
+            });
+        }
+
+        function openReportTemplateModal(templateId) {
+            const reportTemplateModal = new bootstrap.Modal(document.getElementById('reportTemplateModal'));
+            document.getElementById("reportTemplateForm").action = `/invitation/template/${templateId}/report/`;
+            reportTemplateModal.show();
+        }
+
+        function toggleLikeTemplate(templateId, button) {
+            fetch(`/invitation/template/${templateId}/like/`, {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}",
+                },
+            }).then(response => {
+                if (!response.ok) {
+                    console.log("Template liked/unliked successfully.");
+                    const icon = button.querySelector('i');
+                    icon.classList.toggle('bi-heart');
+                    icon.classList.toggle('bi-heart-fill');
+                    icon.classList.toggle('text-dark');
+                    icon.classList.toggle('text-danger');
+                    alert("Failed to like/unlike the template.");
+                }
+            });
+        }
+
+        function toggleSaveTemplate(templateId, button) {
+            fetch(`/invitation/template/${templateId}/save/`, {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}",
+                },
+            }).then(response => {
+                if (!response.ok) {
+                    const icon = button.querySelector('i');
+                    icon.classList.toggle('bi-bookmark');
+                    icon.classList.toggle('bi-bookmark-fill');
+                    icon.classList.toggle('text-dark');
+                    icon.classList.toggle('text-primary');
+                    alert("Failed to save/unsave the template.");
+                }
+            });
+        }
+    </script>
+</body>
+</html>

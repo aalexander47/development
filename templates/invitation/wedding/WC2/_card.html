@@ -1,0 +1,15 @@
+{% load static %}
+<img src="https://t4.ftcdn.net/jpg/04/55/66/83/360_F_455668335_tDXYx9hs77EcvHDi8eUMHBYXRPdgacFk.jpg" alt="" class="header-bg">
+<img class="brand-logo" src="{% static 'assets/logos/eventic-golden-favicon.png' %}" alt="Brand Logo">
+<h1>You're Invited</h1>
+<p class="invite-text">Join us in celebrating the beautiful union of</p>
+<div class="names">{% if invitation.details.groom %}{{ invitation.details.groom }}{% else %}Groom{% endif %} <span>&</span> {% if invitation.details.bride %}{{ invitation.details.bride }}{% else %}Bride{% endif %}</div>
+
+<!-- QR Code Container -->
+<div class="qr-container">
+    <div class="qrcode-box"></div>
+    <img class="qr-logo" src="{% static 'assets/logos/qrcode-logo-light.png' %}" alt="Brand Logo">
+</div>
+<p class="footer">Scan the QR code to get dates, venue and RSVP</p>
+<p class="footer-cc">Powered by <span>Eventic</span></p>
+<img class="footer-img" src="https://www.shutterstock.com/image-illustration/watercolor-horizontal-border-bright-rose-600nw-2193673453.jpg" alt="">

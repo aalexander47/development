@@ -1,0 +1,205 @@
+@import '../../core/scss/_theme.scss';
+@import '../../core/scss/bootstrap5.scss';
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: $poppins;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 16px 24px;
+    background: #ffffff;
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        img {
+            height: 24px;
+            width: auto;
+        }
+    }
+    .navbar {
+        ul {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            li {
+                a {
+                    color: #3a3a3a;
+                    text-decoration: none;
+                    transition: all 0.25s ease-in-out;
+                    font-weight: 500;
+                    font-size: 16px;
+                    &.active {
+                        color: $primary-color;
+                    }
+                    &:hover {
+                        color: $primary-color;
+                    }
+                }
+            }
+        }
+    }
+}
+
+main {
+    section.templates-section {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 24px;
+        .templates-header {
+            margin-bottom: 24px;
+            h2 {
+                font-size: 1.5rem;
+                margin-bottom: 0px;
+            }
+            p {
+                font-size: 1rem;
+                margin-bottom: 0;
+            }
+        }
+        .templates-body {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 50px;
+            .template-card {
+                text-decoration: none;
+                position: relative;
+                overflow: hidden;
+                border-radius: 10px;
+                transition: transform 0.3s ease;
+                .template-card-thumbnail {
+                    position: relative;
+                    display: grid;
+                    place-items: center;
+                    border-radius: 16px;
+                    aspect-ratio: 4/3;
+                    overflow: hidden !important;
+                    box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
+                    border: 1px solid rgba(0, 0, 0, 0.1);
+                    img {
+                        height: 100%;
+                        width: 100%;
+                        object-fit: cover;
+                        transition: opacity 0.3s ease;
+                        &:hover {
+                            opacity: 0.8;
+                        }
+                    }
+                    .view-icon {
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        z-index: 1;
+                        font-size: 1.5rem;
+                        background: rgba(0, 0, 0, 0.5);
+                        padding: 0.5rem 1rem;
+                        border-radius: 5px;
+                        color: white;
+                        text-decoration: none;
+                        opacity: 0;
+                        transition: opacity 0.3s ease;
+                        &:hover {
+                            background: rgba(0, 0, 0, 0.7);
+                            opacity: 1;
+                        }
+                    }
+                }
+                .template-card-content {
+                    padding: 4px 8px;
+                    h5 {
+                        margin-top: 12px;
+                        font-size: 1.05rem;
+                        font-weight: 500;
+                        color: #111;
+                        margin-bottom: 0;
+                    }
+                }
+                .template-icons {
+                    position: absolute;
+                    top: 12px;
+                    right: 12px;
+                    z-index: 2;
+                    transition: opacity 0.3s ease;
+                    .like-template-btn {
+                        display: grid;
+                        place-items: center;
+                        background: transparent;
+                        border: 0;
+                        outline: none;
+                        width: 50px;
+                        height: 50px;
+                        font-size: 2rem;
+                        color: white;
+                        transition: all 0.3s ease;
+                        i.liked {
+                            color: $danger-color;
+                        }
+                    }
+                }
+                &:hover {
+                    transform: scale(1.02);
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {  
+    header {
+        padding: 24px;
+        .logo {
+            height: 20px;
+            width: auto;
+        }
+        ul {
+            gap: 16px;
+            li {
+                a {
+                    font-size: 14px;
+                }
+            }
+        }
+    }
+
+    main {
+        section.templates-section {
+            padding: 8px 24px 24px 24px;
+            .templates-header {
+                margin-bottom: 16px;
+                h2 {
+                    font-size: 1.25rem;
+                }
+                p {
+                    font-size: 0.85rem;
+                }
+            }
+            .templates-body {
+                grid-template-columns: repeat(1, 1fr);
+                gap: 24px;
+                .template-card {
+                    .template-card-content {
+                        h5 {
+                            margin-top: 12px;
+                            font-size: 1.15rem;
+                            font-weight: 500;
+                            color: #111;
+                            margin-bottom: 0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,97 @@
+// Original Colors
+$sky-blue: #0F1E32;
+$blue: #5886AF;
+$light-blue: #E1F5FF;
+$gold: #EAC77D;
+$darkgold: #B47B44;
+$theme-blue: #4364d3;
+$theme-blue-hover: #3b59ba;
+
+// Lighter Shades
+$lighter-sky-blue: lighten($sky-blue, 20%);
+$light-sky-blue: lighten($sky-blue, 10%);
+$lighter-blue: lighten($blue, 20%);
+$light-blue: lighten($blue, 10%);
+$light-light-blue: lighten($light-blue, 10%);
+$lighter-gold: lighten($gold, 20%);
+$light-gold: lighten($gold, 10%);
+$lighter-darkgold: lighten($darkgold, 20%);
+$light-darkgold: lighten($darkgold, 10%);
+
+// Darker Shades
+$darker-sky-blue: darken($sky-blue, 20%);
+$dark-sky-blue: darken($sky-blue, 10%);
+$darker-blue: darken($blue, 20%);
+$dark-blue: darken($blue, 10%);
+$dark-light-blue: darken($light-blue, 10%);
+$darker-gold: darken($gold, 20%);
+$dark-gold: darken($gold, 10%);
+$darker-darkgold: darken($darkgold, 20%);
+$dark-darkgold: darken($darkgold, 10%);
+
+// Other Variables
+$text-color: #333333;
+$link-color: #007bff;
+
+// Gold
+$gold-gradient: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #b18830 30%, #8A6E2F 40%, transparent 80%),
+radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #9d8244 62.5%, #7d642b 100%);
+
+$golden-gradient: linear-gradient(135deg, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 35%),
+linear-gradient(135deg, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);;
+
+// Color Variables
+$primary-color: #007bff;
+$secondary-color: #6c757d;
+$success-color: #28a745;
+$danger-color: #dc3545;
+$info-color: #17a2b8;
+$warning-color: #ffc107;
+$dark-color: #343a40;
+$light-color: #f8f9fa;
+$muted-color: #6c757d;
+
+// Color Variables on Hover
+$primary-color-hover: #0069d9;
+$secondary-color-hover: #5a6268;
+$success-color-hover: #218838;
+$danger-color-hover: #bd362f;
+$info-color-hover: #138496;
+$warning-color-hover: #e0a800;
+$dark-color-hover: #1d2124;
+$light-color-hover: #dae0e5;
+$muted-color-hover: #545b62;
+
+// Color Variables on Disabled
+$primary-color-disabled: #208cff;
+$secondary-color-disabled: #7a848d;
+$success-color-disabled: #30b44e;
+$danger-color-disabled: #e64151;
+$info-color-disabled: #1eacc2;
+$warning-color-disabled: #ffc822;
+$dark-color-disabled: #3b4147;
+$light-color-disabled: #ebeef1;
+$muted-color-disabled: #7a848d;
+ 
+// Shadow Variables
+$shadow_1: 0px 1px 3px rgba(0, 0, 0, 0.12), 0px 1px 2px rgba(0, 0, 0, 0.24);
+$shadow_2: 0px 2px 4px rgba(0, 0, 0, 0.18);
+$shadow_3: 0px 8px 24px rgba(149, 157, 165, 0.2);
+
+// Mixin for the text style
+@mixin gradient-text {
+    color: #333; // Black gradient (though won't be used due to background clip)
+    background: #000000;
+    background: linear-gradient(to bottom left, #000000 0%, #516591 50%, #000000 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+// Mixin for the gold gradient text
+@mixin gold-gradient {
+    color: #333; // Black gradient (though won't be used due to background clip)
+    background: #000000;
+    background: linear-gradient(to bottom left, $darker-darkgold 0%, $darkgold 50%, $darker-darkgold 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}

@@ -1,0 +1,30 @@
+{% extends 'invitation/wedding/details_base.html' %}{% load auth_extras static %}
+{% block title %}{{ invitation.details.groom }} & {{ invitation.details.bride }} wedding invitation{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/invitation/wedding/WC2/styles/details.css' %}">
+{% endblock %}
+
+{% block invitation_card %}
+{% include 'invitation/wedding/WC2/_invitation.html' %}
+{% endblock %}
+
+{% block download_card %}
+{% include 'invitation/wedding/WC2/_card.html' %}
+{% endblock %}
+
+{% block download_qr_code %}
+{% include 'invitation/wedding/WC2/_card_qrcode.html' %}
+{% endblock %}
+
+{% block card %}
+{% include 'invitation/wedding/WC2/_card.html' %}
+{% endblock %}
+
+{% block qr_code %}
+{% include 'invitation/wedding/WC2/_card_qrcode.html' %}
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'scripts/invitation/wedding/WC2/details.js' %}"></script>
+{% endblock %}

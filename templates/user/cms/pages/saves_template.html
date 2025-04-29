@@ -1,0 +1,46 @@
+{% extends 'user/cms/base.html' %}{% load static auth_extras %}
+{% block title %}Saved Templates | Eventic{% endblock %}
+
+{% block content %}
+<div class="content-block">
+    <div class="main-header" id="MH01">
+        <div class="header-top">
+            <div class="header-title">
+                <a href="{% url 'user:Saves' %}" class="back-btn"><i class="bi bi-arrow-left"></i></a>
+                <h1>Saved Templates</h1>
+            </div>
+        </div>
+        <div class="header-bottom">
+            <ul>
+                <li><a href="{% url 'user:SavesService' %}">Services</a></li>
+                <li><a href="{% url 'user:SavesTemplate' %}" class="active">Templates</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main-body">
+        {% include 'vendor/comps/messages.html' %}
+        {% if saved_templates %}
+        <div class="row">
+            {% for template in saved_templates %}
+            <div class="col-md-4 col-6 mb-4">
+                <div class="card shadow-sm rounded-4 overflow-hidden">
+                    <a href="{{ template.slug }}" target="_blank">
+                        <img src="{{ template.thumbnail }}" class="card-img-top" alt="{{ template.name }}">
+                    </a>
+                    <div class="card-body">
+                        <h6 class="mb-0 fw-bold poppins">{{ template.name }}</h6>
+                        <div class="mb-0 text-muted"><small>{{ template.description|truncatechars:50 }}</small></div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-notification-box text-center py-5 bg-light rounded-5">
+            <h2>(つ﹏<。)</h2>
+            <h5 class="mb-0 text-secondary">No saved templates</h5>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,169 @@
+{% extends 'vendor/cms/base.html' %}{% load static auth_extras %}
+{% block title %}Notifications | Eventic{% endblock %}
+
+{% block content %}
+<div class="content-block">
+    <div class="main-header" id="MH01">
+        <div class="header-top">
+            <div class="header-title">
+                {% if request.META.HTTP_REFERER %}
+                <a href="{{ request.META.HTTP_REFERER }}" class="back-btn"><i class="bi bi-arrow-left"></i></a>
+                {% else %}
+                <a href="{% url 'vendor:Dashboard' %}" class="back-btn"><i class="bi bi-arrow-left"></i></a>
+                {% endif %}
+                <h1>Notifications</h1>
+            </div>
+            <div class="btn-group dropstart">
+                <button type="button" class="btn dropdown shadow-none border-0 outline-none" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-three-dots-vertical"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end p-1 rounded-3 shadow">
+                    <li>
+                        <form method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="dropdown-item rounded-3 ps-2 py-2" name="mark_all_as_read"><i class="bi bi-check-all"></i><span class="ms-2">Mark all as read</span></button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="main-body">
+        {% include 'vendor/comps/messages.html' %}
+        <div id="notificationsContainer">
+            {% if notifications|length == 0 %}
+            <div class="no-notification-box text-center py-5 bg-light rounded-5">
+                <h2>(つ﹏<。)</h2>
+                <h5 class="mb-0 text-secondary">No notifications</h5>
+            </div>
+            {% else %}
+            {% for notification in notifications %}
+            <div class="notification-box">
+                <input type="checkbox" name="notification_{{ notification.id }}" id="notification_{{ notification.id }}" class="notification-input">
+                <label for="notification_{{ notification.id }}" class="notification-card{% if not notification.is_read %} notification-unread{% endif %}" id="notification_card_{{ notification.id }}">
+                    <div class="notification-head">
+                        {% if notification.type == "callback_request" %}
+                        <div class="avatar-icon">
+                            <i class="bi bi-telephone-inbound{% if not notification.is_read %}-fill{% endif %}"></i>
+                            {% if not notification.is_read %}
+                            <span class="notification-badge"></span>
+                            {% endif %}
+                        </div>
+                        {% elif notification.type == "business_registration" %}
+                        <div class="avatar-icon">
+                            <i class="bi bi-person{% if not notification.is_read %}-fill{% endif %}"></i>
+                            {% if not notification.is_read %}
+                            <span class="notification-badge"></span>
+                            {% endif %}
+                        </div>
+                        {% else %}
+                        <div class="avatar-icon">
+                            <i class="bi bi-bell{% if not notification.is_read %}-fill{% endif %}"></i>
+                            {% if not notification.is_read %}
+                            <span class="notification-badge"></span>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                        <div class="notification-info">
+                            <h5 class="notification-title">{{ notification.title }}</h5>
+                            <i class="bi bi-dot"></i>
+                            <span class="notification-time">{{ notification.created_at | timesince_simple }} ago</span>
+                        </div>
+                        <div class="notification-action dropstart">
+                            <button type="button" class="action-btn dropdown" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-three-dots-vertical"></i></button>
+                            <ul class="dropdown-menu action-dropdown-menu">
+                                {% if notification.is_read %}
+                                <li>
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="notification_id" value="{{ notification.id }}">
+                                        <button type="submit" class="dropdown-item" name="mark_as_unread"><i class="bi bi-check"></i><span>Mark as unread</span></button>
+                                    </form>
+                                </li>
+                                {% else %}
+                                <li>
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="notification_id" value="{{ notification.id }}">
+                                        <button type="submit" class="dropdown-item" name="mark_as_read"><i class="bi bi-check"></i><span>Mark as read</span></button>
+                                    </form>
+                                </li>
+                                {% endif %}
+                                <li>
+                                    <button type="button" class="dropdown-item dropdown-item-danger" name="delete_notification" data-id="{{ notification.id }}" data-bs-toggle="modal" data-bs-target="#deleteNotificationModal" onclick="deleteNotification(this);"><i class="bi bi-trash"></i><span>Delete</span></button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="user-notification">{{ notification.description|truncatechars:100 }}</div>
+                    </div>
+                    <div class="notification-body">
+                        {% if notification.type == "callback_request" %}
+                        {% if notification.other.client_message %}
+                        <p class="user-notification"><span class="text-secondary">Client Message:</span> {{ notification.other.client_message }}</p>
+                        {% endif %}
+                        <p><span class="text-secondary">Description: </span>{{ notification.description }}</p>
+                        <ul class="cta-group">
+                            {% if notification.other.client_phone %}
+                            <li>
+                                <a href="tel:{{ notification.other.client_phone }}" class="cta-btn cta-call"><i class="bi bi-telephone"></i>Call Now</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                        {% endif %}
+                        {% if notification.type == "business_registration" %}
+                        <p class="user-notification"><span class="text-secondary">Business Name:</span> {{ notification.other.business_name }}</p>
+                        <p class="user-notification"><span class="text-secondary">Vendor Name:</span> {{ notification.other.first_name }} {{ notification.other.last_name }}</p>
+                        <p><span class="text-secondary">Description: </span>{{ notification.description }}</p>
+                        <ul class="cta-group">
+                            {% if notification.other.phone %}
+                            <li>
+                                <a href="tel:{{ notification.other.phone }}" class="cta-btn cta-call"><i class="bi bi-telephone"></i>Call Now</a>
+                            </li>
+                            {% endif %}
+                            {% if notification.other.email %}
+                            <li>
+                                <a href="tel:{{ notification.other.email }}" class="cta-btn cta-call"><i class="bi bi-envelope"></i>Email</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                </label>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Confirm Remove Notification Modal Popup -->
+<div class="modal fade" id="deleteNotificationModal" tabindex="-1" aria-labelledby="deleteNotificationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteNotificationModalLabel">Delete Notification</h5>
+          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            <div class="modal-body text-center">
+                <input type="hidden" name="notification_id" id="delete_notification_id">
+                <p>Are you sure you want to remove <strong><span id="remove_notification_title"></span></strong> Notification?</p>
+                <button type="submit" class="btn btn-danger shadow-none" name="delete_notification">Delete</button>
+            </div>
+        </form>
+      </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+    function deleteNotification(elem) {
+        const id = elem.getAttribute('data-id');
+        const info_card = document.getElementById(`notification_card_${id}`);
+        document.getElementById('delete_notification_id').value = id;
+        document.querySelector('#remove_notification_title').textContent = info_card.querySelector('.notification-title').textContent;
+    }
+</script>
+{% endblock %}

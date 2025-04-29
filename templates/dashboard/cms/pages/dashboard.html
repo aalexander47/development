@@ -1,0 +1,165 @@
+{% extends 'dashboard/cms/base.html' %}
+{% block title %}Admin Dashboard | Eventic{% endblock %}
+
+{% block content %}
+<div class="content-block">
+    <div class="main-header" id="MH01">
+        <div class="header-top">
+            <div class="header-title">
+                <h1>Admin Dashboard</h1>
+            </div>
+        </div>
+    </div>
+    <div class="main-body">
+        {% include 'vendor/comps/messages.html' %}
+        <div class="row mx-0">
+            <div class="col-md-3 col-6 mb-md-4 mb-2 px-0 pe-md-1 pe-1">
+                <div class="card rounded-5 shadow-sm border p-3">
+                    <div class="card-body">
+                        <h5 class="mb-1">Users</h5>
+                        <h2 class="mb-0">{{ users_count }}</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-md-4 mb-2 px-0 px-md-1 ps-1">
+                <div class="card rounded-5 shadow-sm border p-3 bg-light">
+                    <div class="card-body">
+                        <h5 class="mb-1">Vendors</h5>
+                        <h2 class="mb-0">{{ vendors_count }}</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-md-4 mb-2 px-0 px-md-1 pe-1">
+                <div class="card rounded-5 shadow-sm border p-3 bg-primary">
+                    <div class="card-body">
+                        <h5 class="mb-1 text-white">Services</h5>
+                        <h2 class="mb-0 text-white">{{ services_count }}</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-md-4 mb-2 px-0 px-md-1 ps-1">
+                <div class="card rounded-5 shadow-sm border p-3 bg-dark">
+                    <div class="card-body">
+                        <h5 class="mb-1 text-white">Bugs</h5>
+                        <h2 class="mb-0 text-white">{{ bugs_count }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col">
+                <div class="card mb-4 stat-card">
+                    <div class="card-body pb-0">
+                        <p class="text-center">Users</p>
+                        <table class="table mb-3">
+                            <tr>
+                                <td class="pb-0"><h6 class="text-secondary">Staff</h6></td>
+                                <td class="pb-0"><h6 class="text-dark text-end">{{ staff_users_count }}</h6></td>   
+                            </tr>
+                            <tr>
+                                <td class="pb-0"><h6 class="text-secondary">Vendors</h6></td>
+                                <td class="pb-0"><h6 class="text-dark text-end">{{ vendors_count }}</h6></td>
+                            </tr>
+                            <tr>
+                                <td class="pb-0"><h6 class="text-secondary">Payment Pending</h6></td>
+                                <td class="pb-0"><h6 class="text-dark text-end">{{ pending_payment_users_count }}</h6></td>
+                            </tr>
+                        </table>
+                        <a href="{% url 'dashboard:Users' %}" class="btn underline-none text-primary text-center w-100 p-0" role="button">View All</a>
+                    </div>
+                </div>
+                <div class="card mb-4 stat-card">
+                    <div class="card-body pb-0">
+                        <p class="text-center">Vendors</p>
+                        <table class="table">
+                            <tr>
+                                <td class="pb-0"><h6 class="text-secondary">Active</h6></td>
+                                <td class="pb-0"><h6 class="text-dark text-end">{{ active_vendors_count }}</h6></td>
+                            </tr>
+                            <tr>
+                                <td class="pb-0"><h6 class="text-secondary">With Services</h6></td>   
+                                <td class="pb-0"><h6 class="text-dark text-end">{{ vendors_with_services }}</h6></td>
+                            </tr>
+                            <tr>
+                                <td class="pb-0"><h6 class="text-secondary">Inactive</h6></td>   
+                                <td class="pb-0"><h6 class="text-dark text-end">{{ inactive_vendors_count }}</h6></td>
+                            </tr>
+                            <tr>
+                                <td class="pb-0"><h6 class="text-secondary">Verified</h6></td>
+                                <td class="pb-0"><h6 class="text-dark text-end">{{ verified_vendors_count }}</h6></td>
+                            </tr>
+                            <tr>
+                                <td class="pb-0"><h6 class="text-secondary">Suspended</h6></td>
+                                <td class="pb-0"><h6 class="text-dark text-end">{{ suspended_vendors_count }}</h6></td>
+                            </tr>
+                        </table>
+                        <a href="{% url 'dashboard:Vendors' %}" class="btn underline-none text-primary text-center w-100 p-0" role="button">View All</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col">
+                <div class="card mb-4 stat-card">
+                    <div class="card-body">
+                        <p class="text-center">Services</p>
+                        <table class="table mb-0">
+                            <tr>
+                                <td class="pb-0"><h6 class="text-secondary">Active</h6></td>
+                                <td class="pb-0"><h6 class="text-dark text-end">{{ active_services_count }}</h6></td>
+                            </tr>
+                            <tr>
+                                <td class="pb-0"><h6 class="text-secondary">Inactive</h6></td>   
+                                <td class="pb-0"><h6 class="text-dark text-end">{{ inactive_services_count }}</h6></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                {% if request.user.is_admin %}
+                <div class="card rounded-5 shadow-sm border p-3 mb-4">
+                    <div class="card-body">
+                        <p class="text-center">Bill & Credits</p>
+                        <table class="table table-borderless table-hover mb-0">
+                            <tr>
+                                <td class="pb-0"><h6 class="text-secondary">Bill</h6></td>
+                                <td class="pb-0"><h6 class="text-dark text-end">₹{{ total_bill}}</h6></td>
+                            </tr>
+                            <tr>
+                                <td class="pb-0"><h6 class="text-secondary">Credits</h6></td>   
+                                <td class="pb-0"><h6 class="text-dark text-end"><i class="bi bi-wallet2 me-1"></i>{{ total_credits }}</h6></td>
+                            </tr>
+                        </table>
+                        <hr>
+                        <form method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary w-100 py-3 rounded-5 mb-2" name="calculate_price"><i class="bi bi-wallet2"></i>&nbsp; Calculate Price</button>
+                            <button type="button" class="btn btn-light border w-100 py-3 rounded-5" data-bs-toggle="modal" data-bs-target="#calculatePriceModal"><i class="bi bi-calculator"></i>&nbsp; Calculate Custom Price</button>
+                        </form>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Calculate Price Modal -->
+<div class="modal fade" id="calculatePriceModal" tabindex="-1" aria-labelledby="calculatePriceModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <!-- Make the modal centered and small -->
+    <div class="modal-dialog modal-dialog-centered"> 
+      <div class="modal-content rounded-5 p-3">
+        <div class="modal-header border-0">
+          <h5 class="modal-title" id="calculatePriceModalLabel">Calculate Custom Price</h5>
+          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            <div class="modal-body">
+                <div class="form-group">
+                    <input type="datetime-local" class="form-control shadow-none p-3 rounded-3" id="created_at" name="created_at" max="{{ current_datetime }}" required>
+                </div>
+                <button type="submit" class="btn btn-primary text-white shadow-none w-100 p-3 rounded-5" name="calculate_price" id="calculate_price"><i class="bi bi-calculator"></i>&nbsp; Calculate</button>
+            </div>
+        </form>
+      </div>
+    </div>
+</div>
+{% endblock %}

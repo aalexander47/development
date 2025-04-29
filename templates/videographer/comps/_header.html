@@ -1,0 +1,20 @@
+{% load static %}
+<div class="logo">
+    <a href="/">
+        <img src="{% static 'assets/logos/Eventic-golden-dark-lg-logo-new.png' %}" alt="Eventic Gold Dark Logo">
+    </a>
+</div>
+<nav>
+    <ul>
+        <li><a href="{% url 'vendor:Dashboard' %}"><i class="bi bi-house"></i><span>Dashboard</span></a></li>
+        <li><a {% if cp == 'dashboard' %}class="active" disabled{% endif %} href="{% url 'videographer:Dashboard' %}"><i class="bi bi-bar-chart"></i><span>Dashboard</span></a></li>
+        {% if cp == 'create' %}
+        <li><a class="active" disabled href="{% url 'videographer:CreateService' %}"><i class="bi bi-plus-circle"></i><span>Create</span></a></li>
+        {% endif %}
+        {% if cp != 'create' %}
+        <li><a {% if cp == 'gallery' %}class="active" disabled{% endif %} href="{% url 'videographer:Gallery' %}"><i class="bi bi-images"></i><span>Gallery</span></a></li>
+        <li><a {% if cp == 'reviews' %}class="active" disabled{% endif %} href="{% url 'videographer:Reviews' %}"><i class="bi bi-chat"></i><span>Reviews</span></a></li>
+        <li><a {% if cp == 'settings' %}class="active" disabled{% endif %} href="{% url 'videographer:Settings' %}"><i class="bi bi-gear"></i><span>Settings</span></a></li>
+        {% endif %}
+    </ul>
+</nav>

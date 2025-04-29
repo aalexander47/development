@@ -1,0 +1,40 @@
+# Ignore Python cache files
+__pycache__/
+*.pyc
+*.pyo
+collected_static/
+
+# Ignore Django migration files
+**/migrations/
+
+# Ignore log files
+*.log
+*.log.*
+
+# Ignore database files
+*.sqlite3
+
+# Ignore media/uploads
+/media/
+**/uploads/
+
+# Ignore virtual environment
+venv/
+env/
+*.env
+.venv/
+eventic_env/
+
+# Ignore IDE configurations
+.vscode/
+.idea/
+
+# Files
+EPSS.py
+
+UserData.sh
+users.json
+nginx/
+deployment-process.txt
+users.json
+whatsapp_script.py

@@ -1,0 +1,252 @@
+@import '../../core/scss/_theme.scss';
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: $sf-pro;
+}
+
+body {
+    min-height: 100vh;
+    width: 100%;
+    background: #1a1a1a !important;
+}
+
+body::-webkit-scrollbar {
+    width: 0;
+}
+
+.toast-container {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 1055;
+}
+
+.container {
+    max-width: 1200px;
+    width: 100%;
+    min-height: 100vh;
+    margin: 0 auto;
+    padding: 80px 0;
+    display: grid;
+    place-content: center;
+    #headerLogo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        column-gap: 12px;
+        height: 32px;
+        margin-bottom: 36px;
+        img {
+            height: 32px;
+            width: auto;
+        }
+    }
+    h1 {
+        font-size: 64px;
+        font-weight: 500;
+        margin-bottom: 12px;
+        text-align: center; 
+        color: #ffffff;
+        span {
+            background-image: $gold-gradient;
+           color:transparent;
+           -webkit-background-clip:text;
+        }
+    }
+    h3 {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 32px;
+        letter-spacing: 0.03em;
+        text-align: center;
+        color: #a7a7a7;
+        span {
+            color: #ffffff;
+        }
+    }
+    p {
+        max-width: 720px;
+        text-align: center;
+        color: rgb(188, 188, 188);
+        margin: 24px auto 0 auto;
+        font-size: 18px;
+        line-height: 24px;
+        letter-spacing: 0.02em;
+        a {
+             background-image: $gold-gradient;
+            color:transparent;
+            -webkit-background-clip:text;
+            transition: all 0.25s ease-in-out;
+        }
+        a:hover {
+            color: $gold;
+        }
+        span {
+            color: white;
+        }
+    }
+    button#payBtn {
+        position: relative;
+        padding: 8px;
+        margin: 50px auto 24px auto;
+        border-radius: 50px;
+        border: none;
+        outline: none;
+        background: #fdfdfdfb;
+        color: #232323;
+        font-size: 24px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        overflow: hidden;
+        gap: 8px;
+        transition: all 0.25s ease-in-out;
+        .btn-text {
+            text-wrap: nowrap;
+            letter-spacing: 0.5px;
+            line-height: 42px;
+            margin-right: 12px;
+            font-size: 20px;
+            overflow-x: hidden;
+            z-index: 2;
+        }
+        .overlay {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            left: 12px;
+            height: 42px;
+            width: 42px;
+            scale: 0.5;
+            border-radius: 50px;
+            z-index: 1;
+            transition: all 0.5s ease-in-out;
+        }
+        .btn-icon {
+            height: 42px;
+            width: 42px;
+            display: grid;
+            border-radius: 50px;
+            place-content: center;
+            background: $primary-color;
+            color: #ffffff;
+            z-index: 2;
+            transition: all 0.25s ease-in-out;
+            i {
+                font-size: 24px;
+                width: 42px;
+                height: 42px;
+                display: grid;
+                place-content: center;
+            }
+        }
+    }
+    // Animated Button on Hover Effect the little dark color get from the button
+    button#payBtn:hover {
+        color: #ffffff;
+        .btn-icon {
+            background: #ffffff;
+            color: #1a1a1a;
+        }
+        .overlay {
+            width: 150px;
+            scale: 2.5;
+            background: $gold-gradient;
+        }
+    }
+    .coupon-code-box {
+        max-width: 320px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        padding: 4px;
+        border-radius: 12px;
+        gap: 4px;
+        background: #303030;
+        .form-group {
+            margin-bottom: 0;
+            input {
+                border-radius: 8px;
+                background: transparent;
+                border: 0;
+                outline: none;
+                font-size: 1.05rem;
+                width: 100%;
+                box-shadow: none;
+                color: white;
+                padding: 8px 12px;
+                font-family: $poppins;
+            }
+            input.is-invalid {
+                border: 1px solid red;
+                background: #ff00001a;
+            }
+            ::placeholder {
+                color: #8a8a8a;
+                opacity: 1; /* Firefox */
+            }
+            ::-ms-input-placeholder { /* Edge 12 -18 */
+                color: #8a8a8a;
+            }
+        }
+        button#applyCodeBtn {
+            padding: 4px 12px;
+            border-radius: 8px;
+            border: 0;
+            outline: none;
+            background: #3e3e3e;
+            color: $light-color;
+            font-size: 1rem;
+            font-family: $poppins;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.25s ease-in-out;
+            &:hover {
+                background: $primary-color;
+                color: #ffffff;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .container {
+        min-height: 50vh;
+        padding: 50px 12px;
+        #headerLogo {
+            margin-bottom: 24px;
+            height: 32px;
+            img {
+                height: 32px;
+            }
+            .logo-icon {
+                height: 24px;
+            }
+        }
+        h1 {
+            font-size: 2rem;
+            line-height: 2.5rem;
+            margin-bottom: 24px;
+            letter-spacing: 0;
+        }
+        h3 {
+            font-size: 1.2rem;
+            line-height: 1.75rem;
+            margin-bottom: 16px;
+            letter-spacing: 0;
+        }
+        p {
+            font-size: 14px;
+            line-height: 18px;
+        }
+        button#payBtn {
+            margin: 32px auto;
+            .overlay {
+                scale: 0.5;
+            }
+        }
+    }
+}

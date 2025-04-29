@@ -1,0 +1,172 @@
+{% extends 'invitation/pages/build_base.html' %}{% load auth_extras static %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/invitation/wedding/WC2/styles/build.css' %}">
+<!-- Meta Tags -->
+<meta name="description" content="{{ meta_description }}">
+<meta name="author" content="Eventic">
+<meta name="keywords" content="{{ meta_keywords }}">
+<link rel="canonical" href="{{ request.build_absolute_uri }}">
+<!-- Open Graph -->
+<meta property="og:title" content="Eventic">
+<meta property="og:description" content="{{ meta_description }}">
+<meta property="og:image" content="{% static 'assets/defaults/meta-image.png' %}">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Eventic" />
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Eventic">
+<meta name="twitter:description" content="{{ meta_description }}">
+<meta name="twitter:image" content="{% static 'assets/defaults/meta-image.png' %}">
+<meta name="twitter:url" content="{{ request.build_absolute_uri }}">
+<meta name="twitter:site" content="@_Eventic">
+<meta name="twitter:creator" content="@_Eventic">
+<!-- Robots -->
+<meta name="robots" content="index, follow">
+
+
+<script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Eventic",
+      "url": "https://eventic.in/",
+      "logo": "{% static 'assets/defaults/Eventic-icon-logo-gold-bg-white-sm.png' %}",
+      "sameAs": [
+        "https://www.facebook.com/people/{{ FACEBOOK }}",
+        "https://www.instagram.com/{{ INSTAGRAM }}/",
+        "https://x.com/{{ TWITTER }}",
+        "https://www.youtube.com/@{{ YOUTUBE }}"
+      ]
+    }
+</script>
+{% include 'main/utils/_google-analytics.html' %}
+{% endblock %}
+
+{% block content %}
+{% include 'invitation/wedding/WC2/_invitation.html' %}
+{% endblock %}
+
+
+{% block modal %}
+<!-- Create a model for next button -->
+<div class="modal fade" id="nextModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-5 p-md-3 p-2">
+            <div class="modal-header border-0">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Invitation Details</h1>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="invitationDetailsForm">
+                <div class="modal-body pt-0">
+                    <input type="hidden" id="templateID" value="{{ template.id }}">
+                    <div class="row">
+                        <div class="col-md-6 col">
+                            <div class="form-group mb-3">
+                                <label for="groom">Your Name</label>
+                                <input type="text" class="form-control shadow-none" id="groom" name="groom" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col">
+                            <div class="form-group mb-3">
+                                <label for="bride">Partner's Name</label>
+                                <input type="text" class="form-control shadow-none" id="bride" name="bride" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col">
+                            <div class="form-group mb-3">
+                                <label for="start_date">Wedding Date:</label>
+                                <input type="date" class="form-control shadow-none" id="wedding_date" name="wedding_date" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col">
+                            <div class="form-group mb-3">
+                                <label for="start_time">Wedding Time:</label>
+                                <input type="time" class="form-control shadow-none" id="wedding_time" name="wedding_time" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Address:</label>
+                        <textarea class="form-control shadow-none" name="address" id="address" rows="4" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 p-2">
+                    <button type="button" class="btn btn-light shadow-none rounded-5 px-3 py-2" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary shadow-none rounded-5 px-3 py-2">Next <i class="bi bi-arrow-right"></i></button>
+                    <button type="button" class="d-none" id="proceedToOtherBtn" data-bs-toggle="modal" data-bs-target="#otherInfoModal"></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for other information -->
+<div class="modal fade" id="otherInfoModal" tabindex="-1" aria-labelledby="otherInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-5 p-md-3 p-2">
+            <div class="modal-header border-0 ps-2 pt-2">
+                <div class="d-flex align-items-center">
+                    <button type="button" class="btn btn-light shadow-none rounded-5 px-3 me-2" id="backToOtherBtn" data-bs-toggle="modal" data-bs-target="#nextModal"><i class="bi bi-arrow-left"></i></button>
+                    <h1 class="modal-title fs-5" id="otherInfoModalLabel">Other Information</h1>
+                </div>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="otherInfoForm">
+                <div class="modal-body pt-0">
+                    <!-- Start and End Date -->
+                    <h6 class="mb-1 text-secoundary">Invitation Active</h6>
+                    <div class="row">
+                        <div class="col-md-6 col">
+                            <div class="form-group mb-3">
+                                <label for="start_date">From</label>
+                                <input type="date" class="form-control shadow-none" id="start_date" name="start_date" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col">
+                            <div class="form-group mb-3">
+                                <label for="end_date">Till</label>
+                                <input type="date" class="form-control shadow-none" id="end_date" name="end_date" required>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- RSVP toggle -->
+                    <div class="form-check form-switch mb-2">
+                        <input class="form-check-input shadow-none" type="checkbox" id="rsvpToggle" name="rsvpToggle">
+                        <label class="form-check-label" for="rsvpToggle">RSVP Tracker<span class="bg-primary text-white rounded-5 px-2 ms-2"><small>Free</small></span></label>
+                    </div>
+                    <!-- Comment Enabled -->
+                    <div class="form-check form-switch mb-2">
+                        <input class="form-check-input shadow-none" type="checkbox" id="commentToggle" name="commentToggle">
+                        <label class="form-check-label" for="commentToggle">Accept Geust Messages</label>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 justify-content-end p-2">
+                    {% if user.is_authenticated %}
+                    <button type="button" class="d-none" id="proceedToPaymentBtn" data-bs-toggle="modal" data-bs-target="#paymentModal"></button>
+                    <button type="submit" class="btn btn-primary shadow-none rounded-5 px-3 py-2">Next <i class="bi bi-arrow-right"></i></button>
+                    {% else %}
+                    <button type="button" class="d-none" id="proceedToPaymentBtn" data-bs-toggle="modal" data-bs-target="#signupModal"></button>
+                    <button type="submit" class="btn btn-primary shadow-none rounded-5 px-3 py-2">Proceed</button>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extended_script %}
+<!-- GSAP and Split Type -->
+<script src="https://unpkg.com/split-type"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'scripts/invitation/wedding/WC2/build.js' %}"></script>
+{% endblock %}

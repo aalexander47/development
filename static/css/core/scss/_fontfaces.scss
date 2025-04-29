@@ -1,0 +1,87 @@
+@font-face {
+    font-family: 'Geist';
+    src: url('https://eventic-webapp.s3.ap-south-1.amazonaws.com/static/fonts/Geist/GeistVariableVF.woff2') format('woff2');
+    font-weight: normal; // Adjust if needed
+    font-style: normal; // Adjust if needed
+}
+
+@font-face {
+    font-family: 'Google-sans';
+    src: url('https://eventic-webapp.s3.ap-south-1.amazonaws.com/static/fonts/google-sans-cufonfonts/ProductSans-Regular.ttf') format('truetype');
+    font-weight: normal; // Adjust if needed
+    font-style: normal; // Adjust if needed
+}
+
+// @font-face {
+//     font-family: 'Poppins';
+//     src: url('https://eventic-webapp.s3.ap-south-1.amazonaws.com/static/fonts/Poppins/Poppins-Regular.ttf') format('truetype');
+// }
+
+// Import Playfair and Poppins
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+// Import Noto Sans
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('https://eventic-webapp.s3.ap-south-1.amazonaws.com/static/fonts/Roboto/Roboto-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Platypi';
+    src: url('https://eventic-webapp.s3.ap-south-1.amazonaws.com/static/fonts/Platypi/static/Platypi-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: "SF Pro", "SF Pro Text", "Myriad Set Pro", system-ui, "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;;
+    src: url('https://eventic-webapp.s3.ap-south-1.amazonaws.com/static/fonts/SF-Pro/SFPRODISPLAYREGULAR.woff2') format('woff2');
+    font-weight: normal; // Adjust if needed
+}
+
+@font-face {
+    font-family: "Great Vibes";
+    src: url('https://eventic-webapp.s3.ap-south-1.amazonaws.com/static/fonts/great-vibes/GreatVibes-Regular.ttf') format('truetype');
+    font-weight: normal; // Adjust if needed
+}
+
+$geist: 'Geist', 'Open Sans', sans-serif;
+$google-sans: 'Google-sans', 'Open Sans', sans-serif;
+$poppins: 'Poppins', sans-serif;
+$roboto: 'Roboto', sans-serif;
+$platypi: 'Platypi', sans-serif;
+$sf-pro: 'SF Pro', 'Open Sans', Helvetica, sans-serif;
+$playfair: 'Playfair Display', serif;
+$noto-sans: 'Noto Sans', sans-serif;
+$great-vibes: 'Great Vibes';
+$inter: "Inter", sans-serif;
+
+.geist {
+    font-family: $geist !important;
+}
+.google-sans {
+    font-family: $google-sans !important;
+}
+.poppins {
+    font-family: $poppins !important; 
+}
+.roboto {
+    font-family: $roboto !important;
+}
+.platypi {
+    font-family: $platypi !important;
+}
+.sf-pro {
+    font-family: $sf-pro !important;
+}
+.playfair {
+    font-family: $playfair !important;
+}
+.noto-sans {
+    font-family: $noto-sans !important;
+}
+.great-vibes {
+    font-family: $great-vibes !important;
+}

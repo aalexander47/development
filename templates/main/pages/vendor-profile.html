@@ -1,0 +1,323 @@
+{% load auth_extras static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ vendor.name }}</title>
+    <link rel="shortcut icon" href="{% static 'assets/logos/eventic-golden-favicon.png' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/main/styles/eventron.css' %}">
+    <!-- Bootstrap Css and Js -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Meta Tags -->
+    <meta name="description" content="Eventic - Crafting moments that matter.">
+    <meta name="author" content="Eventic">
+    <meta name="keywords" content="{{ vendor.name }}, Photographer, Photography, {{ vendor.city }}, {{ vendor.state }}, {{ vendor.country }}, Eventic">
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+    <!-- Open Graph -->
+    <meta property="og:title" content="{{ vendor.name }} - {{ vendor.city }} | Eventic">
+    <meta property="og:description" content="Eventic - Crafting moments that matter.">
+    <meta property="og:image" content="{% if vendor.profile_picture %}{{ vendor.profile_picture.url }}{% else %}{% static 'assets/defaults/meta-image.png' %}{% endif %}">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:type" content="website"> 
+    <meta property="og:site_name" content="Eventic" />
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ vendor.name }} - {{ vendor.city|title }} | Eventic">
+    <meta name="twitter:description" content="Eventic - Crafting moments that matter.">
+    <meta name="twitter:image" content="{% if vendor.profile_picture %}{{ vendor.profile_picture.url }}{% else %}{% static 'assets/defaults/meta-image.png' %}{% endif %}">
+    <meta name="twitter:url" content="{{ request.build_absolute_uri }}">
+    <meta name="twitter:site" content="@_Eventic">
+    <meta name="twitter:creator" content="@_Eventic">
+
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "name": "Eventic",
+          "url": "https://eventic.in/",
+          "logo": "{% static 'assets/defaults/Eventic-icon-logo-gold-bg-white-sm.png' %}",
+          "sameAs": [
+            "https://www.facebook.com/people/{{ FACEBOOK }}",
+            "https://www.instagram.com/{{ INSTAGRAM }}/",
+            "https://x.com/{{ TWITTER }}",
+            "https://www.youtube.com/@{{ YOUTUBE }}"
+          ]
+        }
+    </script>
+    <!-- Google Analytics -->
+    {% include 'main/utils/_google-analytics.html' %}
+</head>
+<body class="custom-scrollbar">
+    <main>
+        <section class="hero-section">
+            <div class="hero-container">
+                <div class="hero-text">
+                    <h4>Hi, It's</h4>
+                    <h1>{{ vendor.name }}</h1>
+                    <button type="button" data-lead-type="phone" onclick="window.location.href = 'tel:{{ vendor.phone }}';">
+                        <div class="btn-icon">
+                            <i class="bi bi-telephone-fill"></i> 
+                        </div>
+                        <div class="btn-text">Call Now</div>
+                        <div class="overlay"></div>
+                    </button>
+                </div>
+                {% if hero_images %}
+                <div class="hero-img" id="heroImageContainer">
+                    {% if images_1|length > 0 %}
+                    <div id="heroImageBox1" class="carousel slide carousel-fade {% if not images_2|length > 0 %}images-1-done{% endif %}" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            {% for image in images_1 %}
+                            <div class="carousel-item{% if forloop.first %} active{% endif %}" data-bs-interval="3700">
+                                <img src="{{ image }}" class="d-block w-100" alt="{{ image.alt_text }}">
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if images_2|length > 0 %}
+                    <div id="heroImageBox2" class="carousel slide carousel-fade {% if not images_3|length > 0 %}images-2-done{% endif %}" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            {% for image in images_2 %}
+                            <div class="carousel-item{% if forloop.first %} active{% endif %}" data-bs-interval="3250">
+                                <img src="{{ image }}" class="d-block w-100" alt="{{ image.alt_text }}">
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if images_3|length > 0 %}
+                    <div id="heroImageBox3" class="carousel slide carousel-fade" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            {% for image in images_3 %}
+                            <div class="carousel-item{% if forloop.first %} active{% endif %}" data-bs-interval="2470">
+                                <img src="{{ image }}" class="d-block w-100" alt="{{ image.alt_text }}">
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </section>
+        {% if not services %}
+        <section class="service-section">
+            <div class="service-box">
+                <h4 class="section-title">My Services</h4>
+                <h5 class="section-subtitle">From vision to reality, we handle every detail for unforgettable experiences.</h5>
+                <div class="service-cards">
+                    {% for service in all_services %}
+                    <a href="/{{ service.content_type.app_label }}/service/{{ service.content_object_object.id }}/{{ service.content_object.slug }}">
+                        <div class="service-card">
+                            <img src="{% if service.content_object.thumbnail %}{{ service.content_object.thumbnail.url }}{% else %}{% static 'assets/defaults/eventic.png' %}{% endif %}" alt="{{ vendor.name }} {{ service.content_object.category|title }} {{ service.content_type.app_label|title }} {{ vendor.city }}, {{ vendor.state }} Thumbnail - Eventic">
+                            <div class="content-box">
+                                <h5>{{ service.content_object.category|title }}<br>{{ service.content_type.app_label|title }}</h5>
+                                <p>{{ service.content_object.description | safe | truncatewords:"10" }}</p>
+                                <button type="button">Learn More</button>
+                            </div>
+                            <div class="overlay"></div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+        {% endif %}
+        {% if services %}
+        <section class="services-section">
+            <div class="service-box">
+                <h4 class="section-title">My Services</h4>
+                <h5 class="section-subtitle">From vision to reality, we handle every detail for unforgettable experiences.</h5>
+                <div class="service-cards">
+                    {% for service in services %}
+                    <div class="service-card">
+                        <div class="service-card-box">
+                            <div class="thumbnail-box">
+                                <div class="thumbnail">
+                                    <img src="{% if service.content_object.thumbnail %}{{ service.content_object.thumbnail.url }}{% else %}{% static 'assets/defaults/eventic.png' %}{% endif %}" alt="{{ vendor.name }} {{ service.content_object.category|title }} {{ service.content_type.app_label|title }} {{ vendor.city }}, {{ vendor.state }}">
+                                </div>
+                            </div>
+                            <div class="content-box">
+                                <div class="content-header">
+                                    <h3>{{ service.content_object.category|title }}<br><span><i class="bi bi-camera2"></i>{{ service.content_type.app_label|title }}</span></h3>
+                                </div>
+                                <div class="content-body">
+                                    <p>{{ service.content_object.description | safe | truncatewords:"25" }}</p>
+                                    <h6>Starting From</h6>
+                                    <h4><span>Rs.</span> {{ service.content_object.price }}<span> /-</span></h4>
+                                </div>
+                                <div class="content-footer">
+                                    <button type="button" onclick="window.location.href = '/{{ service.content_type.app_label }}/service/{{ service.content_object.id }}/{{ service.content_object.slug }}';">Learn More</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+        {% endif %}
+        {% if portfolio_images %}
+        <section class="portfolio-section">
+            <div class="portfolio-container">
+                <h4 class="section-title">A Glimpse into Our Event Magic</h4>
+                <h5 class="section-subtitle">Immerse yourself in the transformative power of our event designs.</h5>
+                <div class="portfolio-box">
+                    <div class="portfolio-images" id="portfolioImages">
+                        <div class="space-box-start"></div>
+                        {% for image in portfolio_images %}
+                        <img class="portfolio-img {% if forloop.first %}active{% else %}next{% endif %}" src="{{ image }}" alt="" loading="lazy">
+                        {% endfor %}
+                        <div class="space-box-end"></div>
+                    </div>
+                    <div class="slider-btn-box">
+                        <button type="button" class="prev-btn"><i class="bi bi-chevron-left"></i></button>
+                        <button type="button" class="next-btn"><i class="bi bi-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        {% endif %}
+        <section class="contact-section">
+            <div class="contact-container">
+                <h4 class="section-title">Connect with Us Today</h4>
+                <h5 class="section-subtitle">Share your event dreams and let's make them a reality.</h5>
+                <div class="contact-box">
+                    {% if vendor.embed_map %}
+                    <div class="embed-map">
+                        <iframe 
+                            src="{% if vendor.embed_map %}{{ vendor.embed_map }}{% else %}https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d30773484.55170563!2d61.0245165611659!3d19.69009515037612!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30635ff06b92b791%3A0xd78c4fa1854213a6!2sIndia!5e0!3m2!1sen!2sin!4v1719429166988!5m2!1sen!2sin{% endif %}" 
+                            frameborder="0"
+                            allowfullscreen
+                            aria-hidden="false"
+                            tabindex="0"
+                        >
+                        </iframe>
+                    </div>
+                    {% else %}
+                    <div class="embed-map-icon">
+                        <img src="https://png.pngtree.com/png-clipart/20220713/ourmid/pngtree-social-media-3d-map-icons-png-image_5931986.png" alt="">
+                    </div>
+                    {% endif %}
+                    <div class="content">
+                        <div class="ct-box address"><i class="bi bi-geo-alt-fill"></i><p>{{ vendor.address }}, {{ vendor.city }}, {{ vendor.state }} - {{ vendor.pincode }}</p></div>
+                        <div>
+                            <div class="solial-links">
+                                <a href="mail:{{ vendor.email }}" target="_blank"><i class="bi bi-envelope"></i></a>
+                                {% if vendor.facebook %}
+                                <a href="{{ vendor.facebook }}" target="_blank"><i class="bi bi-facebook"></i></a>
+                                {% endif %}
+                                {% if vendor.twitter %}
+                                <a href="{{ vendor.twitter }}" target="_blank"><i class="bi bi-twitter"></i></a>
+                                {% endif %}
+                                {% if vendor.instagram %}
+                                <a href="{{ vendor.instagram }}" target="_blank"><i class="bi bi-instagram"></i></a>
+                                {% endif %}
+                            </div>
+                            <div class="cta-btns">
+                                <button type="button" data-lead-type="phone" onclick="window.location.href = 'tel:{{ vendor.phone }}';">
+                                    <div class="btn-icon">
+                                        <i class="bi bi-telephone-fill"></i> 
+                                    </div>
+                                    <div class="btn-text">Call Now</div>
+                                    <div class="overlay"></div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        {% if vendor.legal.payment_policy or vendor.legal.refund_policy or vendor.legal.terms_conditions or vendor.legal.cancellation_policy %}
+        <section class="legal-section">
+            <div class="legal-cards">
+                <h4 class="section-title">Behind the Scenes</h4>
+                <h5 class="section-subtitle">Learn more about who we are and our commitment to creating successful events.</h5>
+                {% if vendor.legal.payment_policy %}
+                <div class="legal-card" id="payment_policy">
+                    <div class="legal-card-text">
+                        <h3>Payment Policy</h3>
+                        <p>{{ vendor.legal.payment_policy | nl2br | safe | truncatewords:"25" }}</p>
+                        <button type="button">
+                            <div class="btn-icon">
+                                <i class="bi bi-plus"></i> 
+                            </div>
+                            <div class="btn-text">Read More</div>
+                            <div class="overlay"></div>
+                        </button>
+                    </div>
+                    <div class="legal-card-img">
+                        <img src="https://img.freepik.com/free-photo/3d-hand-making-cashless-payment-from-smartphone_107791-16609.jpg?size=338&ext=jpg&ga=GA1.1.2113030492.1719792000&semt=ais_user" alt="">
+                    </div>
+                </div>
+                {% endif %}
+                {% if vendor.legal.refund_policy %}
+                <div class="legal-card" id="refund_policy">
+                    <div class="legal-card-img">
+                        <img src="https://png.pngtree.com/png-clipart/20230621/original/pngtree-cashback-and-refund-wallet-dollar-bills-pile-of-coins-online-payments-png-image_9194165.png" alt="">
+                    </div>
+                    <div class="legal-card-box">
+                        <h3>Refund Policy</h3>
+                        <p>{{ vendor.legal.refund_policy | nl2br | safe | truncatewords:"25" }}</p>
+                        <button type="button">
+                            <div class="btn-icon">
+                                <i class="bi bi-plus"></i> 
+                            </div>
+                            <div class="btn-text">Read More</div>
+                            <div class="overlay"></div>
+                        </button>
+                    </div>
+                </div>
+                {% endif %}
+                {% if vendor.legal.terms_conditions %}
+                <div class="legal-card" id="terms_conditions">
+                    <div class="legal-card-box">
+                        <h3>Terms & Conditions</h3>
+                        <p>{{ vendor.legal.terms_conditions | nl2br | safe | truncatewords:"25" }}</p>
+                        <button type="button">
+                            <div class="btn-icon">
+                                <i class="bi bi-plus"></i> 
+                            </div>
+                            <div class="btn-text">Read More</div>
+                            <div class="overlay"></div>
+                        </button>
+                    </div>
+                    <div class="legal-card-img">
+                        <img src="https://png.pngtree.com/png-vector/20221127/ourmid/pngtree-3d-file-folder-png-image_6482320.png" alt="">
+                    </div>
+                </div>
+                {% endif %}
+                {% if vendor.legal.cancellation_policy %}
+                <div class="legal-card" id="cancellation_policy">
+                    <div class="legal-card-img">
+                        <img src="https://png.pngtree.com/png-clipart/20230814/original/pngtree-3d-icons-do-not-accept-cash-stop-rendering-png-image_10353983.png" alt="">
+                    </div>
+                    <div class="legal-card-box">
+                        <h3>Cancellation Policy</h3>
+                        <p>{{ vendor.legal.cancellation_policy | nl2br | safe | truncatewords:"25" }}</p>
+                        <button type="button">
+                            <div class="btn-icon">
+                                <i class="bi bi-plus"></i> 
+                            </div>
+                            <div class="btn-text">Read More</div>
+                            <div class="overlay"></div>
+                        </button>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </section>
+        {% endif %}
+    </main>
+    <footer>
+        <p>Copyright &copy; 2025 <a href="/">Eventic</a>. All rights reserved.</p>
+    </footer>
+    <script src="{% static 'scripts/main/eventron.js' %}"></script>
+</body>
+</html>

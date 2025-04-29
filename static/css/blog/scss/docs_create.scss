@@ -1,0 +1,234 @@
+@import "../../core/scss/_theme.scss";
+@import "../../core/scss/_prism-theme.scss";
+
+#pills-content {
+    position: relative;
+    h1#docsTitle {
+        font-size: 4rem;
+        line-height: 4.5rem;
+        margin-bottom: 24px;
+        color: #333;
+        font-family: $poppins;
+        font-weight: 700;
+        letter-spacing: 0;
+    }
+}
+
+
+// Typography
+h2,
+h3,
+h4,
+h5,
+h6, p {
+    font-family: $poppins;
+}
+
+a {
+  color: $primary-color;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+button.add-content-box-btn {
+    position: absolute;
+    bottom: 24px;
+    right: 24px;
+    border: none;
+    background: $primary-color;
+    color: white;
+    border-radius: 50px;
+    padding: 12px 20px 12px 16px;
+    font-size: 18px;
+    font-weight: 500;
+    font-family: $poppins;
+    box-shadow: rgba(17, 17, 26, 0.05) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px;
+    cursor: pointer;
+    transition: all 0.25s ease-in-out;
+    &:hover {
+        background: $primary-color-hover;
+    }
+    i.bi-hash {
+        font-size: 18px;
+    }
+}
+
+#contentContainer {
+    .content-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+  
+    .content-area-container {
+        border: 1px solid #f1f3f5b5;
+        background-color: #f1f3f54a;
+        border-radius: 8px;
+        cursor: grab;
+        font-family: $poppins;
+        transition: all 0.25s ease-in-out;
+        .content-area-label {
+            position: absolute;
+            display: none;
+            top: 4px;
+            right: 6px;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.25s ease-in-out;
+            span.content-area-label-text {
+                color: #5e7aa3;
+                font-size: 12px;
+            }
+            button.delete-box-btn {
+                font-size: 14px;
+                border: none;
+                background: none;
+                color: #686868;
+                cursor: pointer;
+                transition: all 0.25s ease-in-out;
+                &:hover {
+                    color: #e11515;
+                }
+            }
+        }
+        .content-area {
+            font-family: $poppins;
+        }
+        &:hover {
+            border: 1px solid #f1f3f5;
+            background-color: #f1f3f5;
+            .content-area-label {
+                display: flex;
+            };
+        } 
+    }
+  
+    .content-area-container.dragging {
+        opacity: 0.5;
+        cursor: grabbing;
+    }
+}
+
+#content_container {
+    padding: 0 16px;
+    padding-bottom: 50px;
+    .edit-box {
+        margin-bottom: 16px;
+        input[type=radio] {
+            display: none;
+        }
+        input[type=radio]:checked + label {
+            border: 1px solid $secondary-color;
+            background: $light-color;
+        }
+        label.radio-label {
+            width: 100%;
+            border-radius: 8px;
+            cursor: pointer;
+            background: $light-color;
+            transition: all 0.25s ease-in-out;
+            .box {
+                padding: 0;
+            }
+            .card-main-container {
+                padding: 12px;
+            }
+        }
+        label:hover {
+            background: $light-color;
+        }
+        .img-center {
+            width: 100%;
+        }
+        .img-fr {
+            float: right;
+            max-height: 200px;
+            width: auto;
+        }
+        .img-fl {
+            float: left;
+            max-height: 200px;
+            width: auto;
+        }
+        .editor {
+            max-height: 280px;
+            min-height: 100px;
+            overflow: scroll;
+        }
+        textarea {
+            min-height: 100px;
+            height: calc(100% - 40px);
+        }
+        .output {
+            padding: 12px 16px;
+            background: #fff;
+        }
+        .editor, .output {
+            h1, h2, h3, h4, h5, h6 {
+                font-family: $poppins;
+            }
+            p { text-align: start; font-family: $poppins;}
+            ul, ol {
+                padding-left: 20px;
+                li {
+                    a {
+                        text-decoration: none;
+                        color: #eee;
+                        font-size: 18px;
+                        letter-spacing: 0.25px;
+                        transition: all 0.1s ease-out;
+                    }
+                    a:hover {
+                        color: $primary-color;
+                        text-decoration: none;
+                    }
+                }
+            }
+            ol {
+                li {
+                    margin-bottom: 18px;
+                    p {
+                        font-size: 16px;
+                        line-height: 1.4;
+                    }
+                    h6, .h6 {
+                        color: rgba(0, 0, 0, 0.8);
+                        font-weight: 600;
+                        margin-bottom: 0.2rem;
+                        font-family: poppins, sans-serif;
+                    }
+                }
+            }
+            ul { list-style:disc; }
+            a {
+                text-decoration: none;
+                color: $primary-color;
+                transition: all 0.2s ease-in-out;
+            }
+            a:hover, a:active {
+                color: $primary-color-hover;
+            }
+            .sub-title {
+                font-family: poppins, sans-serif;
+                font-size: 2.5rem;
+                color: #111;
+                a {
+                    font-family: poppins, sans-serif;
+                }
+                span {
+                    font-weight: 300;
+                }
+            }
+            .btn-link {
+                color: $primary-color;
+                font-weight: 500;
+                font-size: 18px;
+            }
+            .btn-link:hover {
+                color: $primary-color-hover;
+            }
+        }
+    }
+}

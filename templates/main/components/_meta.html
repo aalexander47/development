@@ -1,0 +1,40 @@
+{% load static %}
+<!-- Meta Tags -->
+<meta name="description" content="Eventic - Crafting moments that matter.">
+<meta name="author" content="Eventic">
+<meta name="keywords" content="Eventic, Event, Event Management, Event Planner, Event Organizer, Photographer, Videographer, Photography, Videography">
+<link rel="canonical" href="{{ request.build_absolute_uri }}">
+<!-- Open Graph -->
+<meta property="og:title" content="Eventic">
+<meta property="og:description" content="Eventic - Crafting moments that matter.">
+<meta property="og:image" content="{% static 'assets/defaults/meta-image.png' %}">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Eventic" />
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Eventic">
+<meta name="twitter:description" content="Eventic - Crafting moments that matter.">
+<meta name="twitter:image" content="{% static 'assets/defaults/meta-image.png' %}">
+<meta name="twitter:url" content="{{ request.build_absolute_uri }}">
+<meta name="twitter:site" content="@_Eventic">
+<meta name="twitter:creator" content="@_Eventic">
+<!-- Robots -->
+<meta name="robots" content="index, follow">
+
+
+<script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Eventic",
+      "url": "https://eventic.in/",
+      "logo": "{% static 'assets/defaults/Eventic-icon-logo-gold-bg-white-sm.png' %}",
+      "sameAs": [
+        "https://www.facebook.com/people/{{ FACEBOOK }}",
+        "https://www.instagram.com/{{ INSTAGRAM }}/",
+        "https://x.com/{{ TWITTER }}",
+        "https://www.youtube.com/@{{ YOUTUBE }}"
+      ]
+    }
+</script>

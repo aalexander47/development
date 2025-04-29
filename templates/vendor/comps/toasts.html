@@ -1,0 +1,27 @@
+{% if messages %}
+<div aria-live="polite" aria-atomic="true" class="position-relative">
+    <!-- Position it at the bottom right corner -->
+    <div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3">
+        {% for message in messages %}
+        <div class="toast align-items-center text-{{ message.tags }} border mb-1" role="alert" aria-live="assertive"
+            aria-atomic="true" data-bs-autohide="true" data-bs-delay="5000">
+            <div class="d-flex">
+                <div class="toast-body">
+                    {% if message.tags == 'success' %}
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                    {% elif message.tags == 'info' %}
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    {% elif message.tags == 'warning' %}
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    {% elif message.tags == 'danger' %}
+                    <i class="bi bi-x-circle-fill me-2"></i>
+                    {% endif %}
+                    {{ message }}
+                </div>
+                <button type="button" class="btn-close me-2 m-auto shadow-none" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}

@@ -1,0 +1,75 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  background: #f8f9fa;
+}
+
+main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 24px;
+}
+main section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+}
+main section img {
+  width: 200px;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+main section h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #000000;
+  margin-bottom: 10px;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  text-align: center;
+}
+main section p {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 20px;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  text-align: center;
+}
+main section .action-btns {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 50px;
+}
+main section .action-btns a {
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  transition: all 0.3s;
+}
+main section .action-btns a.btn-invitation {
+  background: #044DCD;
+  color: #fff;
+}
+main section .action-btns a.btn-invitation:hover {
+  background: rgb(1, 78, 161);
+}/*# sourceMappingURL=payment_success.css.map */

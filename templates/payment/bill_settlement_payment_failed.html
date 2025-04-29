@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting...</title>
+    <link rel="stylesheet" href="{% static 'css/payment/styles/BR_payment_failed.css' %}">
+    <link rel="shortcut icon" href="{% static 'assets/logos/eventic-golden-favicon.png' %}" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var url = "{% url 'vendor:Billing' %}"; // Replace with your target URL
+            var countdown = 5;
+
+            function updateCountdown() {
+                if (countdown > 0) {
+                    document.getElementById("countdown").innerText = `0${countdown}`;
+                    countdown--;
+                } else {
+                    window.location.href = url;
+                }
+            }
+
+            setInterval(updateCountdown, 1000);
+            updateCountdown();
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="logo" id="headerLogo">
+            <a href="{% url 'main:home' %}"><img class="logo-icon" src="{% static 'assets/logos/Eventic-golden-white-lg-logo-new.png' %}" alt="Eventic Gold Icon Logo"></a>
+        </div>
+        <div class="box">
+            <h1>Payment Failed!</h1>
+            <h3><span><i class="bi bi-emoji-frown"></i></span>&nbsp;Please try again.</h3>
+            <p>You will be redirected to the your <span>Payments</span> page in <span id="countdown">5</span> seconds.</p>
+        </div>
+    </div>
+</body>
+</html>

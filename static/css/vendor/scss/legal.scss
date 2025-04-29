@@ -1,0 +1,64 @@
+@import '_main.scss';
+
+body {
+    main {
+        .container {
+            padding: 12px 0;
+            margin-bottom: 50px;
+            h2 {
+                font-size: 32px;
+                margin-bottom: 12px;
+            }
+            .text-box {
+                width: 100%;
+                background: hsla(0, 0%, 100%, 0.5);
+                padding: 16px;
+                border-radius: 24px;
+                transition: all 0.25s ease-in-out;
+            }
+            .text-box:hover, .text-box:focus-within {
+                box-shadow: rgba(0, 0, 0, 0.09) 0px 3px 12px;
+                background: rgba(255, 255, 255, 0.9);
+            }
+            textarea {
+                width: 100%;
+                padding-right: 12px;
+                min-height: 150px;
+                max-height: 80vh;
+                letter-spacing: 0.03em;
+                overflow-y: scroll;
+                font-size: 18px;
+                background: transparent;
+                border: none;
+                outline: none;
+                resize: none;
+                transition: all 0.25s ease-in-out;
+            }
+
+            textarea::-webkit-scrollbar {
+                width: 8px;
+                height: 0;
+            }
+            
+            textarea::-webkit-scrollbar-thumb {
+                background-color: rgb(217, 224, 231);
+                border-radius: 8px;
+            }
+        }
+    }
+}
+
+
+ 
+@media screen and (max-width: 768px) {
+    body {
+        main {
+            .container {
+                margin-bottom: 8px;
+                h2 {
+                    font-size: 24px;
+                }
+            }
+        }
+    }
+}

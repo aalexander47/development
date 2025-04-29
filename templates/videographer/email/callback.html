@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Callback Request</title>
+    <style>
+        body {
+            font-family: poppins, serif;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }        
+    </style>
+</head>
+<body>
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f9f9f9; padding: 20px;">
+        <tr>
+            <td align="center">
+                <table width="600" cellpadding="0" cellspacing="0" border="0" style="background-color: #fff; padding: 20px; border-radius: 8px;">
+                    <tr>
+                        <td align="center" style="font-size: 18px; font-weight: bold; color: #333;">
+                            📞 You've Got a Callback Request! Don't Miss Out!
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left" style="padding: 20px 0; font-size: 16px; color: #333;">
+                            Hello {% if user_name %}{{ user_name }}{% else %}there{% endif %},
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left" style="padding-bottom: 20px; font-size: 16px; line-height: 1.5; color: #333;">
+                            Great news! 🎉 You've received a callback request from {{ client_name }} a potential client interested in your services. This could be the perfect opportunity to showcase your skills and make a lasting impression!
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left" style="padding-bottom: 20px; font-size: 16px; color: #333;">
+                            <strong>Here’s what you can do next:</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left" style="padding-bottom: 10px; font-size: 16px; color: #333;">
+                            1. <strong>Review the Client's Details:</strong><br>
+                            <a href="https://eventic.in/vendor/notifications/" style="color: #007bff; text-decoration: none;">View Client Info</a> 🔎
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left" style="padding-bottom: 20px; font-size: 16px; color: #333;">
+                            2. <strong>Reach Out:</strong><br>
+                            Don’t keep them waiting—connect and explore how you can help!
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left" style="padding-bottom: 20px; font-size: 16px; color: #333;">
+                            We’re rooting for you!
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left" style="font-size: 16px; color: #333;">
+                            Best,<br>
+                            <strong>Eventic</strong><br>
+                            Bringing Moments to Life✨
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

@@ -1,0 +1,1018 @@
+@import '../../core/scss/_fontfaces.scss';
+@import '../../core/scss/_theme.scss';
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: $poppins;
+}
+
+body::-webkit-scrollbar {
+    width: 8px;
+    height: 0;
+    background: transparent;
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: rgb(197, 209, 221);
+    border-radius: 8px;
+}
+
+.toast-container {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 1055;
+}
+
+body {
+    main {
+        section.hero-section {
+            width: 100%;
+            background-image: linear-gradient(to top, #e6e9f0 0%, #eef1f5 100%);
+            .hero-container {
+                height: 100vh;
+                margin: 0 auto;
+                display: grid;
+                align-items: center;
+                grid-template-columns: 1fr 1fr;
+                max-width: 1200px;
+            }
+            .hero-text {
+                h4 {
+                    font-size: 32px;
+                    font-weight: 600;
+                    color: #787676;
+                    animation: appearFromBottom 0.3s ease-in;
+                }
+                h1 {
+                    font-size: 4rem;
+                    font-weight: 700;
+                    text-align: start;
+                    max-width: 600px;
+                    line-height: 5rem;
+                    font-family: $poppins !important;
+                    margin-bottom: 42px;
+                    color: #202020;
+                    animation: appearFromBottom 0.4s ease-in;
+                }
+                button {
+                    position: relative;
+                    padding: 12px;
+                    margin-top: 24px;
+                    border-radius: 50px;
+                    border: none;
+                    outline: none;
+                    background: #ffffff;
+                    color: #282828;
+                    font-size: 18px;
+                    font-weight: 500;
+                    display: flex;
+                    align-items: center;
+                    overflow: hidden;
+                    gap: 8px;
+                    transition: all 0.25s ease-in-out;
+                    box-shadow: $shadow_3;
+                    animation: appearFromBottom 0.5s ease-in;
+                    .btn-text {
+                        text-wrap: nowrap;
+                        line-height: 36px;
+                        font-family: $poppins !important;
+                        margin-right: 10px;
+                        overflow-x: hidden;
+                        z-index: 2;
+                    }
+                    .overlay {
+                        position: absolute;
+                        display: flex;
+                        align-items: center;
+                        left: 12px;
+                        height: 36px;
+                        width: 36px;
+                        border-radius: 50px;
+                        z-index: 1;
+                        transition: all 0.5s ease-in-out;
+                    }
+                    .btn-icon {
+                        height: 36px;
+                        width: 36px;
+                        display: grid;
+                        border-radius: 50px;
+                        place-content: center;
+                        background: #3249e0;
+                        color: #ffffff;
+                        z-index: 2;
+                        transition: all 0.25s ease-in-out 0.5s;
+                        i {
+                            font-size: 16px;
+                            width: 36px;
+                            height: 36px;
+                            display: grid;
+                            place-content: center;
+                        }
+                    }
+                }
+                // Animated Button on Hover Effect the little dark color get from the button
+                button:hover {
+                    color: #ffffff;
+                    .btn-icon {
+                        background: #6275f1;
+                        animation: callNowHover 0.5s ease-in-out infinite;
+                    }
+                    .overlay {
+                        width: 100px;
+                        scale: 2.5;
+                        background: #3249e0;
+                    }
+                }
+            }
+            #heroImageContainer {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding: 50px 0;
+                .carousel-inner {
+                    overflow: hidden;
+                    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+                }
+                img {
+                    height: 100%;
+                    width: auto;
+                    object-fit: cover;
+                }
+                #heroImageBox1 {
+                    transform: translate(25%, 40%);
+                    rotate: -10deg;
+                    width: 250px;
+                    height: 250px;
+                    .carousel-item {
+                        height: 250px;
+                    }
+                    .carousel-inner {
+                        border-radius: 32px;
+                    }
+                }
+                #heroImageBox2 {
+                    transform: translate(-25%, 0%);
+                    rotate: 15deg;
+                    width: 200px;
+                    height: 250px;
+                    .carousel-item {
+                        height: 250px;
+                    }
+                    .carousel-inner {
+                        border-radius: 28px;
+                    }
+                }
+                #heroImageBox3 {
+                    transform: translate(30%, -45%);
+                    rotate: -5deg;
+                    width: 150px;
+                    height: 150px;
+                    .carousel-item {
+                        height: 150px;
+                    }
+                    .carousel-inner {
+                        border-radius: 24px;
+                    }
+                }
+                .images-1-done {
+                    transform: translate(0, 0) !important;
+                    rotate: 0deg !important;
+                    width: 500px !important;
+                    height: 500px !important;
+                    .carousel-item {
+                        height: 500px !important;
+                    }
+                    .carousel-inner {
+                        border-radius: 42px !important;
+                    }
+                }
+            }
+        }
+        section.about-section {
+            background: #000000;
+            min-height: 100vh;
+            .content-box {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 50px;
+                align-items: center;
+                min-height: 100vh;
+                margin: 0 auto;
+                max-width: 1200px;
+                .about-box {
+                    .about-title {
+                        font-size: 4rem;
+                        font-weight: 500;
+                        margin-bottom: 36px;
+                        color: #efefef;
+                        text-transform: capitalize;
+                    }
+                    p {
+                        font-size: 24px;
+                        line-height: 38px;
+                        font-weight: 500;
+                        margin-bottom: 0;
+                        color: #c0c0c0;
+                        letter-spacing: 0.02em;
+                        span {
+                            color: white;
+                        }
+                    }
+                }
+                .img-box {
+                    overflow: hidden;
+                    min-height: 100vh;
+                    display: flex;
+                    align-items: center;
+                    img {
+                        width: 100%;
+                        height: auto;
+                        object-fit: cover;
+                    }
+                }
+            }
+        }
+        section.services-section {
+            padding: 150px 0;
+            background: #fff;
+            .service-box {
+                max-width: 1000px;
+                margin: 0 auto;
+            }
+            .section-title {
+                font-size: 4rem;
+                font-weight: 700;
+                font-family: $poppins !important;
+                text-align: center;
+                color: #383838;
+                text-transform: capitalize;
+            }
+            .section-subtitle {
+                font-size: 1.5rem;
+                font-weight: 500;
+                max-width: 500px;
+                margin: 0 auto;
+                text-align: center;
+                margin-bottom: 80px;
+                font-family: $geist;
+                color: #292929;
+            }
+            .service-cards {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 150px;
+                .service-card {
+                    padding: 24px;
+                    .service-card-box {
+                        display: grid;
+                        grid-template-columns: 1fr 1fr;
+                        justify-content: center;
+                        gap: 50px;
+                        .thumbnail-box {
+                            .thumbnail {
+                                width: 100%;
+                                height: 100%;
+                                aspect-ratio: 3/2;
+                                overflow: hidden;
+                                border-radius: 50px;
+                                box-shadow: $shadow_3;
+                                img {
+                                    width: 100%;
+                                    height: 100%;
+                                    object-fit: cover;
+                                    vertical-align: middle;
+                                    align-items: center;
+                                    transition: all 0.25s ease-in-out;
+                                }
+                            }
+                        }
+                        .content-box {
+                            .content-header {
+                                margin-bottom: 12px;
+                                h3 {
+                                    font-size: 3.5rem;
+                                    line-height: 3rem;
+                                    font-weight: 700;
+                                    font-family: $poppins;
+                                    color: #383838;
+                                    span {
+                                        font-size: 2rem;
+                                        font-weight: 700;
+                                        font-family: $poppins;
+                                        color: #6b6b6b;
+                                    }
+                                    i {
+                                        color: #131313;
+                                        margin-right: 12px;
+                                    }
+                                }
+                            }
+                            .content-body {
+                                p {
+                                    font-size: 1rem;
+                                    margin-bottom: 24px;
+                                    color: #383838;
+                                }
+                                h6 {
+                                    margin-bottom: 4px;
+                                    font-size: 1rem;
+                                    color: #ff789a;
+                                }
+                                h4 {
+                                    font-size: 1.5rem;
+                                    font-weight: 600;
+                                    margin-bottom: 12px;
+                                    font-family: $geist;
+                                    color: #383838;
+                                    span {
+                                        color: #929292;
+                                        font-size: 1.25rem;
+                                    }
+                                }
+                            }
+                            .content-footer {
+                                button {
+                                    margin-top: 24px;
+                                    padding: 12px 24px;
+                                    border-radius: 50px;
+                                    background: $primary-color;
+                                    backdrop-filter: blur(50px);
+                                    color: #fff;
+                                    text-shadow: 0px 0px 8px rgba(149, 157, 165, 0.263);
+                                    font-size: 18px;
+                                    letter-spacing: 0.02em;
+                                    outline: none;
+                                    border: none;
+                                    font-family: $poppins;
+                                    transition: all 0.3s ease-in-out;
+                                    &:hover {
+                                        background: $primary-color-hover;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        section.portfolio-section {
+            padding: 150px 0;
+            background: #131313;
+            .section-title {
+                font-size: 4rem;
+                font-weight: 700;
+                text-align: center;
+                margin-bottom: 20px;
+                font-family: $poppins !important;
+                color: #dbdbdb;
+                text-transform: capitalize;
+            }
+            .section-subtitle {
+                font-size: 1.5rem;
+                font-weight: 500;
+                font-family: $geist;
+                text-align: center;
+                max-width: 700px;
+                margin: 0 auto;
+                margin-bottom: 80px;
+                color: #ffffff;
+            }
+            .portfolio-box {
+                position: relative;
+                width: 100%;
+                margin: 0 auto;
+                padding: 0 20px;
+                overflow: hidden;
+            }
+            .portfolio-images {
+                height: 75vh;
+                overflow-x: scroll;
+                scrollbar-width: none;
+                scroll-snap-type: x mandatory;
+                display: flex;
+                align-items: center;
+                gap: 20px;
+                img {
+                    display: block;
+                    width: 100%;
+                    height: 100%;
+                    max-width: 720px;
+                    object-fit: cover;
+                    scroll-snap-align: center;
+                    scroll-behavior: smooth;
+                    vertical-align: middle;
+                    transition: all 0.25s ease-in-out;
+                }
+                .active {
+                    opacity: 1;
+                }
+                .prev {
+                    opacity: 0.3;
+                }
+                .next {
+                    height: 60vh;
+                    opacity: 0.3;
+                }
+                .space-box-start, .space-box-end {
+                    flex: 0 0 auto;
+                }
+            }
+            .slider-btn-box {
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+                gap: 12px;
+                max-width: 1000px;
+                margin: 0 auto;
+                padding-top: 50px;
+                button {
+                    background: #545454;
+                    color: #ffffffd1;
+                    height: 48px;
+                    width: 48px;
+                    border: none;
+                    outline: none;
+                    display: grid;
+                    place-content: center;
+                    font-size: 1.5rem;
+                    font-weight: 600;
+                    border-radius: 50px;
+                    transition: all 0.25s ease-in-out;
+                }
+                button:hover {
+                    background: #fbfbfb;
+                    color: #393939;
+                }
+            }
+        }
+        section.contact-section {
+            padding: 150px 0;
+            background: linear-gradient(to bottom, #fff 0%, #fff 90%, #f0f0f0 100%);
+            .contact-container {
+                max-width: 1000px;
+                margin: 0 auto;
+            }
+            .section-title {
+                font-size: 4rem;
+                font-weight: 700;
+                text-align: center;
+                margin-bottom: 18px;
+                font-family: $poppins !important;
+                color: #292929;
+            }
+            .section-subtitle {
+                font-size: 1.5rem;
+                font-weight: 500;
+                text-align: center;
+                font-family: $geist;
+                max-width: 700px;
+                margin: 0 auto;
+                margin-bottom: 80px;
+                color: #292929;
+            }
+            .contact-box {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                max-width: 720px;
+                margin: 0 auto;
+                padding: 12px;
+                border-radius: 32px;
+                background-image: linear-gradient(120deg, #ebedee 0%, #fdfbfb 100%);
+                border: 1px solid #ebedee;
+                .embed-map {
+                    width: 100%;
+                    aspect-ratio: 1/1;
+                    border: 1px solid #dadada;
+                    border-radius: 20px;
+                    overflow: hidden;
+                    iframe {
+                        width: 100%;
+                        height: 100%;
+                        border: none;
+                    }
+                }
+                .embed-map-icon {
+                    max-width: 200px;
+                    width: 100%;
+                    aspect-ratio: 1/1;
+                    display: grid;
+                    place-items: center;
+                    margin: 0 auto;
+                    img {
+                        height: 100%;
+                        width: 100%;
+                        object-fit: cover;
+                        vertical-align: center;
+                        text-align: center;
+                    }
+                }
+                .content {
+                    display: flex;
+                    flex-direction: column;
+                    padding: 24px;
+                    .ct-box {
+                        display: grid;
+                        grid-template-columns: auto 1fr;
+                        align-items: start;
+                        gap: 8px;
+                        font-size: 1.2rem;
+                        font-weight: 500;
+                        color: #292929;
+                        p {
+                            margin-bottom: 0;
+                        }
+                    }
+                    .cta-btns {
+                        display: flex;
+                        align-items: center;
+                        gap: 12px;
+                        margin-top: 0;
+                        button {
+                            position: relative;
+                            padding: 8px;
+                            margin-top: 24px;
+                            border-radius: 50px;
+                            border: none;
+                            outline: none;
+                            background: $primary-color;
+                            color: white;
+                            font-size: 18px;
+                            font-weight: 500;
+                            display: flex;
+                            align-items: center;
+                            overflow: hidden;
+                            gap: 8px;
+                            transition: all 0.25s ease-in-out;
+                            .btn-text {
+                                text-wrap: nowrap;
+                                font-family: $poppins !important;
+                                line-height: 28px;
+                                margin-right: 10px;
+                                overflow-x: hidden;
+                                z-index: 2;
+                            }
+                            .overlay {
+                                position: absolute;
+                                display: flex;
+                                align-items: center;
+                                left: 12px;
+                                height: 28px;
+                                width: 28px;
+                                border-radius: 50px;
+                                z-index: 1;
+                                transition: all 0.5s ease-in-out;
+                            }
+                            .btn-icon {
+                                height: 32px;
+                                width: 32px;
+                                display: grid;
+                                border-radius: 50px;
+                                place-content: center;
+                                background: #fff;
+                                color: $primary-color;
+                                z-index: 2;
+                                transition: all 0.25s ease-in-out 0.5s;
+                                i {
+                                    font-size: 16px;
+                                    width: 32px;
+                                    height: 32px;
+                                    display: grid;
+                                    place-content: center;
+                                }
+                            }
+                        }
+                        // Animated Button on Hover Effect the little dark color get from the button
+                        button:hover {
+                            color: #ffffff;
+                            .btn-icon {
+                                // rotate icon and make infinite call ring animation
+                                animation: callNowHover 0.5s ease-in-out infinite;
+                            }
+                            .overlay {
+                                width: 100px;
+                                scale: 2.5;
+                                background: $primary-color-hover;
+                            }
+                        }
+                    }
+                    .solial-links {
+                        display: flex;
+                        align-items: center;
+                        gap: 12px;
+                        margin-top: 20px;
+                        a {
+                            height: 42px;
+                            width: 42px;
+                            display: grid;
+                            place-content: center;
+                            border-radius: 50px;
+                            background: #eaeaea;
+                            color: #282828;
+                            font-size: 16px;
+                            text-decoration: none;
+                            transition: all 0.25s ease-in-out;
+                        }
+                        a:hover {
+                            background: #232323;
+                            color: #ffffff;
+                        }
+                    }
+                }
+            }
+        }
+        section.legal-section {
+            padding: 50px 0 150px 0;
+            background: #f0f0f0;
+            .legal-cards {
+                max-width: 1000px;
+                margin: 0 auto;
+                .section-title {
+                    font-size: 2rem;
+                    font-weight: 600;
+                    color: #3e3e3e;
+                    text-transform: capitalize;
+                    font-family: $poppins;
+                }
+                .legal-card {
+                    padding: 50px 0;
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    align-items: center;
+                    .legal-card-text {
+                        padding: 16px 0;
+                        height: auto;
+                        max-width: 600px;
+                    }
+                    h3 {
+                        font-size: 3rem;
+                        font-weight: 700;
+                        margin-bottom: 32px;
+                        color: #272727;
+                        font-family: $poppins;
+                    }
+                    p {
+                        font-size: 16px;
+                        font-weight: 500;
+                        margin-bottom: 0;
+                        color: #4b4b4b;
+                        font-family: $geist;
+                        span {
+                            color: #272727;
+                        }
+                    }
+                    button {
+                        position: relative;
+                        padding: 8px;
+                        margin-top: 24px;
+                        border-radius: 50px;
+                        border: none;
+                        outline: none;
+                        background: #e0e0e0;
+                        color: #282828;
+                        font-weight: 500;
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                        overflow: hidden;
+                        transition: all 0.25s ease-in-out;
+                        animation: appearFromBottom 0.5s ease-in;
+                        .btn-text {
+                            font-size: 18px;
+                            line-height: 32px;
+                            text-wrap: nowrap;
+                            letter-spacing: 0.5px;
+                            margin-right: 8px;
+                            overflow-x: hidden;
+                            z-index: 2;
+                        }
+                        .btn-icon {
+                            height: 32px;
+                            width: 32px;
+                            display: grid;
+                            border-radius: 50px;
+                            place-content: center;
+                            background: #3249e0;
+                            color: #ffffff;
+                            z-index: 2;
+                            transition: all 0.25s ease-in-out;
+                            i {
+                                font-size: 20px;
+                                width: 32px;
+                                height: 32px;
+                                display: grid;
+                                place-content: center;
+                            }
+                        }
+                        .overlay {
+                            position: absolute;
+                            display: flex;
+                            align-items: center;
+                            left: 8px;
+                            height: 24px;
+                            width: 24px;
+                            border-radius: 50px;
+                            z-index: 1;
+                            transition: all 0.5s ease-in-out;
+                        }
+                    }
+                    // Animated Button on Hover Effect the little dark color get from the button
+                    button:hover {
+                        color: #ffffff;
+                        .btn-icon {
+                            background: #6275f1;
+                        }
+                        .overlay {
+                            scale: 3;
+                            background: #3249e0;
+                            width: 80px;
+                        }
+                    }
+                    .legal-card-img {
+                        width: 100%;
+                        height: 100%;
+                        overflow: hidden;
+                        border-radius: 18px;
+                        display: grid;
+                        place-content: center;
+                        mix-blend-mode: multiply;
+                        img {
+                            width: 100%;
+                            height: 100%;
+                            max-height: 400px;
+                            object-fit: cover;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    footer {
+        padding: 50px 12px;
+        background: #f0f0f0;
+        p {
+            font-size: 16px;
+            line-height: 22px;
+            font-weight: 500;
+            text-align: center;
+            margin-bottom: 0;
+            color: #616161;
+            letter-spacing: 0.2px;
+            font-family: $poppins;
+            a {
+                color: #232323;
+                text-decoration: none;
+                transition: all 0.3s ease-in-out;
+            }
+            a:hover {
+                color: #3249e0;
+                text-decoration: underline;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    body {
+        main {
+            section.hero-section {
+                .hero-container {
+                    height: auto;
+                    grid-template-columns: 1fr;
+                    padding: 0;
+                    .hero-text {
+                        text-align: center;
+                        min-height: 50vh !important;
+                        display: grid;
+                        place-content: center;
+                        padding: 50px 24px;
+                        h4 {
+                            font-size: 24px;
+                            text-align: center;
+                            font-weight: 500;
+                            line-height: 24px;
+                            margin-bottom: 0;
+                        }
+                        h1 {
+                            margin: 16px 0 38px 0;
+                            text-align: center; 
+                            font-size: 3rem;
+                            line-height: 3.5rem;
+                            font-weight: 800;
+                            font-family: $geist;
+                        }
+                        button {
+                            text-align: center; 
+                            margin: auto;
+                            font-size: 20px;
+                        }
+                    }
+                    #heroImageContainer {
+                        overflow-x: hidden;
+                        padding: 0;
+                        #heroImageBox1 {
+                            transform: translate(25%, 20%);
+                            rotate: -10deg;
+                            width: 200px;
+                            height: 200px;
+                            .carousel-item {
+                                height: 200px;
+                            }
+                        }
+                        #heroImageBox2 {
+                            transform: translate(-25%, 0%);
+                            rotate: 15deg;
+                            width: 200px;
+                            height: 200px;
+                            .carousel-item {
+                                height: 200px;
+                            }
+                        }
+                        #heroImageBox3 {
+                            transform: translate(30%, -45%);
+                            rotate: -5deg;
+                            width: 180px;
+                            height: 180px;
+                            .carousel-item {
+                                height: 180px;
+                            }
+                        }
+                        .images-1-done {
+                            transform: translate(0, 0) !important;
+                            width: 250px !important;
+                            height: 250px !important;
+                            margin: 50px 0 100px 0 !important;
+                            .carousel-item {
+                                height: 250px !important; 
+                            }
+                        }
+                        .images-2-done {
+                            margin-bottom: 50px;
+                        }
+                    }
+                }
+            }
+            section.services-section {
+                padding: 12px;
+                .section-title {
+                    margin-top: 24px;
+                    font-size: 32px;
+                    font-weight: 700;
+                    line-height: 40px;
+                    font-family: $poppins;
+                }
+                .section-subtitle {
+                    font-size: 1rem;
+                    line-height: 1.25rem;
+                    max-width: 80%;
+                    margin-bottom: 0;
+                    font-family: $geist;
+                }
+                .service-cards {
+                    grid-template-columns: 1fr;
+                    gap: 12px;
+                    .service-card {
+                        .service-card-box {
+                            grid-template-columns: 1fr;
+                            gap: 12px;
+                            .thumbnail-box {
+                                .thumbnail {
+                                    border-radius: 24px;
+                                }
+                            }
+                            .content-box {
+                                padding: 8px;
+                                .content-header {
+                                    margin-top: 4px;
+                                    h3 {
+                                        font-size: 2.5rem;
+                                        line-height: 2.5rem;
+                                        span {
+                                            font-size: 1.75rem;
+                                        }
+                                    }
+                                }
+                                .content-footer {
+                                    button {
+                                        margin-top: 12px;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            section.portfolio-section {
+                padding: 50px 12px;
+                background: linear-gradient(#2d2d2d 0%, #131313 20%, #131313 80%, #2d2d2d);
+                .section-title {
+                    font-size: 32px;
+                    margin-bottom: 12px;
+                    font-family: $poppins !important;
+                }
+                .section-subtitle {
+                    font-size: 1rem;
+                    width: 80%;
+                    margin-bottom: 50px;
+                }
+                .portfolio-box {
+                    padding: 0;
+                }
+                .portfolio-images {
+                    height: 60vh;
+                    img {
+                        border-radius: 12px;
+                    }
+                }
+            }
+            section.contact-section {
+                padding: 50px 12px 100px 12px;
+                .section-title {
+                    font-size: 32px;
+                    font-weight: 700;
+                    line-height: 40px;
+                    font-family: $poppins;
+                }
+                .section-subtitle {
+                    font-size: 1rem;
+                    line-height: 1.25rem;
+                    font-family: $geist;
+                    margin-bottom: 32px;
+                }
+                .contact-box {
+                    grid-template-columns: 1fr;
+                    padding: 12px;
+                    gap: 12px;
+                    .embed-map-icon {
+                        width: 100%;
+                        margin: 24px auto 0 auto;
+                        img {
+                            aspect-ratio: 1/1;
+                        }
+                    }
+                    .content {
+                        padding: 12px;
+                    }
+                }
+            }
+            section.legal-section {
+                padding: 50px 12px;
+                .section-title {
+                    font-size: 32px;
+                    margin-bottom: 12px;
+                    font-family: $poppins !important;
+                    text-align: center;
+                }
+                .section-subtitle {
+                    font-size: 1rem;
+                    text-align: center;
+                    margin: 0 auto;
+                    max-width: 90%;
+                }
+                .legal-cards {
+                    .legal-card {
+                        grid-template-columns: 1fr;
+                        h3 {
+                            font-size: 2.5rem;
+                            margin-bottom: 12px;
+                        }
+                        p {
+                            font-size: 1rem;
+                        }
+                    }
+                }
+            }
+        }
+        footer {
+            padding:  24px 12px;
+        }
+    }
+}
+
+
+// Animations
+@keyframes appearFromBottom {
+    0% {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0px);
+    }
+}
+
+@keyframes callNowHover {
+    0% {
+        transform: rotate(0deg);
+    }
+    50% {
+        transform: rotate(20deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
+}

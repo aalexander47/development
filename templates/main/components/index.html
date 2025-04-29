@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .portfolio-container {
+            width: 100%;
+            background: #171616;
+            padding: 50px 0 100px 0;
+        }
+
+        .portfolio-title {
+            text-align: center;
+            color: #fff;
+            font-size: 3rem;
+            font-family: poppins;
+            font-weight: 900;
+            margin-bottom: 24px;
+        }
+
+        .portfolio-box {
+            position: relative;
+            width: 100%;
+            padding: 24px 0;
+            margin: auto;
+            overflow: hidden;
+        }
+
+        .portfolio-images {
+            display: flex;
+            align-items: center;
+            column-gap: 12px;
+            overflow-x: scroll;
+            scrollbar-width: none;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+        }
+
+        .portfolio-img {
+            width: 100%;
+            height: 70vh;
+            object-fit: cover;
+            scroll-snap-align: center;
+            opacity: 0.5;
+            transition: all 0.3s ease;
+        }
+
+        .portfolio-img.active {
+            opacity: 1;
+            height: 70vh;
+        }
+
+        .portfolio-img.next {
+            height: 60vh;
+        }
+
+        .space-box-start, .space-box-end {
+            flex: 0 0 auto;
+        }
+
+        .slider-btn-box {
+            position: absolute;
+            top: 50%;
+            width: calc(100% - 24px);
+            display: flex;
+            justify-content: space-between;
+            z-index: 1;
+            transform: translateY(-50%) translateX(12px);
+        }
+
+        .slider-btn-box button {
+            background: rgba(255, 255, 255, 0.121);
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: rgb(212, 212, 212);
+            outline: none;
+            user-select: none;
+            backdrop-filter: blur(10px);
+            height: 52px;
+            width: 52px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .slider-btn-box button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="portfolio-container">
+        <h2 class="portfolio-title">Portfolio, Where Talent Meets Opportunity</h2>
+        <div class="portfolio-box">
+            <div class="portfolio-images" id="portfolioImages">
+                <div class="space-box-start"></div>
+                <img class="portfolio-img active" src="https://images.pexels.com/photos/3221176/pexels-photo-3221176.jpeg?auto=compress&cs=tinysrgb&w=600" alt="">
+                <img class="portfolio-img next" src="https://images.pexels.com/photos/3872626/pexels-photo-3872626.jpeg?auto=compress&cs=tinysrgb&w=600" alt="">
+                <img class="portfolio-img next" src="https://images.pexels.com/photos/3998177/pexels-photo-3998177.jpeg?auto=compress&cs=tinysrgb&w=600" alt="">
+                <img class="portfolio-img next" src="https://images.pexels.com/photos/265722/pexels-photo-265722.jpeg?auto=compress&cs=tinysrgb&w=600" alt="">
+                <img class="portfolio-img next" src="https://images.pexels.com/photos/3865895/pexels-photo-3865895.jpeg?auto=compress&cs=tinysrgb&w=600" alt="">
+                <img class="portfolio-img next" src="https://images.pexels.com/photos/8886999/pexels-photo-8886999.jpeg?auto=compress&cs=tinysrgb&w=600" alt="">
+                <img class="portfolio-img next" src="https://images.pexels.com/photos/3872626/pexels-photo-3872626.jpeg?auto=compress&cs=tinysrgb&w=600" alt="">
+                <div class="space-box-end"></div>
+            </div>
+            <div class="slider-btn-box">
+                <button type="button" class="prev-btn"><i class="bi bi-chevron-left"></i></button>
+                <button type="button" class="next-btn"><i class="bi bi-chevron-right"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const container = document.getElementById('portfolioImages');
+            const images = container.getElementsByClassName('portfolio-img');
+            const prevButton = document.querySelector('.prev-btn');
+            const nextButton = document.querySelector('.next-btn');
+            const spaceBoxStart = document.querySelector('.space-box-start');
+            const spaceBoxEnd = document.querySelector('.space-box-end');
+            const containerRect = container.getBoundingClientRect();
+
+            // Set the widths of the space boxes
+            if (images.length > 0) {
+                const firstImageWidth = images[0].offsetWidth;
+                const lastImageWidth = images[images.length - 1].offsetWidth;
+                spaceBoxStart.style.width = `${containerRect.width / 2 - (firstImageWidth / 2)}px`;
+                spaceBoxEnd.style.width = `${containerRect.width / 2 - (lastImageWidth / 2)}px`;
+            }
+
+            function updateActiveImage() {
+                const containerCenterX = containerRect.left + containerRect.width / 2;
+
+                let closestImage = null;
+                let closestDistance = Infinity;
+
+                Array.from(images).forEach(image => {
+                    const imageRect = image.getBoundingClientRect();
+                    const imageCenterX = imageRect.left + imageRect.width / 2;
+
+                    const distance = Math.abs(containerCenterX - imageCenterX);
+                    if (distance < closestDistance) {
+                        closestDistance = distance;
+                        closestImage = image;
+                    }
+                });
+
+                // Remove 'active' class from all images
+                Array.from(images).forEach(image => image.classList.remove('active'));
+
+                // Add 'active' class to the closest image
+                if (closestImage) {
+                    closestImage.classList.add('active');
+                    if (closestImage.classList.contains('next')) {
+                      closestImage.classList.remove('next');
+                    };
+                    if (closestImage.classList.contains('prev')) {
+                      closestImage.classList.remove('prev');
+                    };
+                }
+                const target = document.querySelector('#portfolioImages .active'); // Select the target element
+
+                if (target) {
+                    // Function to get all previous siblings
+                    const getPreviousSiblings = (elem) => {
+                        let siblings = [];
+                        while (elem = elem.previousElementSibling) {
+                            if (elem.classList.contains('next')) {
+                              elem.classList.remove('next');
+                            };
+                            siblings.push(elem);
+                        }
+                        return siblings;
+                    };
+
+                    // Function to get all next siblings
+                    const getNextSiblings = (elem) => {
+                        let siblings = [];
+                        while (elem = elem.nextElementSibling) {
+                            siblings.push(elem);
+                            if (elem.classList.contains('prev')) {
+                              elem.classList.remove('prev');
+                            };
+                        }
+                        return siblings;
+                    };
+
+                    const previousSiblings = getPreviousSiblings(target);
+                    const nextSiblings = getNextSiblings(target);
+
+                    // You can now add classes to the siblings or manipulate them as needed
+                    previousSiblings.forEach(sibling => sibling.classList.add('prev'));
+                    nextSiblings.forEach(sibling => sibling.classList.add('next'));
+                }
+            }
+
+            function scrollToImage(direction) {
+                const containerCenterX = containerRect.left + containerRect.width / 2;
+
+                let closestImage = null;
+                let closestDistance = Infinity;
+
+                Array.from(images).forEach(image => {
+                    const imageRect = image.getBoundingClientRect();
+                    const imageCenterX = imageRect.left + imageRect.width / 2;
+
+                    const distance = Math.abs(containerCenterX - imageCenterX);
+                    if (distance < closestDistance) {
+                        closestDistance = distance;
+                        closestImage = image;
+                    }
+                });
+
+                if (closestImage) {
+                    let targetImage;
+                    if (direction === 'next') {
+                        targetImage = closestImage.nextElementSibling;
+                    } else {
+                        targetImage = closestImage.previousElementSibling;
+                    }
+
+                    if (targetImage && targetImage.classList.contains('portfolio-img')) {
+                        container.scroll({
+                            left: targetImage.offsetLeft - (container.offsetWidth / 2 - targetImage.offsetWidth / 2),
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            }
+
+            // Update active image on scroll
+            container.addEventListener('scroll', updateActiveImage);
+
+            // Button event listeners
+            prevButton.addEventListener('click', () => scrollToImage('prev'));
+            nextButton.addEventListener('click', () => scrollToImage('next'));
+
+            // Initial call to set the active image on page load
+            updateActiveImage();
+        });
+    </script>
+</body>
+</html>

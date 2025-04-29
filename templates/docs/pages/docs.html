@@ -1,0 +1,227 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ docs.seo_data.meta_title }}</title>
+    <link rel="stylesheet" href="{% static 'css/docs/styles/docs.css' %}">
+    <link rel="shortcut icon" href="{% static 'assets/logos/eventic-golden-favicon.png' %}" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Meta Tags -->
+    <meta name="description" content="{{ docs.seo_data.meta_description }}">
+    <meta name="author" content="Eventic">
+    <meta name="keywords"
+        content="{{ docs.seo_data.meta_keywords }}">
+    <link rel="canonical" href="https://eventic.in/docs/{{ docs.slug }}">
+    <!-- Open Graph -->
+    <meta property="og:title" content="{{ docs.seo_data.og_title }}">
+    <meta property="og:description" content="{{ docs.seo_data.og_description }}">
+    <meta property="og:image" content="{{ docs.seo_data.og_image_url }}">
+    <meta property="og:url" content="https://eventic.in/docs/{{ docs.slug }}">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Eventic" />
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ docs.seo_data.twitter_title }}">
+    <meta name="twitter:description" content="{{ docs.seo_data.twitter_description }}">
+    <meta name="twitter:image" content="{{ docs.seo_data.twitter_image_url }}">
+    <meta name="twitter:url" content="https://eventic.in/docs/{{ docs.slug }}">
+    <meta name="twitter:site" content="@_Eventic">
+    <meta name="twitter:creator" content="@_Eventic">
+    <!-- Robots -->
+    <meta name="robots" content="index, follow">
+</head>
+
+<body class="custom-scrollbar">
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <img src="{% static 'assets/logos/Eventic-golden-dark-lg-logo-new.png' %}" alt="Eventic Logo">
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Blog Section -->
+        <section class="blog-content-body">
+            <div class="blog-content-header">
+                <nav class="breadcrumb">
+                    <a href="{% url 'main:home' %}">Home</a>
+                    <span>&gt;</span>
+                    <a href="{% url 'docs:Docs' %}">Docs</a>
+                    <span>&gt;</span>
+                    <span class="active">{{ docs.name }}</span>
+                </nav>
+                <h1 class="blog-title text-wrap">{{ docs.name }}</h1>
+                <div class="thumbnail">
+                    <img src="{{ docs.thumbnail }}" alt="{{ docs.name }}">
+                </div>
+            </div>
+            <div class="blog-content-main">
+                <div class="collapsible-container">
+                    <div class="collapsible-header">
+                        <span>Page Navigation</span>
+                        <button class="toggle-button">
+                            <span class="arrow"></span>
+                        </button>
+                    </div>
+                    <div class="collapsible-content" id="navigationSection">
+                    </div>
+                </div>
+                <div class="blog-body" id="blogBody">
+                    {% for content in docs.content_data.content %}
+                    <div class="blog-content" id="{{ content.id }}">
+                        {{ content.content|safe }}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="blog-content-footer">
+                <div class="recommendation">
+                    <a href="/docs/hello-world" class="recommendation-docs">
+                        <i class="bi bi-file-earmark-richtext"></i> Lorem ipsum dolor, sit amet consectetur adipisicing
+                        elit. Nostrum, inventore.
+                    </a>
+                    <div class="icon-next">
+                        <i class="bi bi-send-arrow-up-fill"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <nav class="footer-nav">
+                <a href="{% url 'main:privacy_policy' %}">Privacy Policy</a>
+                <a href="{% url 'main:terms_of_use' %}">Terms of Service</a>
+                <a href="{% url 'main:contact' %}">Contact Us</a>
+            </nav>
+            <div class="copyright">&copy; 2025 EventicHub Pvt. Ltd. All rights reserved.</div>
+        </div>
+    </footer>
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleButton = document.querySelector('.collapsible-header');
+            const collapsibleContainer = document.querySelector('.collapsible-container');
+            const collapsibleContent = document.querySelector('.collapsible-content');
+
+            toggleButton.addEventListener('click', function () {
+                collapsibleContainer.classList.toggle('expanded');
+
+                // Dynamically set max-height based on content height
+                if (collapsibleContainer.classList.contains('expanded')) {
+                    collapsibleContent.style.maxHeight = `${collapsibleContent.scrollHeight}px`;
+                } else {
+                    collapsibleContent.style.maxHeight = '0';
+                }
+            });
+        });
+
+        function classifyImages() {
+            document.querySelectorAll("img").forEach(img => {
+                img.onload = function () {
+                    const width = img.naturalWidth;
+                    const height = img.naturalHeight;
+
+                    // Remove existing classification classes
+                    img.classList.remove("img-landscape", "img-portrait", "img-square");
+
+                    if (width > height) {
+                        img.classList.add("img-landscape");
+                    } else if (width < height) {
+                        img.classList.add("img-portrait");
+                    } else {
+                        img.classList.add("img-square");
+                    }
+                };
+            });
+        }
+
+        // Run the function after the page loads
+        document.addEventListener("DOMContentLoaded", classifyImages);
+
+
+        function createBlogNavigation() {
+            // Get all the heading elements (h2, h3, etc.)
+            const headings = document.querySelectorAll('#blogBody h2, h3');
+            const navContainer = document.createElement('div'); // Container for the navigation
+            navContainer.className = 'blog-navigation';
+
+            let currentH2 = null; // Track the current H2 element
+
+            headings.forEach(heading => {
+                // Generate an ID if the heading doesn't have one
+                if (!heading.id) {
+                    heading.id = heading.textContent
+                        .trim() // Remove leading/trailing whitespace
+                        .toLowerCase() // Convert to lowercase
+                        .replace(/[^a-z0-9\s]/g, '') // Remove special characters
+                        .replace(/\s+/g, '-'); // Replace spaces with hyphens
+                }
+
+                // Create a link for the heading
+                const link = document.createElement('a');
+                link.textContent = heading.textContent;
+                link.href = `#${heading.id}`;
+                link.className = 'nav-link';
+
+                // Create a list item for the link
+                const listItem = document.createElement('li');
+                listItem.appendChild(link);
+
+                if (heading.tagName === 'H2') {
+                    // If it's an H2, create a new list for it
+                    currentH2 = document.createElement('ul');
+                    // Add nav-h2 class to the list
+                    currentH2.classList.add('nav-h2');
+                    // Add nav-h2 class to the list item
+                    listItem.classList.add('nav-h2-item');
+                    // Add caret icon <i class="bi bi-caret-right-fill"></i> to the list item start
+                    const caretIcon = document.createElement('i');
+                    caretIcon.className = 'bi bi-arrow-right-short';
+                    listItem.insertBefore(caretIcon, listItem.firstChild);
+                    currentH2.appendChild(listItem);
+                    navContainer.appendChild(currentH2);
+                } else if (heading.tagName === 'H3' && currentH2) {
+                    // If it's an H3, nest it under the current H2
+                    const nestedList = currentH2.querySelector('ul') || document.createElement('ul');
+                    // Add nav-h3 class to the list
+                    nestedList.classList.add('nav-h3');
+                    // Add nav-h3 class to the list item
+                    listItem.classList.add('nav-h3-item');
+                    nestedList.appendChild(listItem);
+                    // Add caret icon <i class="bi bi-caret-right-fill"></i> to the list item start
+                    const caretIcon = document.createElement('i');
+                    caretIcon.className = 'bi bi-arrow-return-right';
+                    listItem.insertBefore(caretIcon, listItem.firstChild);
+                    if (!currentH2.querySelector('ul')) {
+                        currentH2.appendChild(nestedList);
+                    }
+                }
+                
+                // Create a link for the heading and add next to the heading as a hash link e.g (heading -> heading #) # is the hash link
+                const hashLink = document.createElement('a');
+                hashLink.href = `#${heading.id}`;
+                hashLink.className = 'hash-link';
+                hashLink.textContent = '#';
+                heading.appendChild(hashLink);
+
+            });
+
+            // Add the navigation to the document
+            document.getElementById('navigationSection').appendChild(navContainer);
+        }
+
+        // Call the function to generate the navigation
+        createBlogNavigation();
+    </script>
+</body>
+
+</html>

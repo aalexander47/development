@@ -1,0 +1,157 @@
+{% load auth_extras static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Eventic</title>
+    <link rel="stylesheet" href="{% static 'css/main/styles/about.css' %}">
+    <link rel="shortcut icon" href="{% static 'assets/logos/eventic-golden-favicon.png' %}" type="image/x-icon">
+    <!-- Bootstrap Css and Js -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    {% include 'main/utils/_google-analytics.html' %}
+</head>
+<body>
+    <main>
+        <section class="hero" id="hero">
+            <header>
+                <div class="logo">
+                    <img src="{% static 'assets/logos/Eventic-golden-dark-lg-logo-new.png' %}" alt="Eventic Logo">
+                </div>
+                <nav>
+                    <ul>
+                        <li class="page"><a href="{% url 'main:contact' %}">Contact</a></li>
+                        <li class="page"><a href="{% url 'docs:Docs' %}">Docs</a></li>
+                        <li class="page"><a href="https://www.instagram.com/{{ INSTAGRAM }}"><i class="bi bi-instagram"></i></a></li>
+                    </ul>
+                </nav>
+            </header>
+            <div class="hero-content">
+                <h5 class="main-subtitle">Crafting <span>Moments</span> That Matter</h5>
+                <img src="{% static 'assets/other/arrow.png' %}" alt="Arrow" class="arrow">
+            </div>
+        </section>
+        <section class="main">
+            <div id="outStory">
+                <div class="container-box">
+                    <h2>Our Story</h2>
+                    <p>Eventic was founded with a mission to revolutionize the event management industry by creating a seamless platform that connects skilled professionals with clients seeking exceptional experiences. We identified the challenges faced by both event professionals and clients—ranging from finding reliable vendors to managing the complexities of event planning—and set out to provide a better solution.</p>
+                </div>
+            </div>
+            <div id="ourVision">
+                <div class="container-box">
+                    <h2>Our Mission</h2>
+                    <p>At Eventic, we aim to:</p>
+                    <img src="{% static 'assets/other/down-arrow.png' %}" alt="Down Arrow" class="down-arrow">
+                    <ul class="mission-list">
+                        <li class="mission-item-1">
+                            <div class="mission-card">
+                                <div class="mission-img">
+                                    <img src="https://img.freepik.com/free-vector/youth-empowerment-abstract-concept-vector-illustration-children-young-people-take-charge-take-action-improve-life-quality-democracy-building-youth-activism-involvement-abstract-metaphor_335657-4186.jpg" alt="Empower Professionals">
+                                </div>
+                                <div class="mission-content">
+                                    <h4 class="mission-title">Empower Professionals</h4>
+                                    <p class="mission-description">Our platform provides event professionals with the tools and resources they need to succeed in a competitive industry.</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="mission-item-2">
+                            <div class="mission-card">
+                                <div class="mission-img">
+                                    <img src="{% static 'assets/other/mission2.png' %}" alt="Simplify Planning">
+                                </div>
+                                <div class="mission-content">
+                                    <h4 class="mission-title">Simplify Planning</h4>
+                                    <p class="mission-description">We offer clients a user-friendly platform that streamlines the event planning process, from start to finish.</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="mission-item-3">
+                            <div class="mission-card">
+                                <div class="mission-img">
+                                    <img src="{% static 'assets/other/mission3.png' %}" alt="Build Community">
+                                </div>
+                                <div class="mission-content">
+                                    <h4 class="mission-title">Build Community</h4>
+                                    <p class="mission-description">Eventic brings together professionals and clients, creating a supportive community that fosters collaboration and growth.</p>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div id="howWeMakeDifference">
+                <div class="container-box">
+                    <div class="content-img-box">
+                        <img src="{% static 'assets/other/reading-book.png' %}" alt="Arrow" class="arrow">
+                    </div>
+                    <div class="content-box">
+                        <h2>How We Make a <span>Difference</span></h2>
+                        <p>Our platform goes beyond simple connections. We create opportunities in emerging sectors, such as specialized photography and videography, contributing to a thriving economy. By focusing on innovation, we ensure Eventic remains at the forefront of industry trends, offering tools and resources that professionals need to excel.</p>
+                        <button type="button" class="btn-join" onclick="window.location.href=`{% url 'auth:business_registration' %}`"><i class="bi bi-stars me-1"></i>Join Now</button>
+                    </div>
+                </div>
+            </div>
+            <div id="keyFeatures">
+                <div class="container-box">
+                    <h2>Key <span>Features</span> of Eventic</h2>
+                    <div class="content-box content-left-box">
+                        <div class="content">
+                            <h3>Trusted Connections</h3>
+                            <p>Easily find and connect with reliable event professionals.</p>
+                        </div>
+                        <div class="content-img">
+                            <img src="{% static 'assets/other/trusted-connections.png' %}" alt="Trusted Connections">
+                        </div>
+                    </div>
+                    <img src="{% static 'assets/other/down-left-arrow.png' %}" alt="Shape" class="down-right-arrow">
+                    <div class="content-box content-right-box">
+                        <div class="content-img">
+                            <img src="{% static 'assets/other/diverse-opportunities.png' %}" alt="Diverse Opportunities">
+                        </div>
+                        <div class="content">
+                            <h3>Diverse Opportunities</h3>
+                            <p>Explore emerging sectors and expand your business.</p>
+                        </div>
+                    </div>
+                    <img src="{% static 'assets/other/down-left-arrow.png' %}" alt="Shape" class="down-left-arrow">
+                    <div class="content-box content-left-box">
+                        <div class="content">
+                            <h3>Innovative Tools</h3>
+                            <p>Access resources designed to simplify event planning and execution.</p>
+                        </div>
+                        <div class="content-img">
+                            <img src="{% static 'assets/other/innovative-tools.jpg' %}" alt="Innovative Tools">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="divider">
+                <img src="{% static 'assets/other/divider.png' %}" alt="Down Arrow">
+            </div>
+            <div id="trustedPartner">
+                <div class="container-box">
+                    <h2>Your <span>Trusted</span> Event Partner</h2>
+                    <p>Whether you’re planning a wedding, corporate event, or any special occasion, Eventic is here to help you create unforgettable experiences. We are committed to making every event a success by providing a platform that supports both professionals and clients every step of the way.</p>
+                    <p>Join Eventic today and be part of a community that transforms the way events are planned and executed!</p>
+                    <button type="button" class="btn-join" onclick="window.location.href=`{% url 'auth:business_registration' %}`"><i class="bi bi-stars me-1"></i>Join Now</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer id="MF01">
+        {% include 'main/components/_footer.html' %}
+    </footer>
+    <script>
+        document.getElementsByClassName('arrow')[0].addEventListener('click', () => {
+            document.getElementById('ourVision').scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+
+</body>
+</html>

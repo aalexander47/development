@@ -1,0 +1,414 @@
+{% extends 'dashboard/cms/base.html' %}{% load auth_extras %}
+{% block title %}Pricings | Eventic{% endblock %}
+
+{% block content %}
+<div class="content-block">
+    <div class="main-header" id="MH01">
+        <div class="header-top">
+            <div class="header-title">
+                <h1>Coupons</h1>
+            </div>
+            <button type="button" class="save-btn" name="create_coupon" data-bs-toggle="modal"
+                data-bs-target="#createCouponModal"><i class="bi bi-plus"></i><span>Create</span>
+            </button>
+        </div>
+        <div class="header-bottom">
+            {% if user.is_superuser or user.is_admin %}
+            <ul>
+                <li><a href="{% url 'dashboard:Pricings' %}">Pricing</a></li>
+            </ul>
+            {% endif %}
+        </div>
+    </div>
+    <div class="main-body">
+        {% include 'vendor/comps/messages.html' %}
+        <div id="pricingContainer">
+            {% if coupons %}
+            <h6 class="text-secondary">Total <span class="text-dark">{{ coupons|length }}</span> Coupons</h6>
+            {% for coupon in coupons %}
+            <div class="vendor-box card p-3 rounded-3 mb-1" id="coupon{{ coupon.id }}" data-id="{{ coupon.id }}" data-status="{{ coupon.is_active }}">
+                <div class="row align-items-start">
+                    <div class="col">
+                        <h5 class="mb-0"><span class="coupon-name">{{ coupon.name }}</span><small class="coupon-status ms-2">{% if coupon.is_active %}<i class="bi bi-check-circle-fill text-success"></i>{% else %}<i class="bi bi-x-circle-fill text-danger"></i>{% endif %}</small></h5>
+                    </div>
+                    <div class="col-auto">
+                        <div class="dropdown dropstart">
+                            <button class="btn dropdown p-0 border-0 shadow-none" type="button" id="dropdownMenuButton{{ forloop.counter }}" data-bs-toggle="dropdown" aria-expanded="false">
+                              <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu p-1 rounded-3 shadow" aria-labelledby="dropdownMenuButton{{ forloop.counter }}">
+                                <li><button class="dropdown-item py-2 rounded" data-bs-toggle="modal" data-bs-target="#updateCouponModal" data-id="{{ coupon.id }}" onclick="updateCouponCode(this)"><i class="bi bi-pencil me-2"></i>Edit</button></li>
+                                <li><button class="dropdown-item dropdown-item-danger py-2 rounded" data-bs-toggle="modal" data-bs-target="#deleteCouponModal" data-id="{{ coupon.id }}" onclick="deleteCouponCode(this)"><i class="bi bi-trash me-2"></i>Delete</button></li>
+                            </ul>
+                          </div> 
+                    </div>
+                </div>
+                <div class="row align-items-start">
+                    <div class="col-md col-12">
+                        <h6 class="mb-0 mt-1"><small><i class="bi bi-qr-code-scan"></i></small>&nbsp;<span class="coupon-code">{{ coupon.code }}</span></h6>
+                        <p class="mb-0"><small><i class="bi bi-person me-1"></i></small><span class="coupon-usage-limit">{{ coupon.usage_limit }}</span></p>
+                        <div class="row">
+                            <div class="col-auto col">
+                                <p class="text-secondary mb-0"><small><i class="bi bi-calendar-event me-1"></i></small>Start: <span class="coupon-start-date text-dark" data-date="{{ coupon.update_start_date }}">{{ coupon.start_date }}</span></p>
+                            </div>
+                            <div class="col-auto col">
+                                <p class="text-secondary mb-0"><small><i class="bi bi-calendar-event me-1"></i></small>End: <span class="coupon-end-date text-dark" data-date="{{ coupon.update_end_date }}">{{ coupon.end_date }}</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-auto col-12">
+                        <p class="mb-0"><small><i class="bi bi-currency-rupee"></i></small><span class="coupon-discount-amount">{{ coupon.discount_amount }}</span></p>
+                        <p class="mb-0"><small></small><span class="coupon-discount-percentage">{{ coupon.discount_percentage }}</span>%&nbsp;<small>upto</small>&nbsp;<i class="bi bi-currency-rupee"></i><span class="coupon-max-discount">{{ coupon.max_discount }}</span></p>
+                        <p class="mb-0"><small><i class="bi bi-coin me-1"></i></small><span class="coupon-credits">{{ coupon.credits }}</span></p>
+                    </div>
+                </div>
+                <p class="text-secondary mb-0"><small><i class="bi bi-clock me-1"></i></small>Created: <span class="coupon-created-at text-dark">{{ coupon.created_at }}</span></p>
+                <p class="mb-0 text-secondary">Applicable at: <span class="coupon-applicable-at text-dark">{% for place in coupon.applicable_at %}{{ place }}{% if not forloop.last %}, {% endif %}{% endfor %}</span>&emsp;Skip Payment: <span class="coupon-skip-payment text-dark">{% if coupon.skip_payment %}Yes{% else %}No{% endif %}</span></p>
+                <p class="mb-0"><span class="text-secondary">Description:</span> <span class="coupon-description">{{ coupon.description }}</span></p>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="no-notification-box text-center py-5 bg-light rounded-5">
+                <h2>⊂(▀¯▀⊂ )</h2>
+                <h5 class="mb-0 text-secondary">No Coupons Available</h5>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Create Coupon Modal -->
+<div class="modal fade" id="createCouponModal" tabindex="-1" aria-labelledby="createCouponModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content rounded-5 p-2 p-md-3">
+            <div class="modal-header border-0 pt-1">
+                <h5 class="modal-title" id="createCouponModalLabel">Create Coupon</h5>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-0 custom-scrollbar overflow-x-hidden">
+                <form method="post" id="createCouponForm">
+                    {% csrf_token %}
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"><i class="bi bi-card-heading"></i></span>
+                        <input type="text" class="form-control shadow-none" placeholder="Name" name="name" required>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-8 pe-1">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-qr-code-scan"></i></span>
+                                <input type="text" class="form-control shadow-none" placeholder="Code" name="code" required>
+                            </div>
+                        </div>
+                        <div class="col-4 ps-1">
+                            <div class="input-check">
+                                <input type="checkbox" class="btn-check" id="is_active" name="is_active" autocomplete="off">
+                                <label class="btn btn-outline-success shadow-none w-100" for="is_active">Active</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-7 pe-1">
+                            <div class="input-group">
+                                <span class="input-group-text" title="Discount Amount" data-bs-toggle="tooltip" data-bs-placement="top"><i class="bi bi-currency-rupee"></i></span>
+                                <input type="number" class="form-control shadow-none" placeholder="Amount" name="discount_amount" step=".01">
+                            </div>
+                        </div>
+                        <div class="col-5 ps-1">
+                            <div class="input-group">
+                                <span class="input-group-text" title="Discount Percentage" data-bs-toggle="tooltip" data-bs-placement="top"><i class="bi bi-percent"></i></span>
+                                <input type="number" class="form-control shadow-none" placeholder="Percentage" name="discount_percentage" step=".01">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-7 pe-1">
+                            <div class="input-group">
+                                <span class="input-group-text" title="Maximum Discount Amount" data-bs-toggle="tooltip" data-bs-placement="top"><i class="bi bi-arrow-up"></i><i class="bi bi-currency-rupee"></i></span>
+                                <input type="number" class="form-control shadow-none" placeholder="Max Amount" name="max_discount" step=".01">
+                            </div>
+                        </div>
+                        <div class="col-5 ps-1">
+                            <div class="input-group">
+                                <span class="input-group-text" title="Usage Limit" data-bs-toggle="tooltip" data-bs-placement="top"><i class="bi bi-person"></i></span>
+                                <input type="number" class="form-control shadow-none" placeholder="Usage Limit" name="usage_limit">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"><i class="bi bi-coin me-2"></i> Credits</span>
+                        <input type="number" class="form-control shadow-none" placeholder="--" name="credits">
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-6 col-12">
+                            <div class="form-group mb-3">
+                                <label for="applicable_at" class="ph-q-label">Applicable At</label> 
+                                <!-- registration, redemption, credit_purchase -->
+                                    <div class="ps-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input shadow-none border-primary" type="checkbox" name="applicable_at" id="registration" value="registration">
+                                        <label class="form-check-label" for="registration">Registration</label>
+                                    </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input shadow-none border-primary" type="checkbox" name="applicable_at" id="payment" value="payment">
+                                            <label class="form-check-label" for="payment">Payment</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input shadow-none border-primary" type="checkbox" name="applicable_at" id="redemption" value="redemption">
+                                            <label class="form-check-label" for="redemption">Redemption</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input shadow-none border-primary" type="checkbox" name="applicable_at" id="credit_purchase" value="credit_purchase">
+                                            <label class="form-check-label" for="credit_purchase">Credit Purchase</label>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-12">
+                            <div class="form-group mb-3">
+                                <label for="skip_payment" class="ph-q-label">Skip Payment</label> 
+                                <!-- Yes, No -->
+                                <div class="row ps-3">
+                                    <div class="form-check col-auto">
+                                        <input class="form-check-input shadow-none border-primary" type="radio" name="skip_payment" id="skip_payment_yes" value="yes">
+                                        <label class="form-check-label" for="skip_payment_yes">Yes</label>
+                                    </div>
+                                    <div class="form-check col-auto">
+                                        <input class="form-check-input shadow-none border-primary" type="radio" name="skip_payment" id="skip_payment_no" value="no">
+                                        <label class="form-check-label" for="skip_payment_no">No</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 pe-1">
+                            <div class="form-group">
+                                <label for="start_date" class="input-group-text rounded-bottom-0 border-bottom-0"><i class="bi bi-calendar-date me-2"></i>Start Date</label>
+                                <input type="date" class="form-control shadow-none rounded-top-0" name="start_date" id="start_date">
+                            </div>
+                        </div>
+                        <div class="col-6 ps-1">
+                            <div class="form-group">
+                                <label for="end_date" class="input-group-text rounded-bottom-0 border-bottom-0"><i class="bi bi-calendar-date me-2"></i> End Date</label>
+                                <input type="date" class="form-control shadow-none rounded-top-0" name="end_date" id="end_date">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="description" class="input-group-text rounded-bottom-0 border-bottom-0"><i class="bi bi-card-text me-2"></i>Description</label>
+                        <textarea class="form-control shadow-none rounded-top-0" name="description" id="description" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-0 pb-0 pe-0">
+                <button type="button" class="btn text-primary shadow-none border-0" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary shadow-none rounded-5 px-3 py-2" name="create_coupon" form="createCouponForm">Create Coupon</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Update Coupon Modal -->
+<div class="modal fade" id="updateCouponModal" tabindex="-1" aria-labelledby="updateCouponModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content rounded-5 p-2 p-md-3">
+            <div class="modal-header border-0 pt-1">
+                <h5 class="modal-title" id="updateCouponModalLabel">Update Coupon</h5>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-0 custom-scrollbar overflow-x-hidden">
+                <form method="post" id="updateCouponForm">
+                    {% csrf_token %}
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"><i class="bi bi-card-heading"></i></span>
+                        <input type="text" class="form-control shadow-none" placeholder="Name" name="name" id="update_name" required>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-8 pe-1">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-qr-code-scan"></i></span>
+                                <input type="text" class="form-control shadow-none" placeholder="Code" name="code" id="update_code" required>
+                            </div>
+                        </div>
+                        <div class="col-4 ps-1">
+                            <div class="input-check">
+                                <input type="checkbox" class="btn-check" id="update_is_active" name="is_active" autocomplete="off">
+                                <label class="btn btn-outline-success shadow-none w-100" for="update_is_active">Active</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-7 pe-1">
+                            <div class="input-group">
+                                <span class="input-group-text" title="Discount Amount" data-bs-toggle="tooltip" data-bs-placement="top"><i class="bi bi-currency-rupee"></i></span>
+                                <input type="number" class="form-control shadow-none" placeholder="Amount" id="update_discount_amount" name="discount_amount" step=".01">
+                            </div>
+                        </div>
+                        <div class="col-5 ps-1">
+                            <div class="input-group">
+                                <span class="input-group-text" title="Discount Percentage" data-bs-toggle="tooltip" data-bs-placement="top"><i class="bi bi-percent"></i></span>
+                                <input type="number" class="form-control shadow-none" placeholder="Percentage" id="update_discount_percentage" name="discount_percentage" step=".01">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-7 pe-1">
+                            <div class="input-group">
+                                <span class="input-group-text" title="Maximum Discount Amount" data-bs-toggle="tooltip" data-bs-placement="top"><i class="bi bi-arrow-up"></i><i class="bi bi-currency-rupee"></i></span>
+                                <input type="number" class="form-control shadow-none" placeholder="Max Amount" id="update_max_discount" name="max_discount" step=".01">
+                            </div>
+                        </div>
+                        <div class="col-5 ps-1">
+                            <div class="input-group">
+                                <span class="input-group-text" title="Usage Limit" data-bs-toggle="tooltip" data-bs-placement="top"><i class="bi bi-person"></i></span>
+                                <input type="number" class="form-control shadow-none" placeholder="Usage Limit" id="update_usage_limit" name="usage_limit">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"><i class="bi bi-coin me-2"></i> Credits</span>
+                        <input type="number" class="form-control shadow-none" placeholder="--" id="update_credits" name="credits">
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-6 col-12">
+                            <div class="form-group mb-3">
+                                <label for="applicable_at" class="ph-q-label">Applicable At</label> 
+                                <!-- registration, redemption, credit_purchase -->
+                                    <div class="ps-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input shadow-none border-primary" type="checkbox" name="applicable_at" id="update_registration" value="registration">
+                                        <label class="form-check-label" for="update_registration">Registration</label>
+                                    </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input shadow-none border-primary" type="checkbox" name="applicable_at" id="update_payment" value="payment">
+                                            <label class="form-check-label" for="update_payment">Payment</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input shadow-none border-primary" type="checkbox" name="applicable_at" id="update_redemption" value="redemption">
+                                            <label class="form-check-label" for="update_redemption">Redemption</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input shadow-none border-primary" type="checkbox" name="applicable_at" id="update_credit_purchase" value="credit_purchase">
+                                            <label class="form-check-label" for="update_credit_purchase">Credit Purchase</label>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-12">
+                            <div class="form-group mb-3">
+                                <label for="skip_payment" class="ph-q-label">Skip Payment</label> 
+                                <!-- Yes, No -->
+                                <div class="row ps-3">
+                                    <div class="form-check col-auto">
+                                        <input class="form-check-input shadow-none border-primary" type="radio" name="skip_payment" id="update_skip_payment_yes" value="yes">
+                                        <label class="form-check-label" for="update_skip_payment_yes">Yes</label>
+                                    </div>
+                                    <div class="form-check col-auto">
+                                        <input class="form-check-input shadow-none border-primary" type="radio" name="skip_payment" id="update_skip_payment_no" value="no">
+                                        <label class="form-check-label" for="update_skip_payment_no">No</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 pe-1">
+                            <div class="form-group">
+                                <label for="update_start_date" class="input-group-text rounded-bottom-0 border-bottom-0"><i class="bi bi-calendar-date me-2"></i>Start Date</label>
+                                <input type="date" class="form-control shadow-none rounded-top-0" name="start_date" id="update_start_date">
+                            </div>
+                        </div>
+                        <div class="col-6 ps-1">
+                            <div class="form-group">
+                                <label for="update_end_date" class="input-group-text rounded-bottom-0 border-bottom-0"><i class="bi bi-calendar-date me-2"></i> End Date</label>
+                                <input type="date" class="form-control shadow-none rounded-top-0" name="end_date" id="update_end_date">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="update_description" class="input-group-text rounded-bottom-0 border-bottom-0"><i class="bi bi-card-text me-2"></i>Description</label>
+                        <textarea class="form-control shadow-none rounded-top-0" name="description" id="update_description" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-0 pb-0 pe-0">
+                <button type="button" class="btn text-primary shadow-none border-0" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary shadow-none rounded-5 px-3 py-2" name="update_coupon" id="update_coupon" form="updateCouponForm">Update Coupon</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+ 
+<!-- Delete Coupon Modal Popup -->
+<div class="modal fade" id="deleteCouponModal" tabindex="-1" aria-labelledby="deleteCouponModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-5 p-md-3 p-2">
+        <div class="modal-header border-0">
+          <h5 class="modal-title" id="deleteBugModalLabel"><i class="bi bi-trash3"></i>&nbsp; Confirm Delete</h5>
+          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            <div class="modal-body text-center py-0">    
+                <p class="mb-0">Are you sure you want to remove <strong><span id="remove_coupon"></span></strong> coupon?</p>
+                <p class="mb-0">This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn border-0 shadow-none" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-danger shadow-none px-3 py-2 rounded-5" name="delete_coupon" id="delete_coupon"><i class="bi bi-trash3 me-2"></i>Delete</button>
+            </div>
+        </form>
+      </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+<script type="text/javascript">
+    function updateCouponCode(elem) {
+        const id = elem.getAttribute('data-id');
+        const info_card = document.getElementById(`coupon${id}`);
+        const isActive = info_card.getAttribute('data-status');
+        
+        document.getElementById('update_coupon').value = id;
+        document.getElementById('update_name').value = info_card.querySelector('.coupon-name').textContent;
+        document.getElementById('update_code').value = info_card.querySelector('.coupon-code').textContent;
+        document.getElementById('update_discount_amount').value = info_card.querySelector('.coupon-discount-amount').textContent;
+        document.getElementById('update_discount_percentage').value = info_card.querySelector('.coupon-discount-percentage').textContent;
+        document.getElementById('update_max_discount').value = info_card.querySelector('.coupon-max-discount').textContent;
+        document.getElementById('update_start_date').value = info_card.querySelector('.coupon-start-date').getAttribute('data-date');
+        document.getElementById('update_end_date').value = info_card.querySelector('.coupon-end-date').getAttribute('data-date');
+        document.getElementById('update_credits').value = info_card.querySelector('.coupon-credits').textContent;
+        document.getElementById('update_usage_limit').value = info_card.querySelector('.coupon-usage-limit').textContent;
+        document.getElementById('update_description').value = info_card.querySelector('.coupon-description').textContent;
+
+        const applicable_at = info_card.querySelector('.coupon-applicable-at').textContent.split(', ');
+        
+        applicable_at.forEach((app) => {
+            document.getElementById(`update_${app}`).checked = true;
+        });
+
+        const skip_payment = info_card.querySelector('.coupon-skip-payment').textContent;
+        if (skip_payment == 'Yes') {
+            document.getElementById('update_skip_payment_yes').checked = true;
+        } else {
+            document.getElementById('update_skip_payment_no').checked = true;
+        }
+
+        if (isActive == 'True') {
+            document.getElementById('update_is_active').checked = true;
+        } else {
+            document.getElementById('update_is_active').checked = false;
+        }
+    }
+
+    function deleteCouponCode(elem) {
+        const id = elem.getAttribute('data-id');
+        const info_card = document.getElementById(`coupon${id}`);
+        document.getElementById('delete_coupon').value = id;
+        document.getElementById('remove_coupon').innerText = info_card.querySelector('.coupon-name').innerText;
+    }
+</script>
+{% endblock %}

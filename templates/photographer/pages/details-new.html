@@ -1,0 +1,207 @@
+{% load auth_extras static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ service.vendor.name }} - {{ category.profession }}, {{ service.vendor.city|title }} | Eventic</title>
+    <link rel="stylesheet" href="{% static 'css/photographer/styles/new-details.css' %}">
+    <link rel="shortcut icon" href="{% static 'assets/logos/eventic-golden-favicon.png' %}" type="image/x-icon">
+    <!-- Bootstrap Css and Js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Meta Tags -->
+    <meta name="description" content="Best {{ category.profession }} in {{ service.vendor.city }}, {{ service.vendor.state }}, {{ service.vendor.country }}. {{ service.vendor.name }} - Eventic">
+    <meta name="author" content="Eventic">
+    <meta name="keywords" content="Best {{ service.profession }}, Best {{ service.profession }} in {{ service.vendor.address }}, Best {{ service.profession }} in {{ service.vendor.city }}, Best {{ service.profession }} in {{ service.vendor.state }}, Best {{ service.profession }} in {{ service.vendor.country }}, Good {{ service.profession }}, Budget {{ service.profession }}, {{ service.vendor.name }}, Photographer, Photography, {{ category.profession }}, {{ category.service }}, {{ category.service }} {{ service.vendor.city }}, {{ service.vendor.state }}, {{ service.vendor.country }}, Eventic, {% if service.has_packages %}{% for package in service.other.packages %}{{ package.name }}, {% endfor %}{% endif %}">
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+    <!-- Open Graph -->
+    <meta property="og:title" content="{{ service.vendor.name }} - {{ category.profession }}, {{ service.vendor.city }} | Eventic">
+    <meta property="og:description" content="Best {{ category.profession }} in {{ service.vendor.city }}, {{ service.vendor.state }}, {{ service.vendor.country }}. {{ service.vendor.name }} - Eventic">
+    <meta property="og:image" content="{% if service.thumbnail %}{{ service.thumbnail.url }}{% else %}{% static 'assets/defaults/meta-image.png' %}{% endif %}">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:type" content="website"> 
+    <meta property="og:site_name" content="Eventic" />
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ service.vendor.name }} - {{ category.profession }}, {{ service.vendor.city|title }} | Eventic">
+    <meta name="twitter:description" content="Best {{ category.profession }} in {{ service.vendor.city }}, {{ service.vendor.state }}, {{ service.vendor.country }}. {{ service.vendor.name }} - Eventic">
+    <meta name="twitter:image" content="{% if service.thumbnail %}{{ service.thumbnail.url }}{% else %}{% static 'assets/defaults/meta-image.png' %}{% endif %}">
+    <meta name="twitter:url" content="{{ request.build_absolute_uri }}">
+    <meta name="twitter:site" content="@_Eventic">
+    <meta name="twitter:creator" content="@_Eventic">
+    <!-- Robots -->
+    <meta name="robots" content="index, follow">
+
+    <script type="application/ld+json">
+        {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Eventic",
+        "url": "https://eventic.in/",
+        "logo": "{% static 'assets/defaults/Eventic-icon-logo-gold-bg-white-sm.png' %}",
+        "sameAs": [
+            "https://www.facebook.com/people/{{ FACEBOOK }}",
+            "https://www.instagram.com/{{ INSTAGRAM }}/",
+            "https://x.com/{{ TWITTER }}",
+            "https://www.youtube.com/@{{ YOUTUBE }}"
+        ]
+        }
+    </script>
+
+    <script type="application/ld+json">
+        {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "name": "{{ service.vendor.name }}",
+        "image": "{% if service.thumbnail %}{{ service.thumbnail.url }}{% endif %}",
+        "@id": "{{ request.build_absolute_uri }}",
+        "url": "{{ request.build_absolute_uri }}",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "{{ service.vendor.address }}",
+            "addressLocality": "{{ service.vendor.city }}",
+            "addressRegion": "{{ service.vendor.state }}",
+            "postalCode": "{{ service.vendor.pincode }}",
+            "addressCountry": "{{ service.vendor.country }}"
+        },
+        "description": "{{ service.description | truncatewords:"25" }}",
+        "sameAs": [
+            {% if service.vendor.facebook %}"{{ service.vendor.facebook }}"{% endif %}
+            {% if service.vendor.instagram %},"{{ service.vendor.instagram }}"{% endif %}
+            {% if service.vendor.twitter %},"{{ service.vendor.twitter }}"{% endif %} 
+            {% if service.vendor.youtube %},"{{ service.vendor.youtube }}"{% endif %}
+        ],
+        <!-- "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "{{ service.vendor.average_rating }}",
+            "reviewCount": "{{ service.vendor.review_count }}"
+        }, -->
+        "priceRange": "{{ service.price }}"
+        }
+    </script>     
+    {% include 'main/utils/_google-analytics.html' %}
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="{% url 'photographer:home' %}">
+                <img src="{% static 'assets/logos/Eventic-golden-white-lg-logo-new.png' %}" alt="Eventic Logo">
+            </a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="{% url 'photographer:search' category='wedding' %}{% if q.search_term %}?q={{ q.search_term }}{% endif %}"><i class="bi bi-search"></i></a></li>
+            </ul>
+            <div class="profile-image">
+                <a href="{% url 'vendor:Dashboard' %}">
+                    <i class="bi bi-person-circle"></i>
+                </a>
+            </div>
+        </nav>
+        <div class="service-navbar">
+            <ul>
+                <li><a href="{% url 'photographer:search' category='wedding' %}{% if q.search_term %}?q={{ q.search_term }}{% endif %}">Wedding</a></li>
+                <li><a href="{% url 'photographer:search' category='engagement' %}{% if q.search_term %}?q={{ q.search_term }}{% endif %}">Engagement</a></li>
+                <li><a href="{% url 'photographer:search' category='wedding' %}{% if q.search_term %}?q={{ q.search_term }}{% endif %}">Pre Wedding</a></li>
+                <li><a href="{% url 'photographer:search' category='wedding' %}{% if q.search_term %}?q={{ q.search_term }}{% endif %}">Post Wedding</a></li>
+                <li><a href="{% url 'photographer:search' category='event' %}{% if q.search_term %}?q={{ q.search_term }}{% endif %}">Event</a></li>
+            </ul>
+        </div>
+    </header>
+    <main class="container p-5">
+        <h3 class="text-center text-secondary">Vendor Details</h3>
+        <h1>{{ service.vendor.name }}</h1>
+        <p>{{ service.vendor.bio | safe }}</p>
+        <h6>Contact</h6>
+        <ul>
+            <li><strong>Phone</strong>: {{ service.vendor.phone }}</li>
+            <li><strong>Email</strong>: {{ service.vendor.email }}</li>
+            <li><strong>WhatsApp</strong>: {{ service.vendor.whatsapp }}</li>
+            <li><strong>Opening Time</strong>: {{ service.vendor.opening_time }}</li>
+            <li><strong>Closing Time</strong>: {{ service.vendor.closing_time }}</li>
+        </ul>
+        <h6>Location</h6>
+        <ul>
+            <li><strong>Address</strong>: {{ service.vendor.address }}</li>
+            <li><strong>City</strong>: {{ service.vendor.city }}</li>
+            <li><strong>State</strong>: {{ service.vendor.state }}</li>
+            <li><strong>Country</strong>: {{ service.vendor.country }}</li>
+            <li><strong>Pincode</strong>: {{ service.vendor.pincode }}</li>
+            <li><strong>Google Maps</strong>:<br>
+                <iframe 
+                    src="{{ service.vendor.embed_map }}" 
+                    width="200" 
+                    height="200" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy">
+                </iframe>
+            </li>
+        </ul>
+        <h6>Social Media</h6>
+        <ul>
+            <li><strong>Facebook</strong>: {{ service.vendor.facebook }}</li>
+            <li><strong>Instagram</strong>: {{ service.vendor.instagram }}</li>
+            <li><strong>Twitter</strong>: {{ service.vendor.twitter }}</li>
+            <li><strong>Youtube</strong>: {{ service.vendor.youtube }}</li>
+            <li><strong>Website</strong>: {{ service.vendor.website }}</li>
+        </ul>
+        <h6>Other</h6>
+        <ul>
+            {% for key,value in service.vendor.other.items %}
+            <li><strong>{{ key }}</strong>: {{ value }}</li>
+            {% endfor %}
+        </ul>
+        <hr>
+        <h3 class="text-center text-secondary">Service Details</h3>
+        <h2>{{ category.service }}</h2>
+        <p>{{ service.description | safe }}</p>
+        <h6>Category Information</h6>
+        <ul>
+            <li><strong>Name</strong>: {{ category.name }}</li>
+            <li><strong>Category</strong>: {{ category.category }}</li>
+            <li><strong>Service</strong>: {{ category.service }}</li>
+            <li><strong>Profession</strong>: {{ category.profession }}</li>
+        </ul>
+        <h6>Service Details</h6>
+        <ul>
+            <li><strong>Contact</strong>: {{ service.contact }}</li>
+            <li><strong>Experience</strong>: {{ service.experience }}</li>
+            <li><strong>Price</strong>: {{ service.price }} / {{ service.price_unit }}</li>
+        </ul>
+        <h6>Packages</h6>
+        <ol>
+            {% for package in service.other.packages %}
+            <li class="mb-2">
+                <strong>Name</strong>: {{ package.name }}
+                <ul>
+                    <li><strong>Price</strong>: {{ package.price }} / {{ package.priceUnit }}</li>
+                    <li><strong>Details</strong>: {{ package.details | safe }}</li>
+                </ul>
+            </li>
+            {% endfor %}
+        </ol>
+        <h6>Add Ons</h6>
+        <ol>
+            {% for addOn in service.other.addOns %}
+            <li class="mb-2">
+                <strong>Name</strong>: {{ addOn.name }}
+                <ul>
+                    <li><strong>Price</strong>: {{ addOn.price }} / {{ addOn.priceUnit }}</li>
+                    <li><strong>Details</strong>: {{ addOn.details | safe }}</li>
+                </ul>
+            </li>
+            {% endfor %}
+        </ol>
+        <h6>Other Information</h6>
+        <ul>
+            {% for key, value in service.other.serviceDetails.items %}
+            <li><strong>{{ key }}</strong>: {{ value }}</li>
+            {% endfor %}
+        </ul>
+    </main>
+</body>
+</html>

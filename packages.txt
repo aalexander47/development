@@ -1,0 +1,28 @@
+psycopg2-binary
+setuptools
+django
+django-cors-headers
+djangorestframework
+pillow
+psycopg2
+django-storages
+django-debug-toolbar
+django-allauth
+razorpay
+boto3
+gunicorn
+whitenoise
+python-decouple
+celery[redis] #delete in production
+django-celery-beat #delete in production
+django-celery-results #delete in production
+requests
+django-ratelimit
+djangorestframework-simplejwt  #delete in production
+django-user-agents
+matplotlib
+celery
+django-dirtyfields
+PyJWT
+cryptography
+geoip2

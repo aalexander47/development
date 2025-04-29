@@ -1,0 +1,33 @@
+{% extends 'invitation/wedding/details_base.html' %}{% load auth_extras static %}
+{% block title %}{% if page == "preview" %}{{ invitation.name }} Wedding Invitation Preview | Eventic{% else %}{{ invitation.details.groom|title }} & {{ invitation.details.bride|title }} Wedding Invitation{% endif %}{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/invitation/wedding/WC1/styles/details.css' %}">
+{% endblock %}
+
+{% block invitation_card %}
+{% include 'invitation/wedding/WC1/_invitation.html' %}
+{% endblock %}
+
+{% block download_card %}
+{% include 'invitation/wedding/WC1/_card.html' %}
+{% endblock %}
+
+{% block download_qr_code %}
+{% include 'invitation/wedding/WC1/_card_qrcode.html' %}
+{% endblock %}
+
+{% block card %}
+{% include 'invitation/wedding/WC1/_card.html' %}
+{% endblock %}
+
+{% block qr_code %}
+{% include 'invitation/wedding/WC1/_card_qrcode.html' %}
+{% endblock %}
+
+{% block scripts %}
+{% if "preview" in request.path %}
+<script src="{% static 'scripts/invitation/wedding/WC1/preview.js' %}"></script>
+{% endif %}
+<script src="{% static 'scripts/invitation/wedding/WC1/details.js' %}"></script>
+{% endblock %}

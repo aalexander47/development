@@ -1,0 +1,66 @@
+{% load auth_extras %}
+<ul class="nav-list-box">
+    {% if user.priority == 'vendor' %}
+    <li class="nav-list-item"><a class="nav-link-btn{% if cp == 'dashboard' %} active{% endif %}" href="{% url 'vendor:Dashboard' %}"><i class="bi bi-bar-chart{% if cp == 'dashboard' %}-fill{% endif %}"></i><span>Dashboard</span></a></li>
+    <li class="nav-list-item"><a class="nav-link-btn{% if user.vendor_is_suspended %} inactive{% else %}{% if cp == 'details' %} active{% endif %}{% endif %}" href="{% url 'vendor:Details' %}"><i class="bi bi-menu-app{% if cp == 'details' %}-fill{% endif %}"></i><span>Details</span></a></li>
+    <li class="nav-list-item"><a class="nav-link-btn{% if not user.vendor_is_active or user.vendor_is_suspended %} inactive{% else %}{% if cp == 'services' %} active{% endif %}{% endif %}" href="{% url 'vendor:Services' %}"><i class="bi bi-stars"></i><span>Services</span></a></li>
+    <li class="nav-list-item"><a class="nav-link-btn{% if user.vendor_is_suspended %} inactive{% else %}{% if cp == 'notifications' %} active{% endif %}{% endif %}" href="{% url 'vendor:Notifications' %}"><i class="bi bi-bell{% if cp == 'notifications' %}-fill{% endif %}"></i><span>Notifications</span><span class="badge" id="sidebarUnreadNotificationCount"></span></a></li>
+    <li class="nav-list-item"><a class="nav-link-btn{% if cp == 'billing' %} active{% endif %}" href="{% url 'vendor:Billing' %}"><i class="bi bi-currency-rupee"></i><span>Billing</span></a></li>
+    <li class="nav-list-item"><a class="nav-link-btn{% if user.vendor_is_suspended %} inactive{% else %}{% if cp == 'settings' %} active{% endif %}{% endif %}" href="{% url 'vendor:Settings' %}"><i class="bi bi-gear{% if cp == 'settings' %}-fill{% endif %}"></i><span>Settings</span></a></li>
+    {% if IN_DEVELOPMENT %}
+    <li class="nav-list-item"><a class="nav-link-btn{% if not user.vendor_is_active or user.vendor_is_suspended %} inactive{% else %}{% if cp == 'epss' %} active{% endif %}{% endif %}" href="{% url 'vendor:EPSS' %}"><i class="bi bi-file-earmark-bar-graph"></i><span>EPSS</span></a></li>
+    {% endif %}
+    <li class="nav-list-item">
+        <div class="btn-group dropup">
+            <button class="nav-link-btn dropdown{% if not user.vendor_is_active or user.vendor_is_suspended %} inactive{% endif %}" type="button" id="navOtherBtnDropdown" data-bs-toggle="dropdown" aria-expanded="false" {% if not user.vendor_is_active or user.vendor_is_suspended %}disabled{% endif %}>
+                <i class="bi bi-grid"></i><span>Other</span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="navOtherBtnDropdown">
+                <li><a class="dropdown-item" href="{% url 'user:Likes' %}"><i class="bi bi-heart"></i>&nbsp; Likes</a></li>
+                <li><a class="dropdown-item" href="{% url 'user:Saves' %}"><i class="bi bi-bookmark"></i>&nbsp; Saves</a></li>
+            </ul>
+        </div>
+    </li>
+    {% elif user.priority == 'staff' %}
+        {% if request.path|startswith:'/docs/' or request.path|startswith:'/blog/' %}
+        <li class="nav-list-item"><a class="nav-link-btn{% if cp == 'docs' %} active{% endif %}" href="{% url 'docs:Dashboard' %}"><i class="bi bi-file-earmark-text{% if cp == 'docs' %}-fill{% endif %}"></i><span>Docs</span></a></li>
+        <li class="nav-list-item"><a class="nav-link-btn{% if cp == 'blogs' %} active{% endif %}" href="{% url 'blog:Dashboard' %}"><i class="bi bi-file-earmark-text{% if cp == 'blogs' %}-fill{% endif %}"></i><span>Blogs</span></a></li>
+        <li class="nav-list-item"><a class="nav-link-btn{% if cp == 'media' %} active{% endif %}" href="{% url 'docs:Media' %}"><i class="bi bi-images"></i><span>Media</span></a></li>
+        <hr>
+        <li class="nav-list-item"><a class="nav-link-btn{% if cp == 'dashboard' %} active{% endif %}" href="{% url 'dashboard:Dashboard' %}"><i class="bi bi-bar-chart{% if cp == 'dashboard' %}-fill{% endif %}"></i><span>Dashboard</span></a></li>
+        {% elif request.path|startswith:'/dashboard' %}
+            <li class="nav-list-item"><a class="nav-link-btn{% if cp == 'dashboard' %} active{% endif %}" href="{% url 'dashboard:Dashboard' %}"><i class="bi bi-bar-chart{% if cp == 'dashboard' %}-fill{% endif %}"></i><span>Dashboard</span></a></li>
+            {% if user.is_superuser or user.is_admin %}
+                <li class="nav-list-item"><a class="nav-link-btn{% if cp == 'pricings' %} active{% endif %}" href="{% url 'dashboard:Pricings' %}"><i class="bi bi-currency-rupee"></i><span>Pricings</span></a></li>
+            {% endif %}
+            {% if user.is_operations or user.is_superuser or user.is_admin %}
+                <li class="nav-list-item"><a class="nav-link-btn{% if cp == 'users' %} active{% endif %}" href="{% url 'dashboard:Users' %}"><i class="bi bi-people{% if cp == 'users' %}-fill{% endif %}"></i><span>Users</span></a></li>
+            {% endif %}
+            <li class="nav-list-item"><a class="nav-link-btn{% if cp == 'notifications' %} active{% endif %}" href="{% url 'dashboard:Notifications' %}"><i class="bi bi-bell{% if cp == 'notifications' %}-fill{% endif %}"></i><span>Notifications</span><span class="badge" id="sidebarUnreadNotificationCount"></span></a></li>
+            {% if user.is_superuser or user.is_admin %}
+                <li class="nav-list-item"><a class="nav-link-btn{% if cp == 'invitations' %} active{% endif %}" href="{% url 'dashboard:Invitations' %}"><i class="bi bi-calendar2-event{% if cp == 'invitations' %}-fill{% endif %}"></i><span>Invitations</span></a></li>
+            {% endif %}
+            {% if user.is_developer or user.is_superuser or user.is_admin %}
+            <li class="nav-list-item"><a class="nav-link-btn{% if cp == 'articles' %} active{% endif %}" href="{% url 'docs:Dashboard' %}"><i class="bi bi-file-earmark-richtext{% if cp == 'articles' %}-fill{% endif %}"></i><span>Articles</span></a></li>
+            <li class="nav-list-item"><a class="nav-link-btn{% if cp == 'bugs' %} active{% endif %}" href="{% url 'dashboard:Bugs' %}"><i class="bi bi-bug{% if cp == 'bugs' %}-fill{% endif %}"></i><span>Bugs</span><span class="badge" id="sidebarUnreadBugCount"></span></a></li>
+            {% endif %}
+            {% if user.is_superuser or user.is_admin %}
+                <li class="nav-list-item"><a class="nav-link-btn{% if cp == 'settings' %} active{% endif %}" href="{% url 'dashboard:Settings' %}"><i class="bi bi-gear{% if cp == 'settings' %}-fill{% endif %}"></i><span>Settings</span></a></li>
+            {% endif %}
+        {% endif %}
+
+    {% else %}
+    <li class="nav-list-item"><a class="nav-link-btn{% if cp == 'likes' %} active{% endif %}" href="{% url 'user:Likes' %}"><i class="bi bi-heart{% if cp == 'likes' %}-fill text-danger{% endif %}"></i><span>Likes</span></a></li>
+    <li class="nav-list-item"><a class="nav-link-btn{% if cp == 'saves' %} active{% endif %}" href="{% url 'user:Saves' %}"><i class="bi bi-bookmark{% if cp == 'saves' %}-fill{% endif %}"></i><span>Saves</span></a></li>
+    <li class="nav-list-item"><a class="nav-link-btn{% if cp == 'notifications' %} active{% endif %}" href="{% url 'user:Notifications' %}"><i class="bi bi-bell{% if cp == 'notifications' %}-fill{% endif %}"></i><span>Notifications</span><span class="badge" id="sidebarUnreadNotificationCount"></span></a></li>
+    <li class="nav-list-item"><a class="nav-link-btn{% if cp == 'invitations' %} active{% endif %}" href="{% url 'user:Invitations' %}"><i class="bi bi-calendar2-event{% if cp == 'invitations' %}-fill{% endif %}"></i><span>Invitations</span></a></li>
+    {% if user.has_group_vendor %}
+    <hr>
+    <li class="nav-list-item"><a class="nav-link-btn{% if cp == 'dashboard' %} active{% endif %}" href="{% url 'vendor:Dashboard' %}"><i class="bi bi-bar-chart{% if cp == 'dashboard' %}-fill{% endif %}"></i><span>Dashboard</span></a></li>
+    {% endif %}
+    {% if user.is_staff %}
+    <hr>
+    <li class="nav-list-item"><a class="nav-link-btn{% if cp == 'dashboard' %} active{% endif %}" href="{% url 'dashboard:Dashboard' %}"><i class="bi bi-person{% if cp == 'dashboard' %}-fill{% endif %}"></i><span>Admin</span></a></li>
+    {% endif %}
+    {% endif %}
+</ul>

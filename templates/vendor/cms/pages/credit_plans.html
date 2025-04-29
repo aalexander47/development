@@ -1,0 +1,160 @@
+{% extends 'vendor/cms/base.html' %}{% load static %}
+{% block title %}Credits Plans - Eventic{% endblock %}
+
+{% block head %}
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="content-block">
+    <div class="main-header" id="MH01">
+        <div class="header-top">
+            <div class="header-title">
+                {% if request.META.HTTP_REFERER %}
+                <a href="{{ request.META.HTTP_REFERER }}" class="back-btn"><i class="bi bi-arrow-left"></i></a>
+                {% else %}
+                <a href="{% url 'vendor:Billing' %}" class="back-btn"><i class="bi bi-arrow-left"></i></a>
+                {% endif %}
+                <h1>Credit Plans</h1>
+            </div>
+        </div>
+    </div>
+    <div class="main-body">
+        {% include 'vendor/comps/messages.html' %}
+        <div id="buyCreditsContentBlock">
+            <section class="main-section-container">
+                <h1 class="section-title">Unlock More Opportunities with Vendor Credits</h1>
+                <form id="payment-form">
+                    <div id="buyCreditsContainer">
+                        {% for plan, plan_details in plans.items %}
+                        <div class="payment-card card-{{ forloop.counter }}" id="{{ plan|title }}Plan">
+                            <h5>{{ plan|title }}</h5>
+                            <h3>{{ plan_details.credits }} <span>Credits</span></h3>
+                            <h6><small><i class="bi bi-currency-rupee"></i></small>{{ plan_details.price }}</h6>
+                            <button class="buy-btn" id="{{ plan }}PlanBtn" data-payment-type="{{ plan }}">Get Now</button>
+                            <div class="card-icon">
+                                <img src="{% static 'assets/defaults/' %}{{ plan_details.icon }}" alt="icon image">
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </form>
+                <p class="text-center text-secondary">By purchasing credits, you agree to our <a href="{% url 'main:payment_policy' %}" target="_blank">Payment Policy</a> and <a href="{% url 'main:refund_policy' %}" target="_blank">Refund Policy</a>.</p>
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+    // Function to handle Razorpay payment
+    async function initiatePayment(button) {
+        const paymentType = button.getAttribute("data-payment-type");
+
+        // Show loading indicator
+        button.disabled = true;
+        button.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; Loading...`;
+        
+        // Fetch order ID dynamically from the server for the selected plan
+        const response = await fetch("{% url 'vendor:CreditPlans' %}", {
+            method: "POST",
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                "Content-Type": "application/x-www-form-urlencoded", // ensure the format is correct for form data
+            },
+            body: new URLSearchParams({
+                'payment_type': paymentType,
+            }),
+        });
+
+        const paymentData = await response.json();
+        
+        if (!response.ok) {
+            console.error("Error fetching Razorpay order:", response.status, response.statusText);
+            alert("Error creating Razorpay order.");
+            button.disabled = false;
+            button.innerHTML = "Get Now";
+            return;
+        }
+        
+        if (!paymentData.success) {
+            alert("Error creating Razorpay order.");
+            button.disabled = false;
+            button.innerHTML = "Get Now";
+            return;
+        }
+
+        // Set up Razorpay options dynamically
+        const options = {
+            "key": "{{ payment.razorpay_key_id }}", // Razorpay API Key
+            "amount": paymentData.payment.amount, // Amount in paise
+            "currency": "INR",
+            "name": "Eventic",  
+            "description": "Subscription Payment",
+            "order_id": paymentData.payment.order_id, // dynamically fetched order ID
+            "handler": function (response) {
+                // Prepare form data for server-side verification
+                const form = document.getElementById('payment-form');
+                form.action = "{% url 'payment:handle_payment_success' %}";
+                form.method = 'POST';
+
+                const csrf_token = document.createElement("input");
+                csrf_token.setAttribute("type", "hidden");
+                csrf_token.setAttribute("name", "csrfmiddlewaretoken");
+                csrf_token.setAttribute("value", '{{ csrf_token }}');
+                form.appendChild(csrf_token);
+
+                const payment_type = document.createElement("input");
+                payment_type.setAttribute("type", "hidden");
+                payment_type.setAttribute("name", "payment_type");
+                payment_type.setAttribute("value", paymentType);
+                form.appendChild(payment_type);
+
+                const razorpay_payment_id = document.createElement("input");
+                razorpay_payment_id.setAttribute("type", "hidden");
+                razorpay_payment_id.setAttribute("name", "razorpay_payment_id");
+                razorpay_payment_id.setAttribute("value", response.razorpay_payment_id);
+                form.appendChild(razorpay_payment_id);
+
+                const razorpay_order_id = document.createElement("input");
+                razorpay_order_id.setAttribute("type", "hidden");
+                razorpay_order_id.setAttribute("name", "razorpay_order_id");
+                razorpay_order_id.setAttribute("value", response.razorpay_order_id);
+                form.appendChild(razorpay_order_id);
+
+                const razorpay_signature = document.createElement("input");
+                razorpay_signature.setAttribute("type", "hidden");
+                razorpay_signature.setAttribute("name", "razorpay_signature");
+                razorpay_signature.setAttribute("value", response.razorpay_signature);
+                form.appendChild(razorpay_signature);
+
+                form.submit();
+            }
+        };
+
+        const rzp1 = new Razorpay(options);
+        rzp1.open();
+
+        // Hide loading indicator
+        button.disabled = false;
+        button.innerHTML = "Get Now";
+    }
+
+    // Event listeners for each button
+    document.getElementById('basicPlanBtn').onclick = function(e) {
+        e.preventDefault();
+        initiatePayment(this);
+    };
+
+    document.getElementById('standardPlanBtn').onclick = function(e) {
+        e.preventDefault();
+        initiatePayment(this);
+    };
+
+    document.getElementById('premiumPlanBtn').onclick = function(e) {
+        e.preventDefault();
+        initiatePayment(this);
+    };
+</script>
+{% endblock %}

@@ -1,0 +1,203 @@
+{% extends 'vendor/cms/base.html' %}
+{% block title %}Team - Eventic{% endblock %}
+
+{% block content %}
+<div class="content-block">
+    <div class="main-header" id="MH01">
+        <div class="header-top">
+            <div class="header-title">
+                {% if request.META.HTTP_REFERER %}
+                <a href="{{ request.META.HTTP_REFERER }}" class="back-btn"><i class="bi bi-arrow-left"></i></a>
+                {% else %}
+                <a href="{% url 'vendor:Details' %}" class="back-btn"><i class="bi bi-arrow-left"></i></a>
+                {% endif %}
+                <h1>Team</h1>
+            </div>
+            <button type="button" class="save-btn" name="add_team_member" data-bs-toggle="modal" data-bs-target="#addTeamMemberModal"><i class="bi bi-person-plus"></i><span>Add</span></button>
+        </div>
+        <div class="header-bottom">
+            <ul>
+                <li><a href="{% url 'vendor:Legal' %}" class="active">Legal</a></li>
+                <li><a href="{% url 'vendor:Details' %}">Details</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main-body">
+        {% include 'vendor/comps/messages.html' %}
+        <div class="team-members-container">
+            {% if not team_members %}
+            <div class="team-card no-data-card">
+                <h3>(｡•́︿•̀｡)</h3>
+                <p>No team member added yet.</p>
+                <button class="btn" data-bs-toggle="modal" data-bs-target="#{% if user.vendor_is_active %}addTeamMemberModal{% else %}updateProfileModal{% endif %}">Add Member</button>
+            </div>
+            {% else %}
+            {% for member in team_members %}
+            <div class="team-member-card" id="teamMember_{{ member.id }}">
+                <div class="member-header">
+                    <div class="user-name">{{ member.name|title }}</div>
+                    <div class="user-role">( <span class="user-role-span">{{ member.role|title }}</span> )</div>
+                </div>
+                <div class="action-btn-box dropstart">
+                    <button type="button" class="action-btn dropdown" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-three-dots-vertical"></i></button>
+                    <ul class="dropdown-menu action-dropdown-menu">
+                        <li>
+                            <button type="button" class="dropdown-item" name="edit_team_member" data-id="{{ member.id }}" data-bs-toggle="modal" data-bs-target="#updateTeamMemberModal" onclick="updateTeamMemberDetails(this);"><i class="bi bi-pencil-square"></i><span>Edit</span></button>
+                        </li>
+                        <li>
+                            <button type="button" class="dropdown-item dropdown-item-danger" name="delete_team_member" data-id="{{ member.id }}" data-bs-toggle="modal" data-bs-target="#deleteTeamMemberModal" onclick="deleteTeamMember(this);"><i class="bi bi-trash"></i><span>Delete</span></button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="member-details">
+                    <div class="contact-item"><i class="bi bi-telephone"></i><span class="user-phone">{{ member.phone }}</span></div>
+                    <div class="contact-item"><i class="bi bi-whatsapp"></i><span class="user-whatsapp">{{ member.whatsapp }}</span></div>
+                    <div class="contact-item"><i class="bi bi-envelope"></i><span class="user-email">{{ member.email }}</span></div>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Add Team Member Modal -->
+<div class="modal fade" id="addTeamMemberModal" tabindex="-1" aria-labelledby="addTeamMemberModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-5 p-2">
+        <div class="modal-header border-0">
+          <h5 class="modal-title" id="addTeamMemberModalLabel">Add Team Member</h5>
+          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="post" action="{% url 'vendor:Team' %}">
+            {% csrf_token %}
+            <div class="modal-body pt-0">
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control shadow-none" name="name" id="name" placeholder="Name" required>
+                    <label for="name"><i class="bi bi-person"></i>&nbsp; Name</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control shadow-none" name="role" id="role" placeholder="Role" required>
+                    <label for="role"><i class="bi bi-briefcase"></i>&nbsp; Work Role</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="number" class="form-control shadow-none" name="phone" id="phone" min="1000000000" max="9999999999" placeholder="Phone" required oninvalid="this.setCustomValidity('Add a valid phone number')" oninput="this.setCustomValidity('')" />
+                    <label for="phone"><i class="bi bi-telephone"></i>&nbsp; Phone</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="number" class="form-control shadow-none" name="whatsapp" id="whatsapp" min="1000000000" max="9999999999" placeholder="WhatsApp" required oninvalid="this.setCustomValidity('Add a valid WhatsApp number')" oninput="this.setCustomValidity('')" />
+                    <label for="whatsapp"><i class="bi bi-whatsapp"></i>&nbsp; WhatsApp</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="email" class="form-control shadow-none" name="email" id="email" placeholder="Email" required>
+                    <label for="email"><i class="bi bi-envelope"></i>&nbsp; Email</label>
+                </div>
+                <button type="submit" class="btn btn-primary shadow-none" name="add_team_member">Add Member</button>
+            </div>
+        </form>
+      </div>
+    </div>
+</div>
+
+<!-- Update Profile Pop Up Modal -->
+<div class="modal fade" id="updateProfileModal" tabindex="-1" aria-labelledby="updateProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content rounded-5 p-2">
+            <div class="modal-header border-0">
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center pt-3 pb-5">
+                <h4><i class="bi bi-exclamation-triangle-fill text-danger"></i>&nbsp;Your account is not active.</h4>
+                <p>By updating your profile, you can activate your account. And you can get access to all the features.</p>
+                <a href="{% url 'vendor:Details' %}" class="btn btn-primary py-2 px-3 rounded-5" role="button">Update Profile</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Update Team Member Modal -->
+<div class="modal fade" id="updateTeamMemberModal" tabindex="-1" aria-labelledby="updateTeamMemberModalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-centered">
+      <div class="modal-content rounded-5 p-2">
+        <div class="modal-header">
+          <h5 class="modal-title" id="updateTeamMemberModalLabel">Update Team Member</h5>
+          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            <div class="modal-body">
+                <input type="hidden" name="member_id" id="update_member_id">
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control shadow-none" name="name" id="update_name" placeholder="Name" required>
+                    <label for="name"><i class="bi bi-person"></i>&nbsp; Name</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control shadow-none" name="role" id="update_role" placeholder="Role" required>
+                    <label for="role"><i class="bi bi-briefcase"></i>&nbsp; Work Role</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="tel" class="form-control shadow-none" name="phone" id="update_phone" placeholder="Phone" required>
+                    <label for="phone"><i class="bi bi-telephone"></i>&nbsp; Phone</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="tel" class="form-control shadow-none" name="whatsapp" id="update_whatsapp" placeholder="WhatsApp" required>
+                    <label for="whatsapp"><i class="bi bi-whatsapp"></i>&nbsp; WhatsApp</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="email" class="form-control shadow-none" name="email" id="update_email" placeholder="Email" required>
+                    <label for="email"><i class="bi bi-envelope"></i>&nbsp; Email</label>
+                </div>
+                <button type="submit" class="btn btn-primary shadow-none" name="update_team_member">Update Member</button>
+            </div>
+        </form>
+      </div>
+    </div>
+</div>
+
+<!-- Confirm Remove Team Member Modal Popup -->
+<div class="modal fade" id="deleteTeamMemberModal" tabindex="-1" aria-labelledby="deleteTeamMemberModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-5 p-2">
+        <div class="modal-header border-0">
+          <h5 class="modal-title" id="deleteTeamMemberModalLabel">Delete Team Member</h5>
+          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            <div class="modal-body text-center">
+                <input type="hidden" name="member_id" id="remove_member_id">
+                <p class="mb-0">Are you sure you want to remove <strong><span id="remove_member_name"></span></strong> from team member?</p>
+            </div>
+            <div class="modal-footer text-center d-flex justify-content-center border-0">
+                <button type="button" class="btn btn-outline-light text-dark border-0 shadow-none" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-outline-danger border-0 shadow-none" name="remove_team_member">Delete</button>
+            </div>
+        </form>
+      </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+    function updateTeamMemberDetails(elem) {
+        const id = elem.getAttribute('data-id');
+        const info_card = document.getElementById(`teamMember_${id}`);
+        document.getElementById('update_member_id').value = id;
+        document.getElementById('update_name').value = info_card.querySelector('.user-name').textContent;
+        document.getElementById('update_role').value = info_card.querySelector('.user-role-span').textContent;
+        document.getElementById('update_phone').value = info_card.querySelector('.user-phone').textContent;
+        document.getElementById('update_whatsapp').value = info_card.querySelector('.user-whatsapp').textContent;
+        document.getElementById('update_email').value = info_card.querySelector('.user-email').textContent;
+    }
+
+    function deleteTeamMember(elem) {
+        const id = elem.getAttribute('data-id');
+        const info_card = document.getElementById(`teamMember_${id}`);
+        document.getElementById('remove_member_id').value = id;
+        document.getElementById('remove_member_name').textContent = info_card.querySelector('.user-name').textContent;
+    }
+</script>
+{% endblock %}

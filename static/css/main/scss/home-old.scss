@@ -1,0 +1,190 @@
+@import '../../core/scss/_theme.scss';
+@import '_main.scss';
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700');
+
+body {
+    background: #eceef3 !important;
+    font-family: $poppins;
+}
+
+.hero-banner {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    margin-bottom: 42px;
+    .hero-banner-content {
+        position: relative;
+        height: auto;
+        width: 100%;
+        border-radius: 12px;
+        background-image: linear-gradient(-225deg, #FFE29F 0%, #FFA99F 48%, #FF719A 100%);
+        box-shadow: rgba(0, 0, 0, 0.09) 0px 3px 12px;
+        .banner-content {
+            width: 100%;
+            height: 100%;
+            padding: 12px 12px 12px 24px;
+            display: grid;
+            align-items: center;
+            grid-template-columns: 1fr auto;
+            gap: 12px;
+            overflow: hidden;
+            z-index: 2;
+            .banner-content-title {
+                margin-bottom: 0;
+                font-size: 24px;
+                font-weight: 500;
+                color: rgb(43, 43, 43);
+                font-family: $poppins;
+                z-index: 2;
+                span {
+                    font-family: $playfair;
+                    font-style: italic;
+                    font-weight: 700;
+                }
+            }
+            .banner-content-btn {
+                padding: 8px 16px;
+                font-size: 1rem;
+                font-family: $poppins;
+                background: rgba(255, 255, 255, 0.226);
+                backdrop-filter: blur(10px);
+                color: #ffffff;
+                border: 1px solid rgb(255, 255, 255);
+                text-decoration: none;
+                border-radius: 50px;
+                transition: all 0.25s ease-in-out;
+                &:hover {
+                    color: #020202;
+                    background: white;
+                }
+            }
+        }
+    }
+}
+
+.search-main-box {
+    padding-top: 24px;
+}
+
+#businsess_register_section {
+    width: 100%;
+    padding: 0 0 50px 0;
+    .box {
+        position: relative;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 50px 100px;
+        border-radius: 42px;
+        display: grid;
+        place-items: center;
+        background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        box-shadow: $shadow_3;
+        overflow: hidden;
+        img.bg-cover {
+            display: none;
+            position: absolute;
+            opacity: 0.9;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        h3 {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-align: center;
+            color: #1c1c1c;
+            font-family: $platypi;
+            z-index: 2;
+        }
+        p {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 24px;
+            text-align: center;
+            color: #383838;
+            z-index: 2;
+            font-family: $poppins;
+        }
+        a {
+            padding: 12px 18px;
+            border-radius: 50px;
+            border: none;
+            outline: none;
+            background: $primary-color;
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 500;
+            text-decoration: none;
+            font-family: $poppins;
+            transition: all 0.25s ease-in-out;
+        }
+        // Animated Button on Hover Effect the little dark color get from the button
+        a:hover, a:active, a:focus {
+            background: $primary-color-hover;
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .hero-banner {
+        padding: 0 12px;
+        margin-bottom: 24px;
+        .hero-banner-content {
+            border-radius: 12px;
+            .banner-content {
+                padding: 8px;
+                .banner-content-title {
+                    font-size: 14px;
+                    text-align: center;
+                }
+                .banner-content-btn {
+                    padding: 8px 12px;
+                    font-size: 0.875rem;
+                    width: auto;
+                    margin: 0 auto;
+                    background: white;
+                    color: #020202;
+                    border: 0;
+                    border-radius: 8px;
+                }
+            }
+        }
+    }
+    .search-main-box {
+        padding: 0 12px;
+    }
+    #businsess_register_section {
+        padding: 0 12px 24px 12px;
+        .box {
+            padding: 36px;
+            h3 {
+                font-size: 2.5rem;
+                margin-bottom: 18px;
+                font-weight: 700;
+                line-height: 3rem;
+                text-align: start;
+            }
+            p {
+                font-size: 18px;
+                font-weight: 500;
+                letter-spacing: 0;
+                text-align: start;
+            }
+            a:hover, a:active, a:focus {
+                .overlay {
+                    width: 400px;
+                    scale: 2.5;
+                    background: $gold-gradient;
+                }
+            }
+        }
+    }
+}
+
+@import 'components/_portfolio.scss';
+@import 'components/_featured_vendors.scss';
+@import 'components/_cards_container.scss';
+@import 'components/_search_container.scss';

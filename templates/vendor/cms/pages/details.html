@@ -1,0 +1,370 @@
+{% extends 'vendor/cms/base.html' %}{% load static %}
+{% block title %}Details - Eventic{% endblock %}
+
+{% block content %}
+<div class="content-block">
+    <form action="{% url 'vendor:Details' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="main-header" id="MH01">
+            <div class="header-top">
+                <div class="header-title">
+                    <h1>Details</h1>
+                </div>
+                <button type="submit" class="save-btn" name="update_vendor_details"><i class="bi bi-floppy"></i><span>Save</span></button>
+            </div>
+            <div class="header-bottom">
+                <ul>
+                    <li><a href="{% url 'vendor:Team' %}">Team</a></li>
+                    <li><a href="{% url 'vendor:Legal' %}">Legal</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="main-body">
+            {% include 'vendor/comps/messages.html' %}
+            <section class="basic_details_section">
+                <div class="basic_details">
+                    <h2><i class="bi bi-person-vcard"></i>&nbsp;Basic</h2>
+                    <div class="row"> 
+                        <div class="col-md-4"> 
+                            <div class="form-group">
+                                <div class="image-input-group">
+                                    <label for="profile_picture">
+                                        <div class="image-preview-box">
+                                            <img src="{% if vendor.profile_picture %}{{ vendor.profile_picture.url }}{% else %}{% static 'assets/defaults/brand-logo.png' %}{% endif %}" id="label_profile_picture" alt="Profile Picture of {{ vendor.name }} at Eventic">
+                                            <span class="image-label">Brand / Business Logo</span>
+                                        </div>
+                                    </label>
+                                    <button type="button" class="{% if user.profile_picture %}d-block{% else %}d-none{% endif %}" name="remove_file" id="remove_file" data-id="profile_picture" data-image-src="{% static 'assets/defaults/brand-logo.png' %}" data-file-exists="{% if vendor.profile_picture %}true{% else %}false{% endif %}" onclick="removeFile(this)"><i class="bi bi-trash3"></i>&nbsp;Remove</button>
+                                    <input type="file" name="profile_picture" id="profile_picture" class="d-none" accept="image/*" onchange="previewImage(this);">
+                                    <input type="hidden" class="d-none" name="file_exists" id="file_exists" value="{% if vendor.profile_picture %}unchanged{% else %}nofile{% endif %}">
+                                    <div class="form-text">Profile Picture should be in 1:1 ratio. And should be less than 500 KB</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="businessName"><i class="bi bi-briefcase"></i>&nbsp; Business / Brand Name <span class="star">*</span></label>
+                                <input type="text" class="fs-4 q-control" name="name" id="businessName" value="{% if vendor.name %}{{ vendor.name }}{% endif %}" placeholder="--" required>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="email"><i class="bi bi-envelope"></i>&nbsp; Email <span class="star">*</span></label>
+                                        <input type="email" class="q-control" name="email" value="{% if vendor.email %}{{ vendor.email }}{% endif %}" placeholder="--" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="phone"><i class="bi bi-phone"></i>&nbsp; Phone No. <span class="star">*</span></label>
+                                        <input type="text" class="q-control" name="phone" value="{% if vendor.phone %}{{ vendor.phone }}{% endif %}" placeholder="--" required>
+                                    </div>
+                                    <label for="opening_time_closing_time"><i class="bi bi-clock"></i>&nbsp; Contact Time <span class="star">*</span></label>
+                                    <div class="row mb-3">
+                                        <div class="col-6">
+                                            <div class="from-group">
+                                                <label for="opening_time">From</label>
+                                                <input type="time" class="q-control" name="opening_time" value="{% if vendor.opening_time %}{{ vendor.opening_time }}{% else %}09:00:00{% endif %}" placeholder="--" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="from-group">
+                                                <label for="closing_time">To</label>
+                                                <input type="time" class="q-control" name="closing_time" value="{% if vendor.closing_time %}{{ vendor.closing_time }}{% else %}18:00:00{% endif %}" placeholder="--" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="whatsapp"><i class="bi bi-whatsapp"></i>&nbsp; WhatsApp <span class="star">*</span></label>
+                                        <input type="text" class="q-control" name="whatsapp" value="{% if vendor.whatsapp %}{{ vendor.whatsapp }}{% endif %}" placeholder="--" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-area-container mb-3" id="bioContentArea">
+                    <label for="content" class="content-area-label"><span class="content-area-label-text"><i class="bi bi-card-text me-2"></i>Bio</span></label>
+                    <div class="content-area-box">
+                        <div class="content-area custom-scrollbar" data-bs-target="#contentAreaModal" data-bs-toggle="modal" data-id="bioContentArea">{% if vendor.bio %}{{ vendor.bio|safe }}{% endif %}</div>
+                        <textarea name="bio" class="d-none">{% if vendor.bio %}{{ vendor.bio }}{% endif %}</textarea>
+                    </div>
+                </div>
+            </section>
+            <section class="address_details_section">
+                <div class="address_details">
+                    <h2><i class="bi bi-geo-alt-fill"></i>&nbsp;Address Details</h2>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="address">Address <span class="star">*</span></label>
+                                <input type="text" class="q-control" name="address" value="{% if vendor.address %}{{ vendor.address }}{% endif %}" placeholder="--" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="city">City <span class="star">*</span></label>
+                                <input type="text" class="q-control" name="city" value="{% if vendor.city %}{{ vendor.city }}{% endif %}" placeholder="--" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="pincode">Pincode <span class="star">*</span></label>
+                                <input type="number" class="q-control" name="pincode" value="{% if vendor.pincode %}{{ vendor.pincode }}{% endif %}" placeholder="--" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="state">State <span class="star">*</span></label>
+                                <select name="state" class="q-control" id="state" required>
+                                    <option name="Andhra Pradesh" {% if vendor.state == 'Andhra Pradesh' %}selected{% endif %}>Andra Pradesh</option>
+                                    <option name="Arunachal Pradesh" {% if vendor.state == 'Arunachal Pradesh' %}selected{% endif %}>Arunachal Pradesh</option>
+                                    <option name="Assam" {% if vendor.state == 'Assam' %}selected{% endif %}>Assam</option>
+                                    <option name="Bihar" {% if vendor.state == 'Bihar' %}selected{% endif %}>>Bihar</option>
+                                    <option name="Chhattisgarh" {% if vendor.state == 'Chhattisgarh' %}selected{% endif %}>>Chhattisgarh</option>
+                                    <option name="Goa" {% if vendor.state == 'Goa' %}selected{% endif %}>Goa</option>
+                                    <option name="Gujarat" {% if vendor.state == 'Gujarat' %}selected{% endif %}>Gujarat</option>
+                                    <option name="Haryana" {% if vendor.state == 'Haryana' %}selected{% endif %}>Haryana</option>
+                                    <option name="Himachal Pradesh" {% if vendor.state == 'Himachal Pradesh' %}selected{% endif %}>Himachal Pradesh</option>
+                                    <option name="Jharkhand" {% if vendor.state == 'Jharkhand' %}selected{% endif %}>Jharkhand</option>
+                                    <option name="Karnataka" {% if vendor.state == 'Karnataka' %}selected{% endif %}>Karnataka</option>
+                                    <option name="Kerala" {% if vendor.state == 'Kerala' %}selected{% endif %}>Kerala</option>
+                                    <option name="Maharashtra" {% if vendor.state == 'Maharashtra' %}selected{% endif %}>Maharashtra</option>
+                                    <option name="Madhya Pradesh" {% if vendor.state == 'Madhya Pradesh' %}selected{% endif %}>Madhya Pradesh</option>
+                                    <option name="Manipur" {% if vendor.state == 'Manipur' %}selected{% endif %}>Manipur</option>
+                                    <option name="Meghalaya" {% if vendor.state == 'Meghalaya' %}selected{% endif %}>Meghalaya</option>
+                                    <option name="Mizoram" {% if vendor.state == 'Mizoram' %}selected{% endif %}>Mizoram</option>
+                                    <option name="Nagaland" {% if vendor.state == 'Nagaland' %}selected{% endif %}>Nagaland</option>
+                                    <option name="Odisha" {% if vendor.state == 'Odisha' %}selected{% endif %}>Odisha</option>
+                                    <option name="Punjab" {% if vendor.state == 'Punjab' %}selected{% endif %}>Punjab</option>
+                                    <option name="Rajasthan" {% if vendor.state == 'Rajasthan' %}selected{% endif %}>Rajasthan</option>
+                                    <option name="Sikkim" {% if vendor.state == 'Sikkim' %}selected{% endif %}>Sikkim</option>
+                                    <option name="Tamil Nadu" {% if vendor.state == 'Tamil Nadu' %}selected{% endif %}>Tamil Nadu</option>
+                                    <option name="Tripura" {% if vendor.state == 'Tripura' %}selected{% endif %}>Tripura</option>
+                                    <option name="Telangana" {% if vendor.state == 'Telangana' %}selected{% endif %}>Telangana</option>
+                                    <option name="Uttar Pradesh" {% if vendor.state == 'Uttar Pradesh' %}selected{% endif %}>Uttar Pradesh</option>
+                                    <option name="Uttarakhand" {% if vendor.state == 'Uttarakhand' %}selected{% endif %}>Uttarakhand</option>
+                                    <option name="West Bengal" {% if vendor.state == 'West Bengal' %}selected{% endif %}>West Bengal</option>
+                                    <option name="Andaman & Nicobar" {% if vendor.state == 'Goa' %}selected{% endif %}>Andaman & Nicobar</option>
+                                    <option name="Chandigarh" {% if vendor.state == 'Goa' %}selected{% endif %}>Chandigarh</option>
+                                    <option name="Dadra & Nagar Haveli and Daman & Diu" {% if vendor.state == 'Dadra & Nagar Haveli and Daman & Diu' %}selected{% endif %}>Dadra & Nagar Haveli and Daman & Diu</option>
+                                    <option name="Delhi" {% if vendor.state == 'Delhi' %}selected{% endif %}>Delhi</option>
+                                    <option name="Jammu & Kashmir" {% if vendor.state == 'Jammu & Kashmir' %}selected{% endif %}>Jammu & Kashmir</option>
+                                    <option name="Ladakh" {% if vendor.state == 'Ladakh' %}selected{% endif %}>Ladakh</option>
+                                    <option name="Lakshadweep" {% if vendor.state == 'Lakshadweep' %}selected{% endif %}>Lakshadweep</option>
+                                    <option name="Puducherry" {% if vendor.state == 'Puducherry' %}selected{% endif %}>Puducherry</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="country">Country <span class="star">*</span></label>
+                                <select name="country" class="q-control" id="country">
+                                    <option value="India" selected>India</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="social_media_section">
+                <div class="social_media">
+                    <h2><i class="bi bi-share-fill"></i>&nbsp; Social Media</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="website"><i class="bi bi-globe2"></i>&nbsp; Website</label>
+                                <input type="text" class="q-control" name="website" value="{% if vendor.website %}{{ vendor.website }}{% endif %}" placeholder="--">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="instagram"><i class="bi bi-instagram"></i>&nbsp; Instagram</label>
+                                <input type="text" class="q-control" name="instagram" value="{% if vendor.instagram %}{{ vendor.instagram }}{% endif %}" placeholder="--">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="facebook"><i class="bi bi-facebook"></i>&nbsp; Facebook</label>
+                                <input type="text" class="q-control" name="facebook" value="{% if vendor.facebook %}{{ vendor.facebook }}{% endif %}" placeholder="--">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="twitter"><i class="bi bi-twitter"></i>&nbsp; Twitter</label>
+                                <input type="text" class="q-control" name="twitter" value="{% if vendor.twitter %}{{ vendor.twitter }}{% endif %}" placeholder="--">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="embed_map_section">
+                <div class="embed_map">
+                    <h2><i class="bi bi-geo-alt-fill"></i>&nbsp;Embed Map</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="from-group mb-3">
+                                <label for="embed-map" class="form-label"><i class="bi bi-geo-alt-fill"></i>&nbsp;Google Map Code</label>
+                                <div class="text-box">
+                                    <textarea type="text" class="autoResizeTextarea q-control" name="embed_map" id="embed_map" placeholder="Code here..." onkeyup="updateEmbedMap(this);">{% if vendor.embed_map %}{{ vendor.embed_map }}{% endif %}</textarea>
+                                </div>
+                            </div>
+                            <p>To know how to embed google map, <button type="button" class="btn btn-link p-0" data-bs-toggle="modal" data-bs-target="#embedMapModal">click here</button>.</p>
+                            <div class="modal fade" id="embedMapModal" tabindex="-1" aria-hidden="true" aria-labelledby="embedMapModalLabel" data-bs-backdrop="static">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <div class="row">
+                                                <div class="col-auto pe-1">
+                                                    <img src="https://lh3.googleusercontent.com/9tLfTpdILdHDAvGrRm7GdbjWdpbWSMOa0csoQ8pUba9tLP8tq7M4Quks1xuMQAVnAxVfryiDXRzZ-KDnkPv8Sm4g_YFom1ltQHjQ6Q" alt="Google Maps Logo" height="28px" width="28px">
+                                                </div>
+                                                <div class="col ps-1">
+                                                    <h5 class="modal-title" id="embedMapModalLabel">Embed Google Map</h5>
+                                                </div>
+                                            </div>
+                                            <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body px-4">
+                                            <p>How to embed google map in your website?</p>
+                                            <ol>
+                                                <li>Go to google maps</li>
+                                                <li>Search for your location</li>
+                                                <li>Click and select your location (<i class="bi bi-geo-alt-fill text-danger"></i> a marker will appear)</li>
+                                                <li>Click on "<strong>Share</strong>" button</li>
+                                                <li>Click on "<strong>Embed Google Map</strong>" button</li>
+                                                <li>Click on <span class="text-primary">COPY HTML</span></li>
+                                                <li>Paste the code in <strong><i class="bi bi-geo-alt-fill"></i> Google Map Code</strong></li>
+                                            </ol>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="map w-100 rounded-3 border border-secondary overflow-hidden">
+                                <iframe 
+                                    id="map_iframe"
+                                    src="{% if vendor.embed_map %}{{ vendor.embed_map }}{% else %}https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d30773484.55170563!2d61.0245165611659!3d19.69009515037612!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30635ff06b92b791%3A0xd78c4fa1854213a6!2sIndia!5e0!3m2!1sen!2sin!4v1719429166988!5m2!1sen!2sin{% endif %}" 
+                                    width="100%" 
+                                    height="250" 
+                                    style="border:0;" 
+                                    loading="lazy" 
+                                    referrerpolicy="no-referrer-when-downgrade"
+                                ></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </form>
+</div>
+
+{% include 'cms/modals/_contentAreaModal.html' %}
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+    // List of not allowed characters
+    const notAllowedChars = /[@\/\\:;,.*?#"<>|\'\(\)\[\]\{\}`!%$^&*+=~–—_-]/g;
+
+    // Function to check and remove not allowed characters on keyup
+    document.getElementById('businessName').addEventListener('keyup', function(event) {
+        let input = this.value;
+        
+        // Check for any disallowed character in the input and remove it
+        if (notAllowedChars.test(input)) {
+            alert("Some characters you entered are not allowed!");
+            this.value = input.replace(notAllowedChars, ''); // Remove all disallowed characters
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const textareas = document.querySelectorAll('.autoResizeTextarea');
+
+        textareas.forEach(textarea => {
+            textarea.addEventListener('input', function() {
+                this.style.height = 'auto';  // Reset height to auto to correctly calculate new scrollHeight
+                this.style.height = this.scrollHeight + 'px';  // Set height to new scrollHeight
+            });
+        });
+    });
+
+    function previewImage(input) {
+        let remove_btn = document.getElementById("remove_file");
+        if (!checkFileSize(input)) {
+            remove_btn.setAttribute("data-file-exists", "false");
+            remove_btn.classList.remove("d-block");
+            remove_btn.classList.add("d-none");
+            document.getElementById("file_exists").value = "removed";
+            return;
+        }
+        var file = input.files[0];
+        const id = input.id;
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            document.getElementById("label_" + id).src = e.target.result;
+            remove_btn.setAttribute("data-file-exists", "true");
+            remove_btn.classList.remove("d-none");
+            remove_btn.classList.add("d-block");
+            document.getElementById("file_exists").value = "changed";
+        };
+
+        reader.readAsDataURL(file);
+    }
+
+    function checkFileSize(input_file) {
+        const MAX_FILE_SIZE = 500 * 1024; // 500KB in bytes
+
+        const files = input_file.files;
+        const id = input_file.id;
+
+        if (files && files[0]) {
+            const file = files[0];
+            const fileSize = file.size;
+
+            if (fileSize > MAX_FILE_SIZE) {
+                // Clear the selected file
+                input_file.value = "";
+                
+                // Display warning message
+                alert(
+                    "Error: File size exceeds the maximum limit of 500KB. Please choose a smaller image."
+                );
+                return false;
+            }
+            return true;
+        }
+    }
+
+    function removeFile(e) {
+        const id = e.getAttribute("data-id");
+        let input_file = document.getElementById(id)
+        input_file.value = "";
+        document.getElementById("label_" + id).src = e.getAttribute("data-image-src");
+        e.setAttribute("data-file-exists", "false");
+        e.classList.remove("d-block");
+        e.classList.add("d-none");
+        document.getElementById("file_exists").value = "removed";
+    }
+
+    function updateEmbedMap(e) {
+        const embedMap = e.value;
+        const regex = /src="([^"]+)"/;
+        const match = embedMap.match(regex);
+        if (match) {
+            document.getElementById("map_iframe").setAttribute("src", match[1]);
+            e.setAttribute("value", match[1]);
+            e.value = match[1];
+        }
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,108 @@
+{% extends 'invitation/cms/base.html' %}
+{% block title %}Invitation Dashboard | Eventic{% endblock %}
+
+{% block content %}
+<div class="content-block">
+    <div class="main-header" id="MH01">
+        <div class="header-top">
+            <div class="header-title">
+                <a href="{% url 'user:Invitations' %}" class="back-btn"><i class="bi bi-arrow-left"></i></a>
+                <h1>Invitation Details</h1>
+            </div>
+            <a href="{% url 'main:invitation' id=invitation.id %}" class="save-btn" target="_blank"><i class="bi bi-box-arrow-up-right"></i><span>View</span></a>
+        </div>
+        <div class="header-bottom">
+            <ul>
+                <li><a href="{% url 'invitation:cms_rsvps' id=invitation.id %}">RSVP's</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main-body">
+        <div class="container">
+            <h6 class="text-center">{{ invitation.template.name }}</h6>
+            <h2 class="text-center mb-4">{{ invitation.details.groom }} & {{ invitation.details.bride }}</h2>
+            <hr>
+            <div class="row mt-5 align-items-center justify-content-center">
+                <div class="col-md-4 col-12">
+                    <h5 class="text-center">RSVP Responses</h5>
+                    <canvas id="rsvpPieChart" height="200"></canvas>
+                </div>
+                <div class="col-md-4 col-12">
+                    <a href="{% url 'invitation:cms_rsvps' id=invitation.id %}" class="btn btn-outline-primary card rounded-4 p-2">
+                        <div class="card-body">
+                            <h6 class="text-center">RSVP's Count</h6>
+                            <h1 class="text-center mb-0">{{ invitation.rsvps_count }}</h1>
+                        </div>
+                    </a>
+                    <div class="d-flex flex-column align-items-center mt-2">
+                        <div class="d-flex justify-content-between w-100 p-3 border-secondary mb-2 rounded-3 bg-light">
+                            <span>Yes</span>
+                            <span>{{ rsvp_yes_count }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between w-100 p-3 border-secondary mb-2 rounded-3 bg-light">
+                            <span>No</span>
+                            <span>{{ rsvp_no_count }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between w-100 p-3 border-secondary mb-2 rounded-3 bg-light">
+                            <span>Maybe</span>
+                            <span>{{ rsvp_maybe_count }}</span>
+                        </div>
+                        <a href="{% url 'invitation:cms_rsvps' id=invitation.id %}" class="btn btn-outline-primary w-100 border-0 rounded-3">View All RSVP's<i class="bi bi-arrow-right ms-2"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const ctx = document.getElementById('rsvpPieChart').getContext('2d');
+        const data = [
+                `{{ rsvp_yes_count }}`,
+                `{{ rsvp_no_count }}`,
+                `{{ rsvp_maybe_count }}`
+            ].map(Number); // Convert string to number
+        const rsvpData = {
+            labels: ['Yes', 'No', 'Maybe'],
+            datasets: [{
+                label: 'RSVP Responses',
+                data: data,
+                backgroundColor: ['#4CAF50', '#F44336', '#FFC107'],
+                hoverOffset: 4
+            }]
+        };
+
+        console.log(rsvpData);
+        
+
+        new Chart(ctx, {
+            type: 'pie',
+            data: rsvpData,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (tooltipItem) {
+                                const total = rsvpData.datasets[0].data.reduce((a, b) => a + b, 0);
+                                const value = rsvpData.datasets[0].data[tooltipItem.dataIndex];
+                                const percentage = ((value / total) * 100).toFixed(2);
+                                return `${tooltipItem.label}: ${value} (${percentage}%)`;
+                            }
+                        }
+                    }
+                },
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,1324 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+@font-face {
+  font-family: "Geist";
+  src: url("https://eventic-webapp.s3.ap-south-1.amazonaws.com/static/fonts/Geist/GeistVariableVF.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Google-sans";
+  src: url("https://eventic-webapp.s3.ap-south-1.amazonaws.com/static/fonts/google-sans-cufonfonts/ProductSans-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Roboto";
+  src: url("https://eventic-webapp.s3.ap-south-1.amazonaws.com/static/fonts/Roboto/Roboto-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Platypi";
+  src: url("https://eventic-webapp.s3.ap-south-1.amazonaws.com/static/fonts/Platypi/static/Platypi-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "SF Pro", "SF Pro Text", "Myriad Set Pro", system-ui, "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  src: url("https://eventic-webapp.s3.ap-south-1.amazonaws.com/static/fonts/SF-Pro/SFPRODISPLAYREGULAR.woff2") format("woff2");
+  font-weight: normal;
+}
+@font-face {
+  font-family: "Great Vibes";
+  src: url("https://eventic-webapp.s3.ap-south-1.amazonaws.com/static/fonts/great-vibes/GreatVibes-Regular.ttf") format("truetype");
+  font-weight: normal;
+}
+.geist {
+  font-family: "Geist", "Open Sans", sans-serif !important;
+}
+
+.google-sans {
+  font-family: "Google-sans", "Open Sans", sans-serif !important;
+}
+
+.poppins {
+  font-family: "Poppins", sans-serif !important;
+}
+
+.roboto {
+  font-family: "Roboto", sans-serif !important;
+}
+
+.platypi {
+  font-family: "Platypi", sans-serif !important;
+}
+
+.sf-pro {
+  font-family: "SF Pro", "Open Sans", Helvetica, sans-serif !important;
+}
+
+.playfair {
+  font-family: "Playfair Display", serif !important;
+}
+
+.noto-sans {
+  font-family: "Noto Sans", sans-serif !important;
+}
+
+.great-vibes {
+  font-family: "Great Vibes" !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 0;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgb(217, 224, 231);
+  border-radius: 8px;
+}
+
+.overflow-x-hidden {
+  overflow-x: hidden;
+}
+
+.overflow-y-hidden {
+  overflow-y: hidden;
+}
+
+.ls-0 {
+  letter-spacing: 0px;
+}
+
+.ls-1 {
+  letter-spacing: 1px;
+}
+
+.ls-2 {
+  letter-spacing: 2px;
+}
+
+.ls-3 {
+  letter-spacing: 3px;
+}
+
+.ls-4 {
+  letter-spacing: 4px;
+}
+
+.ls-5 {
+  letter-spacing: 5px;
+}
+
+label.form-check-label {
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+
+.dropdown-item-danger {
+  color: #dc3545;
+  background: transparent;
+}
+
+.dropdown-item-danger:focus,
+.dropdown-item-danger:hover {
+  color: #bd362f;
+  background: #f8f9fa;
+}
+
+label.switch {
+  position: relative;
+  display: inline-block;
+  width: 58px;
+  height: 32px;
+}
+label.switch input[type=checkbox] {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+label.switch input[type=checkbox]:checked + .slider {
+  background-color: #2196f3;
+}
+label.switch input[type=checkbox]:focus + .slider {
+  box-shadow: 0 0 1px #2196f3;
+}
+label.switch input[type=checkbox]:checked + .slider:before {
+  transform: translateX(26px);
+}
+label.switch span.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+}
+label.switch span.slider:before {
+  position: absolute;
+  content: "";
+  height: 24px;
+  width: 24px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+}
+label.switch span.round {
+  border-radius: 34px;
+}
+label.switch span.round:before {
+  border-radius: 50%;
+}
+
+.no-results-box {
+  padding: 50px;
+  border-radius: 32px;
+  background: #fff;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.no-results-box h2 {
+  font-size: 2rem;
+  margin-bottom: 16px;
+}
+.no-results-box h3 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #606e9a;
+  opacity: 0.4;
+  font-family: "Poppins", sans-serif;
+}
+.no-results-box p {
+  font-size: 1rem;
+  max-width: 560px;
+}
+
+.btn-theme-blue {
+  background: #4364d3;
+  color: #ffffff;
+  transition: all 0.25s ease-in-out;
+}
+.btn-theme-blue:hover {
+  background: #3b59ba;
+  color: #ffffff;
+}
+
+.btn-outline-theme-blue {
+  border-color: #4364d3;
+  color: #4364d3;
+  transition: all 0.25s ease-in-out;
+}
+.btn-outline-theme-blue:hover {
+  background: #4364d3;
+  color: #ffffff;
+}
+
+@supports (-webkit-appearance: none) or (-moz-appearance: none) {
+  .checkbox-wrapper label {
+    cursor: pointer;
+  }
+  .checkbox-wrapper input[type=checkbox] {
+    margin: 0;
+    margin-top: 2px;
+    --active: #275efe;
+    --active-inner: #fff;
+    --focus: 2px rgba(39, 94, 254, 0.3);
+    --border: #bbc1e1;
+    --border-hover: #275efe;
+    --background: #fff;
+    --disabled: #f6f8ff;
+    --disabled-inner: #e1e6f9;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    height: 22px;
+    outline: none;
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+    cursor: pointer;
+    box-shadow: none !important;
+    border: 1px solid var(--bc, var(--border));
+    background: var(--b, var(--background));
+    transition: background 0.3s, border-color 0.3s, box-shadow 0.2s;
+  }
+  .checkbox-wrapper input[type=checkbox]:after {
+    content: "";
+    display: block;
+    left: 0;
+    top: 0;
+    position: absolute;
+    transition: transform var(--d-t, 0.3s) var(--d-t-e, ease), opacity var(--d-o, 0.2s);
+  }
+  .checkbox-wrapper input[type=checkbox]:checked {
+    --b: var(--active);
+    --bc: var(--active);
+    --d-o: 0.3s;
+    --d-t: 0.6s;
+    --d-t-e: cubic-bezier(0.2, 0.85, 0.32, 1.2);
+  }
+  .checkbox-wrapper input[type=checkbox]:disabled {
+    --b: var(--disabled);
+    cursor: not-allowed;
+    opacity: 0.9;
+  }
+  .checkbox-wrapper input[type=checkbox]:disabled:checked {
+    --b: var(--disabled-inner);
+    --bc: var(--border);
+  }
+  .checkbox-wrapper input[type=checkbox]:disabled + label {
+    cursor: not-allowed;
+  }
+  .checkbox-wrapper input[type=checkbox]:hover:not(:checked):not(:disabled) {
+    --bc: var(--border-hover);
+  }
+  .checkbox-wrapper input[type=checkbox]:focus {
+    box-shadow: 0 0 0 var(--focus);
+  }
+  .checkbox-wrapper input[type=checkbox]:not(.switch) {
+    width: 21px;
+  }
+  .checkbox-wrapper input[type=checkbox]:not(.switch):after {
+    opacity: var(--o, 0);
+  }
+  .checkbox-wrapper input[type=checkbox]:not(.switch):checked {
+    --o: 1;
+  }
+  .checkbox-wrapper input[type=checkbox] + label {
+    display: inline-block;
+    vertical-align: middle;
+    cursor: pointer;
+    margin-left: 4px;
+  }
+  .checkbox-wrapper input[type=checkbox]:not(.switch) {
+    border-radius: 7px;
+  }
+  .checkbox-wrapper input[type=checkbox]:not(.switch):after {
+    width: 5px;
+    height: 9px;
+    border: 2px solid var(--active-inner);
+    border-top: 0;
+    border-left: 0;
+    left: 7px;
+    top: 4px;
+    transform: rotate(var(--r, 20deg));
+  }
+  .checkbox-wrapper input[type=checkbox]:not(.switch):checked {
+    --r: 43deg;
+  }
+  .checkbox-wrapper input[type=checkbox].switch {
+    width: 38px;
+    border-radius: 11px;
+  }
+  .checkbox-wrapper input[type=checkbox].switch:after {
+    left: 2px;
+    top: 2px;
+    border-radius: 50%;
+    width: 17px;
+    height: 17px;
+    background: var(--ab, var(--border));
+    transform: translateX(var(--x, 0));
+  }
+  .checkbox-wrapper input[type=checkbox].switch:checked {
+    --ab: var(--active-inner);
+    --x: 17px;
+  }
+  .checkbox-wrapper input[type=checkbox].switch:disabled:not(:checked):after {
+    opacity: 0.6;
+  }
+}
+.checkbox-wrapper * {
+  box-sizing: inherit;
+}
+
+.checkbox-wrapper *:before,
+.checkbox-wrapper *:after {
+  box-sizing: inherit;
+}
+
+/* From Uiverse.io by alexruix */
+.square-box-loader {
+  width: 48px;
+  height: 48px;
+  margin: auto;
+  position: relative;
+}
+
+.square-box-loader:before {
+  content: "";
+  width: 48px;
+  height: 5px;
+  background: rgba(67, 101, 211, 0.2980392157);
+  position: absolute;
+  top: 60px;
+  left: 0;
+  border-radius: 50%;
+  animation: shadow324 0.5s linear infinite;
+}
+
+.square-box-loader:after {
+  content: "";
+  width: 100%;
+  height: 100%;
+  background: #4364d3;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 4px;
+  animation: jump7456 0.5s linear infinite;
+}
+
+.overlay-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.5);
+  -webkit-backdrop-filter: blur(10px);
+          backdrop-filter: blur(10px);
+  display: none;
+  z-index: 9999;
+}
+.overlay-loader .loading-container {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes jump7456 {
+  15% {
+    border-bottom-right-radius: 3px;
+  }
+  25% {
+    transform: translateY(9px) rotate(22.5deg);
+  }
+  50% {
+    transform: translateY(18px) scale(1, 0.9) rotate(45deg);
+    border-bottom-right-radius: 40px;
+  }
+  75% {
+    transform: translateY(9px) rotate(67.5deg);
+  }
+  100% {
+    transform: translateY(0) rotate(90deg);
+  }
+}
+@keyframes shadow324 {
+  0%, 100% {
+    transform: scale(1, 1);
+  }
+  50% {
+    transform: scale(1.2, 1);
+  }
+}
+/* HTML: <div class="loader"></div> */
+.box-circle-loader {
+  width: 65px;
+  aspect-ratio: 1;
+  position: relative;
+}
+
+.box-circle-loader:before,
+.box-circle-loader:after {
+  content: "";
+  position: absolute;
+  border-radius: 50px;
+  box-shadow: 0 0 0 3px inset #1a1a1a;
+  animation: l5 2.5s infinite;
+}
+
+.box-circle-loader:after {
+  animation-delay: -1.25s;
+  border-radius: 0;
+}
+
+@keyframes l5 {
+  0% {
+    inset: 0 35px 35px 0;
+  }
+  12.5% {
+    inset: 0 35px 0 0;
+  }
+  25% {
+    inset: 35px 35px 0 0;
+  }
+  37.5% {
+    inset: 35px 0 0 0;
+  }
+  50% {
+    inset: 35px 0 0 35px;
+  }
+  62.5% {
+    inset: 0 0 0 35px;
+  }
+  75% {
+    inset: 0 0 35px 35px;
+  }
+  87.5% {
+    inset: 0 0 35px 0;
+  }
+  100% {
+    inset: 0 35px 35px 0;
+  }
+}
+@font-face {
+  font-family: "bavista-soulare";
+  src: url("../../../fonts/bavista-soulare/Bavista_Soulare.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+body {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  background: #f2f2f2 !important;
+}
+
+main section#heroContainer {
+  width: 100%;
+  padding: 0 32px;
+}
+main section#heroContainer header {
+  background-image: linear-gradient(to right, #434343 0%, black 100%);
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
+  border: 1px solid white;
+  border-top: 0;
+  max-width: 1000px;
+  border-radius: 0 0 24px 24px;
+  margin: 0 auto;
+  padding: 16px 24px;
+  margin-bottom: 24px;
+}
+main section#heroContainer header nav {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+main section#heroContainer header nav .logo {
+  height: 28px;
+  width: auto;
+}
+main section#heroContainer header nav .logo img {
+  height: 28px;
+  width: auto;
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+main section#heroContainer header nav ul.pages {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+main section#heroContainer header nav ul.pages li.page {
+  padding: 8px 0 4px 0;
+  border-bottom: 1px solid transparent;
+  margin: 0;
+  transition: all 0.25s ease-in-out;
+}
+main section#heroContainer header nav ul.pages li.page a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  font-family: "Poppins", sans-serif;
+  transition: all 0.25s ease-in-out;
+}
+main section#heroContainer header nav ul.pages li.page:hover {
+  border-bottom: 1px solid white;
+}
+main section#heroContainer header nav ul.socials {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  gap: 24px;
+  padding: 0;
+  margin: 0;
+}
+main section#heroContainer header nav ul.socials li.social {
+  padding: 0;
+  margin: 0;
+}
+main section#heroContainer header nav ul.socials li.social a {
+  text-decoration: none;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  font-family: "Poppins", sans-serif;
+  transition: all 0.25s ease-in-out;
+}
+main section#heroContainer header nav ul.socials li.social button.hamburger-btn {
+  display: none;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: white;
+  font-size: 20px;
+  padding: 0;
+  margin: 0;
+  transition: all 0.25s ease-in-out;
+}
+main section#heroContainer .content-box {
+  min-height: calc(100vh - 125px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+main section#heroContainer .content-box h1 {
+  font-family: "bavista-soulare", "Open Sans", sans-serif;
+  color: #000;
+  font-size: 7.5rem;
+  line-height: 7rem;
+  margin-bottom: 24px;
+}
+main section#heroContainer .content-box p {
+  font-family: "Poppins", sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: #282828;
+  margin-bottom: 75px;
+}
+main section#heroContainer .content-box .cta-btn-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+main section#heroContainer .content-box .cta-btn-group a {
+  text-decoration: none;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-size: 18px;
+  transition: all 0.25s ease-in-out;
+}
+main section#heroContainer .content-box .cta-btn-group a:hover {
+  scale: 1.05;
+}
+main section#heroContainer .content-box .cta-btn-group .btn-cta-primary {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
+  background-image: linear-gradient(-225deg, #A445B2 0%, #D41872 52%, #FF0066 100%);
+  color: rgb(255, 255, 255);
+}
+main section#heroContainer .content-box .cta-btn-group .btn-cta-secoundary {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
+  background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #ddd;
+}
+main section#eHookContainer {
+  margin: 50px 0;
+}
+main section#eHookContainer .content-box {
+  padding: 50px 0;
+  max-width: 800px;
+  background: #fff;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  border-radius: 42px;
+  padding: 24px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
+}
+main section#eHookContainer .content-box .mockup-box {
+  border-radius: 18px;
+  overflow: hidden;
+  aspect-ratio: 2/3;
+  background: #eee;
+}
+main section#eHookContainer .content-box .mockup-box img {
+  height: 100%;
+  width: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+main section#eHookContainer .content-box .content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+main section#eHookContainer .content-box .content h4 {
+  font-size: 3rem;
+  font-weight: 700;
+  font-family: "Poppins", sans-serif;
+  margin-bottom: 24px;
+}
+main section#eHookContainer .content-box .content p {
+  font-size: 1.5rem;
+  font-family: "Poppins", sans-serif;
+}
+main section#eHookContainer .content-box .content .cta-action-btn {
+  display: flex;
+  justify-content: flex-end;
+}
+main section#eHookContainer .content-box .content .cta-action-btn a.btn-goto {
+  width: auto;
+  text-decoration: none;
+  font-size: 20px;
+  margin-bottom: 0;
+  color: #333;
+  font-family: "Poppins", sans-serif;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 8px;
+  transition: all 0.25s ease-in-out;
+}
+main section#eHookContainer .content-box .content .cta-action-btn a.btn-goto .btn-icon {
+  display: grid;
+  place-items: center;
+  height: 32px;
+  width: 32px;
+  color: white;
+  background: #333;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
+  border-radius: 50px;
+  transition: all 0.25s ease-in-out;
+}
+main section#eHookContainer .content-box .content .cta-action-btn a.btn-goto .btn-icon i {
+  font-size: 16px;
+}
+main section#eHookContainer .content-box .content .cta-action-btn a.btn-goto:hover {
+  color: #000;
+}
+main section#eHookContainer .content-box .content .cta-action-btn a.btn-goto:hover .btn-icon {
+  background: #000;
+}
+main section#painPointsContainer .content-box {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 50px 0;
+}
+main section#painPointsContainer .content-box h2 {
+  font-size: 3rem;
+  line-height: 3rem;
+  font-weight: 400;
+  font-family: "Poppins", sans-serif;
+  margin-bottom: 80px;
+}
+main section#painPointsContainer .content-box .cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 24px;
+}
+main section#painPointsContainer .content-box .cards .card {
+  position: relative;
+  padding: 24px;
+  border-radius: 24px;
+  border: 0;
+  background: #fff;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
+  transition: all 0.25s ease-in-out;
+}
+main section#painPointsContainer .content-box .cards .card img {
+  position: absolute;
+  top: -50px;
+  right: 12px;
+  height: 150px;
+  width: 150px;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+main section#painPointsContainer .content-box .cards .card h5 {
+  margin-bottom: 12px;
+  font-size: 4rem;
+  font-weight: 200;
+  font-family: "Inter", sans-serif;
+  opacity: 0.25;
+}
+main section#painPointsContainer .content-box .cards .card p {
+  font-family: "Poppins", sans-serif;
+  font-size: 24px;
+  font-weight: 500;
+  color: #282828;
+  margin-bottom: 12px;
+}
+main section#painPointsContainer .content-box .cta-action-btn {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 50px;
+}
+main section#painPointsContainer .content-box .cta-action-btn a.btn-goto {
+  width: auto;
+  text-decoration: none;
+  font-size: 24px;
+  margin-bottom: 0;
+  color: #333;
+  font-family: "Poppins", sans-serif;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 8px;
+  transition: all 0.25s ease-in-out;
+}
+main section#painPointsContainer .content-box .cta-action-btn a.btn-goto .btn-icon {
+  display: grid;
+  place-items: center;
+  height: 32px;
+  width: 32px;
+  color: white;
+  background: #333;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
+  border-radius: 50px;
+  transition: all 0.25s ease-in-out;
+}
+main section#painPointsContainer .content-box .cta-action-btn a.btn-goto .btn-icon i {
+  font-size: 16px;
+}
+main section#painPointsContainer .content-box .cta-action-btn a.btn-goto:hover {
+  color: #000;
+}
+main section#painPointsContainer .content-box .cta-action-btn a.btn-goto:hover .btn-icon {
+  background: #000;
+}
+main section#templateShowcaseContainer .content-box {
+  margin: 0 auto;
+  padding: 50px 0;
+  width: 100%;
+}
+main section#templateShowcaseContainer .content-box h2 {
+  font-size: 3rem;
+  line-height: 3rem;
+  font-style: italic;
+  text-align: center;
+  font-family: "Playfair Display", serif;
+  font-weight: 600;
+  margin-bottom: 50px;
+}
+main section#templateShowcaseContainer .content-box .scrolling-wrapper {
+  width: 100%;
+  padding-bottom: 24px;
+  display: flex;
+  align-items: flex-start;
+  white-space: nowrap;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  gap: 24px;
+}
+main section#templateShowcaseContainer .content-box .scrolling-wrapper::-webkit-scrollbar {
+  display: none;
+}
+main section#templateShowcaseContainer .content-box .scrolling-wrapper .card-dummy {
+  display: inline-block;
+  flex: 0 0 180px;
+  scroll-snap-align: start;
+  aspect-ratio: 5/6;
+}
+main section#templateShowcaseContainer .content-box .scrolling-wrapper .card {
+  display: inline-block;
+  position: relative;
+  flex: 0 0 360px;
+  scroll-snap-align: start;
+  aspect-ratio: 5/7;
+  background: #eee;
+  border-radius: 32px;
+  overflow: hidden;
+}
+main section#templateShowcaseContainer .content-box .scrolling-wrapper .card h5 {
+  position: absolute;
+  bottom: 24px;
+  left: 12px;
+  right: 12px;
+  font-family: "Poppins", sans-serif;
+  font-size: 2rem;
+  text-align: center;
+  color: white;
+  font-weight: 500;
+}
+main section#templateShowcaseContainer .content-box .scrolling-wrapper .card img {
+  height: 100%;
+  width: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+main section#pricingContainer .content-box {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 50px 0;
+}
+main section#pricingContainer .content-box h2 {
+  font-size: 3rem;
+  line-height: 3rem;
+  font-weight: 400;
+  font-family: "Playfair Display", serif;
+  font-style: italic;
+  margin-bottom: 24px;
+}
+main section#pricingContainer .content-box .pricing-structure {
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+  gap: 24px;
+}
+main section#pricingContainer .content-box .pricing-structure h3 {
+  grid-column: 1/-1;
+  font-size: 1.5rem;
+  line-height: 1.5rem;
+  font-weight: 400;
+  font-family: "Poppins", sans-serif;
+  margin-bottom: 24px;
+}
+main section#pricingContainer .content-box .pricing-structure .free-price-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 50px;
+  border-radius: 42px;
+  background: #fff;
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 0px 16px;
+  background-image: linear-gradient(to right, #ed6ea0 0%, #ec8c69 100%);
+}
+main section#pricingContainer .content-box .pricing-structure .free-price-box i.bi-gift {
+  font-size: 1.5rem;
+  color: white;
+}
+main section#pricingContainer .content-box .pricing-structure .free-price-box h4 {
+  font-size: 3rem;
+  font-weight: 400;
+  font-family: "Poppins", sans-serif;
+  margin: 12px 0;
+  color: white;
+}
+main section#pricingContainer .content-box .pricing-structure .free-price-box p {
+  font-size: 1rem;
+  font-family: "Poppins", sans-serif;
+  color: white;
+}
+main section#pricingContainer .content-box .pricing-structure .free-price-box a.btn-cta-try-free {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: auto;
+  text-decoration: none;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-size: 18px;
+  background: #ffffff;
+  color: #333;
+  transition: all 0.25s ease-in-out;
+}
+main section#pricingContainer .content-box .pricing-structure .free-price-box a.btn-cta-try-free:hover {
+  scale: 1.05;
+}
+main section#pricingContainer .content-box .pricing-structure .duration-price-box {
+  padding: 50px;
+  border-radius: 42px;
+  background: #fff;
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 0px 16px;
+}
+main section#pricingContainer .content-box .pricing-structure .duration-price-box h4 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  font-family: "Poppins", sans-serif;
+  margin-bottom: 12px;
+}
+main section#pricingContainer .content-box .pricing-structure .duration-price-box p {
+  font-size: 1rem;
+  font-family: "Poppins", sans-serif;
+  margin-bottom: 12px;
+}
+main section#pricingContainer .content-box .pricing-structure .duration-price-box ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+main section#pricingContainer .content-box .pricing-structure .duration-price-box ul li {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: start;
+  gap: 8px;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  margin-bottom: 4px;
+}
+main section#pricingContainer .content-box .pricing-structure .duration-price-box ul li h5 {
+  margin-bottom: 0;
+  font-size: 1rem;
+  font-family: "Poppins", sans-serif;
+}
+main section#pricingContainer .content-box .pricing-structure .duration-price-box ul li p {
+  margin-bottom: 0;
+  font-size: 1rem;
+  text-align: end;
+}
+main section#pricingContainer .content-box .pricing-structure .duration-price-box ul li p small {
+  font-size: 0.75rem;
+  font-family: "Poppins", sans-serif;
+  color: #111;
+}
+main section#pricingContainer .content-box .pricing-structure .duration-price-box ul li i.bi-arrow-right {
+  font-size: 1rem;
+  color: #777;
+}
+main section#pricingContainer .content-box .pricing-structure .duration-price-box ul li:first-child {
+  background-image: linear-gradient(to right, #ed6ea0 0%, #ec8c69 100%);
+  color: white;
+}
+main section#pricingContainer .content-box .pricing-structure .duration-price-box ul li:first-child i {
+  color: white;
+}
+main section#pricingContainer .content-box .pricing-structure .duration-price-box p.payment-policy, main section#pricingContainer .content-box .pricing-structure .duration-price-box p.note {
+  font-size: 0.75rem;
+  font-family: "Poppins", sans-serif;
+  margin-top: 12px;
+  color: #666;
+  margin-bottom: 0;
+  text-align: end;
+}
+main section#pricingContainer .content-box .pricing-structure .duration-price-box p.payment-policy a, main section#pricingContainer .content-box .pricing-structure .duration-price-box p.note a {
+  color: #333;
+  text-decoration: none;
+}
+main section#pricingContainer .content-box .pricing-structure .duration-price-box p.payment-policy a:hover, main section#pricingContainer .content-box .pricing-structure .duration-price-box p.note a:hover {
+  text-decoration: underline;
+}
+main section#pricingContainer .content-box .pricing-structure .duration-price-box p.note {
+  text-align: start;
+}
+main section#pricingContainer .content-box .pricing-structure .duration-price-box p.note span {
+  font-weight: 500;
+  color: #333;
+}
+main section#pricingContainer .content-box .pricing-structure .tools-price-box {
+  grid-column: 1/-1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 50px;
+  border-radius: 42px;
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 0px 16px;
+  color: #000;
+  background: #fff;
+}
+main section#pricingContainer .content-box .pricing-structure .tools-price-box h4 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  font-family: "Poppins", sans-serif;
+  margin-bottom: 8px;
+}
+main section#pricingContainer .content-box .pricing-structure .tools-price-box p {
+  font-size: 1rem;
+  font-family: "Poppins", sans-serif;
+  margin-bottom: 24px;
+}
+main section#pricingContainer .content-box .pricing-structure .tools-price-box ul {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+main section#pricingContainer .content-box .pricing-structure .tools-price-box ul li {
+  padding: 24px;
+  border-radius: 16px;
+  border: 1px solid #bac8d8;
+  margin-bottom: 4px;
+}
+main section#pricingContainer .content-box .pricing-structure .tools-price-box ul li i {
+  font-size: 1.5rem;
+  color: #777;
+}
+main section#pricingContainer .content-box .pricing-structure .tools-price-box ul li i.bi-people {
+  color: #6291ff;
+}
+main section#pricingContainer .content-box .pricing-structure .tools-price-box ul li i.bi-emoji-smile {
+  color: #18d703;
+}
+main section#pricingContainer .content-box .pricing-structure .tools-price-box ul li i.bi-controller {
+  color: #e9ba01;
+}
+main section#pricingContainer .content-box .pricing-structure .tools-price-box ul li h5 {
+  margin: 12px 0;
+  font-size: 1.5rem;
+  font-family: "Poppins", sans-serif;
+}
+main section#pricingContainer .content-box .pricing-structure .tools-price-box ul li p {
+  margin-bottom: 0;
+  font-size: 1rem;
+}
+main section#testimonialsContainer {
+  margin: 50px 0;
+}
+main section#testimonialsContainer .content-box {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 50px 0;
+}
+main section#testimonialsContainer .content-box h2 {
+  font-size: 3rem;
+  line-height: 3rem;
+  font-weight: 400;
+  font-family: "Playfair Display", serif;
+  font-style: italic;
+  text-align: center;
+  margin-bottom: 50px;
+}
+main section#testimonialsContainer .content-box #testimonialCarousel {
+  width: 100%;
+}
+main section#testimonialsContainer .content-box #testimonialCarousel .carousel-indicators [data-bs-target] {
+  width: 8px;
+  height: 8px;
+  margin: 0 8px;
+  border-radius: 50%;
+}
+main section#testimonialsContainer .content-box #testimonialCarousel .carousel-inner {
+  border-radius: 32px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: rgba(0, 0, 0, 0.1) -4px 9px 25px -6px;
+}
+main section#testimonialsContainer .content-box #testimonialCarousel .carousel-inner .carousel-item {
+  width: 100%;
+}
+main section#testimonialsContainer .content-box #testimonialCarousel .carousel-inner .carousel-item .carousel-card {
+  min-height: 500px;
+  width: 100%;
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+main section#testimonialsContainer .content-box #testimonialCarousel .carousel-inner .carousel-item .carousel-card h6 {
+  font-size: 1rem;
+  font-family: "Poppins", sans-serif;
+  color: #D41872;
+  font-weight: 500;
+  margin-bottom: 24px;
+}
+main section#testimonialsContainer .content-box #testimonialCarousel .carousel-inner .carousel-item .carousel-card p {
+  font-size: 1.25rem;
+  font-family: "Poppins", sans-serif;
+  margin-bottom: 12px;
+  max-width: 700px;
+  text-align: center;
+}
+main section#testimonialsContainer .content-box #testimonialCarousel .carousel-inner .carousel-item .carousel-card h5 {
+  font-size: 1rem;
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  margin-bottom: 0;
+}
+main section#testimonialsContainer .content-box #testimonialCarousel .carousel-inner .carousel-item .carousel-card h5 span {
+  font-weight: 400;
+}
+
+@media screen and (max-width: 768px) {
+  main section#heroContainer {
+    padding: 0 12px;
+  }
+  main section#heroContainer header {
+    margin-bottom: 16px;
+  }
+  main section#heroContainer header nav ul.pages {
+    display: none;
+  }
+  main section#heroContainer header nav ul.socials li.social button.hamburger-btn {
+    display: block;
+  }
+  main section#heroContainer .content-box h1 {
+    font-size: 3rem;
+    line-height: 3rem;
+  }
+  main section#heroContainer .content-box p {
+    font-size: 16px;
+    margin-bottom: 50px;
+  }
+  main section#heroContainer .content-box .cta-btn-group {
+    flex-direction: column;
+    gap: 16px;
+  }
+  main section#heroContainer .content-box .cta-btn-group a {
+    width: 100%;
+  }
+  main section#eHookContainer {
+    padding: 12px;
+  }
+  main section#eHookContainer .content-box {
+    padding: 12px;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    border-radius: 32px;
+  }
+  main section#eHookContainer .content-box .mockup-box {
+    aspect-ratio: 2/3;
+    border-radius: 20px;
+  }
+  main section#eHookContainer .content-box .content {
+    padding: 0 12px 12px 12px;
+  }
+  main section#eHookContainer .content-box .content h4 {
+    font-size: 2.5rem;
+  }
+  main section#eHookContainer .content-box .content p {
+    font-size: 1.25rem;
+    margin-bottom: 42px;
+  }
+  main section#painPointsContainer {
+    padding: 12px;
+  }
+  main section#painPointsContainer .content-box h2 {
+    font-size: 2.5rem;
+    line-height: 2.5rem;
+    margin-bottom: 60px;
+  }
+  main section#painPointsContainer .content-box .cards {
+    grid-template-columns: 1fr 1fr;
+    gap: 75px 16px;
+  }
+  main section#painPointsContainer .content-box .cards .card {
+    padding: 12px;
+  }
+  main section#painPointsContainer .content-box .cards .card img {
+    position: absolute;
+    top: -50px;
+    right: 8px;
+    height: 100px;
+    width: 100px;
+    -o-object-fit: cover;
+       object-fit: cover;
+  }
+  main section#painPointsContainer .content-box .cards .card h5 {
+    font-size: 2rem;
+    color: #000 !important;
+  }
+  main section#painPointsContainer .content-box .cards .card p {
+    font-size: 18px;
+  }
+  main section#painPointsContainer .content-box .cta-action-btn {
+    margin-top: 24px;
+  }
+  main section#pricingContainer {
+    padding: 12px;
+  }
+  main section#pricingContainer .content-box h2 {
+    font-size: 2.5rem;
+    line-height: 3rem;
+    margin-bottom: 12px;
+  }
+  main section#pricingContainer .content-box .pricing-structure {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  main section#pricingContainer .content-box .pricing-structure h3 {
+    grid-column: 1;
+    font-size: 1.25rem;
+    line-height: 1.5rem;
+    margin-bottom: 24px;
+  }
+  main section#pricingContainer .content-box .pricing-structure .free-price-box {
+    padding: 42px;
+  }
+  main section#pricingContainer .content-box .pricing-structure .free-price-box h4 {
+    font-size: 2.5rem;
+  }
+  main section#pricingContainer .content-box .pricing-structure .free-price-box p {
+    font-size: 1.25rem;
+  }
+  main section#pricingContainer .content-box .pricing-structure .duration-price-box {
+    padding: 24px;
+    border-radius: 24px;
+  }
+  main section#pricingContainer .content-box .pricing-structure .duration-price-box h4 {
+    font-size: 1.25rem;
+  }
+  main section#pricingContainer .content-box .pricing-structure .duration-price-box p {
+    font-size: 1rem;
+    margin-bottom: 12px;
+  }
+  main section#pricingContainer .content-box .pricing-structure .tools-price-box {
+    grid-column: 1;
+  }
+  main section#pricingContainer .content-box .pricing-structure .tools-price-box h4 {
+    font-size: 1.25rem;
+  }
+  main section#pricingContainer .content-box .pricing-structure .tools-price-box p {
+    font-size: 1rem;
+    margin-bottom: 24px;
+    text-align: center;
+  }
+  main section#pricingContainer .content-box .pricing-structure .tools-price-box ul {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  main section#pricingContainer .content-box .pricing-structure .tools-price-box ul li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px;
+    border-radius: 16px;
+    border: 1px solid #bac8d8;
+  }
+  main section#pricingContainer .content-box .pricing-structure .tools-price-box ul li h5 {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+  main section#pricingContainer .content-box .pricing-structure .tools-price-box ul li p {
+    font-size: 1rem;
+  }
+  main section#testimonialsContainer {
+    padding: 0 12px;
+    margin: 0;
+  }
+  main section#testimonialsContainer .content-box {
+    padding: 12px;
+  }
+  main section#testimonialsContainer .content-box h2 {
+    font-size: 2.5rem;
+    line-height: 2.5rem;
+    margin-bottom: 24px;
+  }
+  main section#testimonialsContainer .content-box #testimonialCarousel .carousel-inner {
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  main section#testimonialsContainer .content-box #testimonialCarousel .carousel-item .carousel-card {
+    padding: 50px 24px 80px 24px;
+  }
+  main section#testimonialsContainer .content-box #testimonialCarousel .carousel-item .carousel-card h6 {
+    font-size: 1.05rem;
+  }
+  main section#testimonialsContainer .content-box #testimonialCarousel .carousel-item .carousel-card p {
+    font-size: 1.25rem;
+    max-width: 100%;
+    margin-bottom: 24px;
+  }
+  main section#testimonialsContainer .content-box #testimonialCarousel .carousel-item .carousel-card h5 {
+    font-size: 1rem;
+    text-align: center;
+  }
+}/*# sourceMappingURL=home.css.map */

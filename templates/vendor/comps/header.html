@@ -1,0 +1,19 @@
+{% load static %}
+<div class="logo">
+    <a href="/">
+        <img src="{% static 'assets/logos/Eventic-golden-dark-lg-logo-new.png' %}" alt="Eventic Gold Dark Logo">
+    </a>
+</div>
+<nav>
+    <ul>
+        <li><a {% if cp == 'dashboard' %}class="active" disabled{% endif %} href="{% url 'vendor:Dashboard' %}"><i class="bi bi-house"></i><span>Dashboard</span></a></li>
+        <li><a {% if cp == 'details' %}class="active" disabled{% endif %} href="{% url 'vendor:Details' %}"><i class="bi bi-person-hearts"></i><span>Details</span></a></li>
+        <li><a {% if cp == 'services' %}class="active" disabled{% endif %} href="{% url 'vendor:Services' %}"><i class="bi bi-stars"></i><span>Services</span></a></li>
+        <li><a {% if cp == 'billing' %}class="active" disabled{% endif %} href="{% url 'vendor:Billing' %}"><i class="bi bi-coin"></i><span>Billing</span></a></li>
+        {% if IN_DEVELOPMENT %}
+        <li><a {% if cp == 'epss' %}class="active" disabled{% endif %} href="{% url 'vendor:EPSS' %}"><i class="bi bi-file-earmark-bar-graph"></i><span>EPSS</span></a></li>
+        {% endif %}
+        <li><a {% if cp == 'legal' %}class="active" disabled{% endif %} href="{% url 'vendor:Legal' %}"><i class="bi bi-folder"></i><span>Legal</span></a></li>
+        <li><a {% if cp == 'settings' %}class="active" disabled{% endif %} href="{% url 'vendor:Settings' %}"><i class="bi bi-gear"></i><span>Settings</span></a></li>
+    </ul>
+</nav>

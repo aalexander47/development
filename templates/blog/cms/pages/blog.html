@@ -1,0 +1,113 @@
+{% extends 'vendor/cms/base.html' %}{% load static auth_extras %}
+{% block title %}Documentations | Eventic{% endblock %}
+
+{% block content %}
+<div class="content-block">
+    <div class="main-header" id="MH01">
+        <div class="header-top">
+            <div class="header-title">
+                <h1>Blogs</h1>
+            </div>
+            <div class="btn-group dropstart">
+                <button type="button" class="btn dropdown shadow-none border-0 outline-none" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-three-dots-vertical"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end p-1 rounded-3 shadow">
+                    <li>
+                        <button type="button" class="dropdown-item rounded-3 ps-2 py-2" name="create_doc"><i class="bi bi-file-earmark-richtext"></i><span class="ms-2">Create</span></button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="header-bottom">
+            <ul>
+                <li><a href="{% url 'blog:blogCreate' %}"><i class="bi bi-file-earmark-text me-1"></i>Create</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main-body">
+        {% include 'vendor/comps/messages.html' %}
+        <div id="notificationsContainer">
+            {% if blogs|length == 0 %}
+            <div class="no-notification-box text-center py-5 bg-light rounded-5">
+                <h2>(つ﹏<。)</h2>
+                <h5 class="mb-0 text-secondary">No Blogs</h5>
+            </div>
+            {% else %}
+            <table class="table table-sm table-hover table-borderless">
+                <thead>
+                    <tr>
+                        <th class="p-2">No.</th>
+                        <th class="text-start w-100 p-2">Blog</th>
+                        <th class="text-center"></th>
+                    </tr>
+                </thead>
+                {% for blog in blogs %}
+                <tbody>
+                    <tr>
+                        <td class="p-2">{{ forloop.counter }}</td>
+                        <td class="text-start p-2">{{ blog.name }}</td>
+                        <td class="p-2">
+                            <a href="{% url 'blog:Blog' blog.url %}" class="btn shadow-none border-0 p-0" role="button" target="_blank">
+                                <i class="bi bi-box-arrow-up-right"></i>
+                            </a>
+                        </td>
+                        <td class="text-center p-2">
+                            <div class="btn-group dropstart">
+                                <button type="button" class="btn dropdown shadow-none border-0 outline-none p-0" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-three-dots-vertical"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end p-1 rounded-3 shadow">
+                                    <li>
+                                        <a class="dropdown-item rounded-3 ps-2 py-2" href="{% url 'blog:blogUpdate' blog.id %}">
+                                            <i class="bi bi-pencil-square"></i><span class="ms-2">Edit</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item dropdown-item-danger rounded-3 ps-2 py-2" href="{% url 'blog:blogDelete' blog.id %}">
+                                            <i class="bi bi-trash"></i><span class="ms-2">Delete</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+                {% endfor %}
+            </table>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Confirm Remove Notification Modal Popup -->
+<div class="modal fade" id="deleteNotificationModal" tabindex="-1" aria-labelledby="deleteNotificationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteNotificationModalLabel">Delete Notification</h5>
+          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            <div class="modal-body text-center">
+                <input type="hidden" name="notification_id" id="delete_notification_id">
+                <p>Are you sure you want to remove <strong><span id="remove_notification_title"></span></strong> Notification?</p>
+                <button type="submit" class="btn btn-danger shadow-none" name="delete_notification">Delete</button>
+            </div>
+        </form>
+      </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+    function deleteNotification(elem) {
+        const id = elem.getAttribute('data-id');
+        const info_card = document.getElementById(`notification_card_${id}`);
+        document.getElementById('delete_notification_id').value = id;
+        document.querySelector('#remove_notification_title').textContent = info_card.querySelector('.notification-title').textContent;
+    }
+</script>
+{% endblock %}

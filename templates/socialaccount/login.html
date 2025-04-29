@@ -1,0 +1,27 @@
+{% extends "socialaccount/base.html" %}{% load socialaccount allauth i18n %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center py-5">
+    <div class="col-md-6 col-lg-4">
+        <div class="card shadow rounded-5 p-md-3">
+            <div class="card-body">
+                <h2 class="text-center mb-4">Social Login</h2>
+
+                <p class="text-center">You are about to log in with your social account.</p>
+                <div class="d-grid mb-3 justify-content-center">
+                    <form action="{% provider_login_url 'google' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-dark shadow-none" name="login"><i class="bi bi-google" ></i>&nbsp; Continue with Google</button>
+                    </form>
+                </div>
+
+                <hr>
+
+                <div class="text-center">
+                    <p>Or <a href="{% url 'auth:login' %}" class="text-decoration-none">log in with email</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

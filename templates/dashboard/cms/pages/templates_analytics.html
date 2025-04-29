@@ -1,0 +1,113 @@
+{% extends 'dashboard/cms/base.html' %}
+{% load auth_extras %}
+{% block title %}Template Details | Eventic{% endblock %}
+
+{% block content %}
+<div class="content-block">
+    <div class="main-header" id="MH01">
+        <div class="header-top">
+            <div class="header-title">
+                <a href="{% url 'dashboard:Templates' %}" class="back-btn"><i class="bi bi-arrow-left"></i></a>
+                <h1>Template Details</h1>
+            </div>
+        </div>
+        <div class="header-bottom">
+            <ul>
+                <li><a href="#details" class="active" data-bs-toggle="tab">Details</a></li>
+                <li><a href="{% url 'dashboard:TemplateReviews' template.id %}">Comments</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main-body">
+        <div class="container">
+            <div class="tab-content">
+                <!-- Template Details Tab -->
+                <div class="tab-pane fade show active" id="details">
+                    <h6 class="text-center">{{ template.name }}</h6>
+                    <div class="row mt-5 align-items-center">
+                        <div class="col-md-6 col-12">
+                            <h5 class="text-center">Template Thumbnail</h5>
+                            <img src="{{ template.thumbnail.url }}" class="img-fluid rounded" alt="{{ template.name }}">
+                        </div>
+                        <div class="col-md-6 col-12">
+                            <h5 class="text-center">Template Details</h5>
+                            <div class="d-flex flex-column align-items-center">
+                                <div class="d-flex justify-content-between w-75 mb-3">
+                                    <span class="fw-bold">Name:</span>
+                                    <span>{{ template.name }}</span>
+                                </div>
+                                <div class="d-flex justify-content-between w-75 mb-3">
+                                    <span class="fw-bold">Price:</span>
+                                    <span>${{ template.price }}</span>
+                                </div>
+                                <div class="d-flex justify-content-between w-75 mb-3">
+                                    <span class="fw-bold">Free Days:</span>
+                                    <span>{{ template.free_days }}</span>
+                                </div>
+                                <div class="d-flex justify-content-between w-75 mb-3">
+                                    <span class="fw-bold">Tag:</span>
+                                    <span>{{ template.tag }}</span>
+                                </div>
+                                <div class="d-flex justify-content-between w-75 mb-3">
+                                    <span class="fw-bold">Created At:</span>
+                                    <span>{{ template.created_at }}</span>
+                                </div>
+                                <div class="d-flex justify-content-between w-75">
+                                    <span class="fw-bold">Updated At:</span>
+                                    <span>{{ template.updated_at }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Heatmap Section -->
+                    <div class="mt-5">
+                        <h5 class="text-center">Invitation Heatmap</h5>
+                        <div id="map" style="height: 500px; width: 100%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Include Leaflet.js and Heatmap Plugin -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Initialize the map
+        const map = L.map('map').setView([20, 0], 2); // Centered globally
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Fetch heatmap data
+        fetch('/dashboard/templates/heatmap-data/?template_id={{ template.id }}')
+            .then(response => response.json())
+            .then(data => {
+                // Create heatmap layer
+                const heat = L.heatLayer(data.heatmap_points, {
+                    radius: 25,
+                    blur: 15,
+                    maxZoom: 17,
+                }).addTo(map);
+
+                // Add tooltips for each point
+                data.locations.forEach(location => {
+                    const marker = L.marker([location.lat, location.lng]).addTo(map);
+                    marker.bindTooltip(
+                        `${location.count} Invitations in ${location.country_code}`,
+                        { permanent: false, direction: 'top' }
+                    );
+                });
+            })
+            .catch(error => console.error('Error fetching heatmap data:', error));
+    });
+</script>
+{% endblock %}

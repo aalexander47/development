@@ -1,0 +1,565 @@
+{% extends 'main/base.html' %}
+{% load auth_extras static %}
+{% block title %}{{ service.vendor.name }} - {{ service.category|title }} Videographer {{ service.vendor.city }} | Eventic{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/main/styles/details.css' %}">
+{% include 'main/utils/_google-analytics.html' %}
+{% endblock %}
+
+{% block navbar_search_url %}{% url 'videographer:search_service' %}{% endblock %}
+{% block content %}
+<article id="serviceDetails">
+    <div class="box">
+        {% if request.user_agent.is_mobile %}
+        {% if service.has_thumbnail %}
+        <div id="thumbnail">
+            <img src="{{ service.thumbnail.url }}" alt="{{ service.vendor.name }} {{ service.category|title }} Videographer {{ service.vendor.city }} Service Thumbnail Eventic" onerror=`this.src="{% static 'assets/defaults/1x1.png' %}";` loading="lazy" decoding="async">
+            <div class="like-save-box">
+                <div class="like-btn-box">
+                    <span id="likeCount">{% if service.like_count > 0 %}{{ service.like_count }}{% endif %}</span>
+                    {% if request.user.is_authenticated and not request.user.is_staff %}
+                    <i class="bi bi-heart{% if service.is_liked %}-fill liked{% endif %} like-btn" data-id="{{ service.id }}" data-vendor-id="{{ service.vendor.id }}" data-liked="{% if service.is_liked %}true{% else %}false{% endif %}" title="{% if service.is_liked %}Unlike{% else %}Like{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" onclick="likeTrigger(this)"></i>
+                    {% else %}
+                    <i class="bi bi-heart like-btn" data-bs-toggle="modal" data-bs-target="{% if request.user.is_staff %}#staffModal{% else %}#loginModal{% endif %}" title="Like" data-bs-toggle="tooltip" data-bs-placement="top"></i>
+                    {% endif %}
+                </div>
+                <div class="save-btn-box">
+                    {% if request.user.is_authenticated and not request.user.is_staff %}
+                    <i class="bi bi-bookmark{% if service.is_saved %}-check-fill saved{% endif %} save-btn" data-id="{{ service.id }}" data-vendor-id="{{ service.vendor.id }}" data-saved="{% if service.is_saved %}true{% else %}false{% endif %}" title="{% if service.is_saved %}Unsave{% else %}Save{% endif %}" data-bs-toggle="tooltip" data-bs-placement="left" onclick="saveTrigger(this)"></i>
+                    {% else %}
+                    <i class="bi bi-bookmark save-btn" data-bs-toggle="modal" data-bs-target="{% if request.user.is_staff %}#staffModal{% else %}#loginModal{% endif %}" title="Save" data-bs-toggle="tooltip" data-bs-placement="left"></i>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endif %}
+        <div class="content-box">
+            <h4>{{ service.category|title }} Videographer</h4>
+            <h1>{{ service.vendor.name }}</h1>
+            <div class="info-box">
+                <i class="bi bi-alarm"></i>
+                <p>Started In {{ service.experience }}</p>
+            </div>
+            <div class="info-box">
+                <i class="bi bi-geo-alt-fill"></i>
+                <p>{{ service.vendor.address }}, {{ service.vendor.city }}, {{ service.vendor.state }} - {{ service.vendor.pincode }}</p>
+            </div>
+            {% if service.reviews_count %}
+            <div class="info-box">
+                <i class="bi bi-chat-dots"></i>
+                <p>{{ service.reviews_count }} Reviews</p>
+            </div>
+            {% endif %}
+            <hr>
+            <div class="price-box">
+                <h3 id="photoPrice"><i class="bi bi-currency-rupee"></i>{{ service.price }}<span> / {{ service.price_unit }}</span></h3>
+                <label for="photoPrice">Video</label>
+            </div>
+            {% if service.todays_user_leads >= 5 %}
+            <hr>
+            <div class="btns">
+                {% if service.vendor.phone %}
+                <button type="button" class="btn-call" id="requestCallback" data-bs-toggle="modal" data-bs-target="#requestCallbackModal">
+                    <div class="btn-icon">
+                        <i class="bi bi-telephone-fill"></i> 
+                    </div>
+                    <div class="btn-text">Request a Callback</div>
+                    <div class="overlay"></div>
+                </button>
+                {% endif %}
+            </div>
+            {% else %}
+            {% if service.vendor.phone or service.vendor.whatsapp %}
+            <hr>
+            <div class="btns">
+                {% if service.vendor.phone %}
+                <button type="button" class="btn-call" onclick="trackLead('phone');">
+                    <div class="btn-icon"> 
+                        <i class="bi bi-telephone-fill"></i> 
+                    </div>
+                    <div class="btn-text">Call Now</div>
+                    <div class="overlay"></div>
+                </button>
+                {% endif %}
+                {% if service.vendor.whatsapp %}
+                <button type="button" class="btn-whatsapp" onclick="trackLead('whatsapp');">
+                    <i class="bi bi-whatsapp"></i> 
+                </button>
+                {% endif %}
+            </div>
+            {% endif %}
+            {% endif %}
+            {% if service.total_leads > 0 %}
+            <hr>
+            <p class="text-center text-muted">{% if service.total_leads > 25 %}High In Demand. {% endif %}<span class="text-dark">{{ service.total_leads }} Enquiries</span> In Last <span class="text-dark">30</span> Days</p>
+            {% endif %}
+        </div>
+    </div>
+</article>
+<section id="mainContainer">
+    {% if not request.user_agent.is_mobile %}
+    {% if service.has_thumbnail %}
+    <div id="thumbnail" class="box">
+        <img src="{{ service.thumbnail.url }}" alt="{{ service.vendor.name }} {{ service.category|title }} Videographer {{ service.vendor.city }} Service Thumbnail Eventic" onerror=`this.src="{% static 'assets/defaults/1x1.png' %}";` loading="lazy" decoding="async">
+        <div class="like-save-box">
+            <div class="like-btn-box">
+                <span id="likeCount">{% if service.like_count > 0 %}{{ service.like_count }}{% endif %}</span>
+                {% if request.user.is_authenticated and not request.user.is_staff %}
+                <i class="bi bi-heart{% if service.is_liked %}-fill liked{% endif %} like-btn" data-id="{{ service.id }}" data-vendor-id="{{ service.vendor.id }}" data-liked="{% if service.is_liked %}true{% else %}false{% endif %}" title="{% if service.is_liked %}Unlike{% else %}Like{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" onclick="likeTrigger(this)"></i>
+                {% else %}
+                <i class="bi bi-heart like-btn" data-bs-toggle="modal" data-bs-target="{% if request.user.is_staff %}#staffModal{% else %}#loginModal{% endif %}" title="Like" data-bs-toggle="tooltip" data-bs-placement="top"></i>
+                {% endif %}
+            </div>
+            <div class="save-btn-box">
+                {% if request.user.is_authenticated and not request.user.is_staff %}
+                <i class="bi bi-bookmark{% if service.is_saved %}-check-fill saved{% endif %} save-btn" data-id="{{ service.id }}" data-vendor-id="{{ service.vendor.id }}" data-saved="{% if service.is_saved %}true{% else %}false{% endif %}" title="{% if service.is_saved %}Unsave{% else %}Save{% endif %}" data-bs-toggle="tooltip" data-bs-placement="left" onclick="saveTrigger(this)"></i>
+                {% else %}
+                <i class="bi bi-bookmark save-btn" data-bs-toggle="modal" data-bs-target="{% if request.user.is_staff %}#staffModal{% else %}#loginModal{% endif %}" title="Save" data-bs-toggle="tooltip" data-bs-placement="left"></i>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% endif %}
+    <div id="mainNavbar">
+        <ul class="glass-bg list-group" id="mainNav">
+            {% if service.description or service.vendor.bio %}
+            <li><a  class="list-group-item list-group-item-action" href="#about"><i class="bi bi-info-circle"></i>&nbsp; About</a></li>
+            {% endif %}
+            {% if service.has_packages %}
+            <li><a  class="list-group-item list-group-item-action" href="#packages"><i class="bi bi-box-seam"></i>&nbsp; Packages</a></li>
+            {% endif %}
+            {% if service.has_addOns %}
+            <li><a  class="list-group-item list-group-item-action" href="#addOns"><i class="bi bi-patch-plus"></i>&nbsp; Add-Ons</a></li>
+            {% endif %}
+            {% if service.has_gallery %}
+            <li><a  class="list-group-item list-group-item-action" href="#gallery"><i class="bi bi-images"></i>&nbsp; Gallery</a></li>
+            {% endif %}
+            <li><a  class="list-group-item list-group-item-action" href="#reviews"><i class="bi bi-chat"></i>&nbsp; Reviews</a></li>
+            {% if service.has_faqs %}
+            <li><a  class="list-group-item list-group-item-action" href="#faq">FAQs</a></li>
+            {% endif %}
+        </ul>
+    </div>
+    <div data-bs-spy="scroll" data-bs-target="#mainNav" data-bs-offset="0" tabindex="0">
+        {% if service.description or service.vendor.bio %}
+        <div id="about">
+            <h3><i class="bi bi-info-circle"></i>&nbsp; About</h3>
+            {% if service.vendor.bio %}
+            <div class="box">
+                <h5>About {{ service.vendor.name }}</h5>
+                <p>{{ service.vendor.bio }}</p>
+            </div>
+            {% endif %}
+            {% if service.vendor.bio and service.description %}
+            <hr class="w-75">
+            {% endif %}
+            {% if service.description %}
+            <div class="box">
+                <h5>About {{ service.category }} Photography</h5>
+                <p>{{ service.description }}</p>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+        {% if service.has_packages %}
+        <div id="packages">
+            <h3><i class="bi bi-box-seam"></i>&nbsp; Packages</h3>
+            {% for package in service.other.packages %}
+            <p>
+                <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePackage{{ forloop.counter }}" aria-expanded="false" aria-controls="collapsePackage{{ forloop.counter }}">
+                    <div class="title">{{ forloop.counter }}. {{ package.name }}</div>
+                    <div class="price"><i class="bi bi-currency-rupee"></i>{{ package.price }}<small class="text-muted"> / {{ package.pricePer }}</small></div>
+                </button>
+            </p>
+            <div class="collapse" id="collapsePackage{{ forloop.counter }}">
+                <div class="card card-body">{{ package.details | nl2br }}</div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% if service.has_addOns %}
+        <div id="addOns">
+            <h3><i class="bi bi-patch-plus"></i>&nbsp; Add-Ons</h3>
+            {% for addOn in service.other.addOns %}
+            <p>
+                <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAddOn{{ forloop.counter }}" aria-expanded="false" aria-controls="collapseAddOn{{ forloop.counter }}">
+                    <div class="title">{{ forloop.counter }}. {{ addOn.name }}</div>
+                    <div class="price"><i class="bi bi-currency-rupee"></i>{{ addOn.price }}<small class="text-muted"> / {{ addOn.pricePer }}</small></div>
+                </button>
+            </p>
+            <div class="collapse" id="collapseAddOn{{ forloop.counter }}">
+                <div class="card card-body">{{ addOn.details | nl2br }}</div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% if service.has_gallery %}
+        <div id="gallery">
+            <h3><i class="bi bi-images"></i>&nbsp; Gallery ({{ service.gallery.all|length }})</h3>
+            <div class="images-container custom-scrollbar">
+                <div class="left-image-box">
+                    {% for image in service.gallery.all %}
+                    {% if forloop.counter|divisibleby:"2" == False and image.has_image %}
+                    <img src="{{ image }}" alt="Service Thumbnail" onerror=`this.src="{% static 'assets/defaults/1x1.png' %}";` width="100%" height="auto" loading="lazy" decoding="async">
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="right-image-box">
+                    {% for image in service.gallery.all %}
+                    {% if forloop.counter|divisibleby:"2" and image.has_image %}
+                    <img src="{{ image }}" alt="Service Thumbnail" onerror=`this.src="{% static 'assets/defaults/1x1.png' %}";` width="100%" height="auto" loading="lazy" decoding="async">
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <div id="reviews">
+            <div class="rating-container">
+                <div class="reviews-container">
+                    {% if not service.has_rated %}
+                    {% if request.user.is_authenticated %}
+                    {% if not request.user.is_staff and service.user_id != request.user.id %}
+                    <div class="review-container">
+                        <div class="review-form my-3">
+                            <div class="card-header">Rate This Service</div>
+                            <form method="post" action="{% url 'videographer:service_rating' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="service_id" value="{{ service.id }}">
+                                <input type="hidden" name="vendor_id" value="{{ service.vendor_id }}">
+                                <h5>How would you rate the services?</h5>
+                                <div class="satisfaction-rating">
+                                    <div class="rating-scale rating-1">
+                                        <input type="radio" class="btn-check" name="rating" id="disappointed" value="1">
+                                        <label for="disappointed"><i class="bi bi-emoji-angry"></i>&nbsp; Disappointed</label>
+                                    </div>
+                                    <div class="rating-scale rating-2">
+                                        <input type="radio" class="btn-check" name="rating" id="unsatisfied" value="2">
+                                        <label for="unsatisfied"><i class="bi bi-emoji-frown"></i>&nbsp; Unsatisfied</label>
+                                    </div>
+                                    <div class="rating-scale rating-3">
+                                        <input type="radio" class="btn-check" name="rating" id="neutral" value="3">
+                                        <label for="neutral"><i class="bi bi-emoji-neutral"></i>&nbsp; Neutral</label>
+                                    </div>
+                                    <div class="rating-scale rating-4">
+                                        <input type="radio" class="btn-check" name="rating" id="satisfied" value="4">
+                                        <label for="satisfied"><i class="bi bi-emoji-smile"></i>&nbsp; Satisfied</label>
+                                    </div>
+                                    <div class="rating-scale rating-5">
+                                        <input type="radio" class="btn-check" name="rating" id="very-satisfied" value="5">
+                                        <label for="very-satisfied"><i class="bi bi-emoji-laughing"></i>&nbsp; Very Satisfied</label>
+                                    </div>
+                                </div>
+                                <h5>Would you like to recommend this service? And for what reasons?</h5>
+                                <h6 class="text-secondary">(Choose up to 3)</h6>
+                                <div class="recommendation-rating">
+                                    <div class="recommend-for">
+                                        <input type="checkbox" class="btn-check-recommend" name="recommend_for" id="on_time" value="On Time">
+                                        <label for="on_time"><i class="bi bi-clock"></i>&nbsp; On Time</label>
+                                    </div>
+                                    <div class="recommend-for">
+                                        <input type="checkbox" class="btn-check-recommend" name="recommend_for" id="price" value="Price">
+                                        <label for="price"><i class="bi bi-currency-rupee"></i>&nbsp; Price</label>
+                                    </div>
+                                    <div class="recommend-for">
+                                        <input type="checkbox" class="btn-check-recommend" name="recommend_for" id="quality" value="Quality">
+                                        <label for="quality"><i class="bi bi-patch-check"></i>&nbsp; Quality</label>
+                                    </div>
+                                    <div class="recommend-for">
+                                        <input type="checkbox" class="btn-check-recommend" name="recommend_for" id="value" value="Value">
+                                        <label for="value"><i class="bi bi-award"></i>&nbsp; Value</label>
+                                    </div>
+                                    {% for plan in service.other.plans %}
+                                    <div class="recommend-for">
+                                        <input type="checkbox" class="btn-check-recommend" name="recommend_for" id="plan-rating-{{ forloop.counter }}" value="{{ plan.name }}">
+                                        <label for="plan-rating-{{ forloop.counter }}"><i class="bi bi-stars"></i>&nbsp; For {{ plan.name }}</label>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="writeReview" class="form-label">Write a review</label>
+                                    <textarea class="form-control custom-scrollbar shadow-none rounded-3" placeholder="Review here..." id="writeReview" style="height: 150px" name="review" required></textarea>
+                                </div>
+                                <div class="d-flex justify-content-beween column-gap-3">
+                                    <button type="button" class="btn btn-outline-secondary shadow-none rounded-3 px-4" type="button" data-bs-toggle="modal" data-bs-target="#reportModal">Report Eventron Service</button>
+                                    <button type="submit" class="btn btn-primary shadow-none rounded-3 px-4 ms-auto" name="submit_review">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- Report Modal -->
+                    <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="reportModalLabel">Report Eventron Service</h5>
+                                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <form action="{% url 'videographer:report_service' %}" method="POST" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="service_id" value="{{ service.id }}">
+                                    <div class="modal-body">
+                                        <p>Are you sure you want to report this Eventron Service?</p>
+                                        <!-- Report Form -->
+                                        <div class="form-group mb-3">
+                                            <label for="reportReason">Reason</label>
+                                            <!-- Radio Buttons to select report reason for the content -->
+                                            <div class="form-check">
+                                                <input class="form-check-input shadow-none shadow-none" type="radio" name="report_reason" id="eventronReportReason1" value="False Information">
+                                                <label class="form-check-label" for="eventronReportReason1">
+                                                    False Information
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input shadow-none shadow-none" type="radio" name="report_reason" id="eventronReportReason2" value="Copyrighted Content">
+                                                <label class="form-check-label" for="eventronReportReason2">
+                                                    Copyrighted Content
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input shadow-none shadow-none" type="radio" name="report_reason" id="eventronReportReason3" value="Other">
+                                                <label class="form-check-label" for="eventronReportReason3">
+                                                    Other
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group mb-2">
+                                            <label for="reportDescription">Description</label>
+                                            <textarea class="form-control shadow-none" id="reportDescription" name="report_description" rows="3" required></textarea>
+                                        </div>
+                                        <!-- screenshot -->
+                                        <div class="form-group">
+                                            <label for="screenshot">Screenshot</label>
+                                            <input type="file" class="form-control shadow-none" name="screenshot" id="screenshot" accept="image/*">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-outline-secondary shadow-none rounded-3 px-4" data-bs-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-primary shadow-none rounded-3 px-4 ms-auto" name="report_service">Report</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% else %}
+                    <div class="review-container">
+                        <div class="review-form my-3">
+                            <div class="card-header">Rate This Service</div>
+                            <a href="{% url 'auth:login' %}" class="text-decoration-none">
+                                <div class="review-login">
+                                    <p>Please <span>Login</span> to write a review.</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endif %}
+                    {% if service.reviews_count %}
+                    <div class="reviews-box mt-3">
+                        <div class="card-header"><i class="bi bi-chat-dots"></i>&nbsp; Reviews</div>
+                        <div class="review-cards">
+                            {% for review in service.reviews.all %}
+                            <div class="review-card">
+                                <div class="review-card-profile">
+                                    {% if review.user.userprofile.picture %}
+                                    <img src="{{ review.user.userprofile.picture.url }}" alt="{{ review.user.first_name }} {{ review.user.last_name }}" loading="lazy" decoding="async">
+                                    {% else %}
+                                    <img src="{% static 'assets/defaults/profile.png' %}" alt="{{ review.user.first_name }} {{ review.user.last_name }}" loading="lazy" decoding="async">
+                                    {% endif %}
+                                </div>
+                                <div class="user-info">
+                                    <h5>{% if review.user.first_name or review.user.last_name %}{{ review.user.first_name }} {{ review.user.last_name }}{% elif review.user.username %}@{{ review.user.username }}{% endif %}</h5>
+                                    <div class="rating-header">
+                                        {% if review.rating == 1 %}
+                                        <div class="rating rating-disappointed"><i class="bi bi-emoji-angry"></i>&nbsp; Disappointed</div><div>|</div>
+                                        {% elif review.rating == 2 %}
+                                        <div class="rating rating-unsatisfied"><i class="bi bi-emoji-frown"></i>&nbsp; Unsatisfied</div><div>|</div>
+                                        {% elif review.rating == 3 %}
+                                        <div class="rating rating-neutral"><i class="bi bi-emoji-neutral"></i>&nbsp; Neutral</div><div>|</div>
+                                        {% elif review.rating == 4 %}
+                                        <div class="rating rating-satisfied"><i class="bi bi-emoji-smile"></i>&nbsp; Satisfied</div><div>|</div>
+                                        {% elif review.rating == 5 %}
+                                        <div class="rating rating-very-satisfied"><i class="bi bi-emoji-laughing"></i>&nbsp; Very Satisfied</div><div>|</div>
+                                        {% endif %}
+                                        <div class="rating-date">{{ review.created_at|date }}</div>
+                                    </div>
+                                </div>
+                                <div class="review-report btn-group dropstart">
+                                    <button type="button" class="btn dropdown" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-three-dots-vertical"></i></button>
+                                    <ul class="dropdown-menu">
+                                        {% if request.user == review.user %}
+                                        <li>
+                                            <form action="{% url 'videographer:delete_review' %}" method="post">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="review_id" value="{{ review.id }}">
+                                                <button type="submit" class="dropdown-item dropdown-item-danger" name="delete_review" value="{{ review.id }}"><i class="bi bi-trash"></i>&nbsp; Delete</button>
+                                            </form>
+                                        </li>
+                                        {% else %}
+                                        <li><button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#reportReviewModal" data-bs-review-id="{{ review.id }}" data-bs-username="{% if review.user.first_name or review.user.last_name %}{{ review.user.first_name }} {{ review.user.last_name }}{% elif review.user.username %}@{{ review.user.username }}{% endif %}"><i class="bi bi-flag"></i>&nbsp; Report</button></li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                                <p class="review-text">{{ review.review | nl2br | safe }}</p>
+                                {% if review.recommend_for %}
+                                <div class="recommend_for">
+                                    {% for recommend in review.recommend_for %}
+                                    <div class="recommend">
+                                        {% if recommend == 'On Time' %}
+                                        <i class="bi bi-clock"></i>
+                                        {% elif recommend == 'Price' %}
+                                        <i class="bi bi-currency-rupee"></i>
+                                        {% elif recommend == 'Quality' %}
+                                        <i class="bi bi-patch-check"></i>
+                                        {% elif recommend == 'Value' %}
+                                        <i class="bi bi-coin"></i>
+                                        {% else %}
+                                        <i class="bi bi-stars"></i>
+                                        {% endif %}
+                                        {{ recommend }}
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="otherContent"></section>
+{% endblock %}
+
+{% block extra_content %}
+{% if service.vendor.phone %}
+<div class="slide-container{% if service.todays_user_leads >= 5 %} inactive{% endif %}" id="slideContainer">
+    <div class="slide-button" id="slide-button">→</div>
+    <div class="slide-text">{% if service.todays_user_leads >= 5 %}Request a Callback{% else %}Slide to Call{% endif %}</div>
+</div>
+{% endif %}
+
+{% if service.reviews_count > 0 %}
+{% if request.user.is_authenticated %}
+<!-- Report Review Modal -->
+<div class="modal fade" id="reportReviewModal" tabindex="-1" aria-labelledby="reportReviewModalLabel" aria-hidden="true" data-is-auth="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reportReviewModalLabel">Report Review</h5>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{% url 'videographer:report_review' %}" method="POST">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <!-- Review ID -->
+                    <input type="hidden" name="review_id" id="reviewID">
+                    <p>Are you sure you want to report this review?</p>
+                    <!-- Report reason radio buttons -->
+                    <h6>Report Reason</h6>
+                    <div class="form-check">
+                        <input class="form-check-input shadow-none" type="radio" name="report_reason" id="reviewReportReason1" value="Inappropriate">
+                        <label class="form-check-label" for="reviewReportReason1">
+                            Inappropriate
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input shadow-none" type="radio" name="report_reason" id="reviewReportReason2" value="Spam">
+                        <label class="form-check-label" for="reviewReportReason2">
+                            Spam
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input shadow-none" type="radio" name="report_reason" id="reviewReportReason3" value="Other">
+                        <label class="form-check-label" for="reviewReportReason3">
+                            Other
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" name="report_review">Report</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="modal fade" id="reportReviewModal" tabindex="-1" aria-labelledby="reportReviewModalLabel" aria-hidden="true" data-is-auth="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reportReviewModalLabel">Login</h5>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-center mb-0">Please <a href="{% url 'auth:login' %}" class="text-decoration-none">login</a> to report a review.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a href="{% url 'auth:login' %}" class="btn btn-primary">Login</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endif %}
+
+{% if service.todays_user_leads >= 5 %}
+<!-- Request Callback Modal -->
+<div class="modal fade" id="requestCallbackModal" tabindex="-1" aria-labelledby="requestCallbackModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="requestCallbackModalLabel"><i class="bi bi-telephone"></i>&ensp;Request Callback</h5>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {% if service.has_user_lead %}
+                <h3 class="text-center"><i class="bi bi-check-circle-fill text-success"></i></h3>
+                <p class="text-center">You have already requested a callback for this service.</p>
+                {% else %}
+                <form action="{% url 'videographer:request_callback' service_id=service.id slug=service.slug vendor_id=service.vendor_id %}" method="post">
+                    {% csrf_token %}
+                    <div class="form-group mb-3">
+                        <label for="name" class="form-label"><i class="bi bi-person"></i>&ensp;Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control shadow-none" id="name" name="name" required>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 pe-md-1">
+                            <div class="form-group mb-3">
+                                <label for="phone" class="form-label"><i class="bi bi-telephone"></i>&ensp;Phone <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control shadow-none" id="phone" name="phone" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6 ps-md-1">
+                            <div class="form-group mb-3">
+                                <label for="email" class="form-label"><i class="bi bi-envelope"></i>&ensp;Email <span class="text-danger">*</span></label>
+                                <input type="email" class="form-control shadow-none" id="email" name="email" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="message" class="form-label"><i class="bi bi-chat"></i>&ensp;Message</label>
+                        <textarea class="form-control shadow-none" id="message" rows="3" name="message" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary shadow-none rounded-3 px-4 ms-auto" name="request_callback">Submit</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'scripts/videographer/details.js' %}"></script>
+{% endblock %}
